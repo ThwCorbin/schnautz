@@ -1,0 +1,139 @@
+/* font families */
+/* font-family: 'Ubuntu', sans-serif; */
+@import url("https://fonts.googleapis.com/css?family=Ubuntu");
+
+/* CSS Variables */
+:root {
+  --blue: #1fadee;
+  --blueGreen: #0ea181;
+  --green: #06b130;
+  --greenLight: #00ff55;
+  --pink: #f80d83;
+  --grey: #afabab;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 10px;
+  text-shadow: 1px 0 var(--blueGreen);
+  margin: 0;
+}
+
+p,
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
+.title {
+  text-align: center;
+  color: var(--blue);
+  margin: 10px;
+  font-size: 3rem;
+}
+
+
+.cardTable {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+  padding: 0;
+  margin: 0;
+}
+
+.players1and2,
+.players3and4,
+.commonArea {
+  display: flex;
+  padding: 10px;
+}
+
+.playerPositions {
+  display: flex;
+  align-self: start;
+  color: var(--pink);
+  font-size: 1rem;
+  text-align: left;
+  padding: 5px;
+}
+
+.playerOne,
+.playerTwo,
+.playerThree,
+.playerFour,
+.commonHand {
+  display: flex;
+  justify-content: space-between;
+  width: 300px;
+  padding: 5px;
+}
+
+.playerPositionsTwo,
+.playerPositionsFour {
+  margin-left: 50px;
+}
+
+.gameControls {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  color: var(--blueGreen);
+  text-shadow: 1px 0 var(--greenLight);
+  font-size: 1rem;
+  background: var(--grey);
+  border: solid var(--blue) .5rem;
+  padding: 5px;
+}
+
+.playersButton,
+.dealButton,
+.exchangeButton,
+.buyButton,
+.holdButton {
+  width: 10rem;
+  height: 2rem;
+  background: var(--greenLight);
+  color: var(--pink);
+}
+
+.aCard {
+  display: flex;
+  width: 5rem;
+  height: 7rem;
+  border: 1px solid var(--green);
+  background: var(--blueGreen);
+  font-size: 1rem;
+  color: var(--pink);
+  margin: 0;
+}
+
+.is-active {
+  border: 3px solid var(--pink);
+  background: var(--blueGreen);
+  /* color: var(--pink); */
+}
+
+
+/* #other {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 144px;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  background: var(--blueGrey);
+  padding: 0;
+  border-radius: 50%;
+  box-shadow: 2px 2px 2px var(--violetDeep);
+  margin: 0;
+} */
