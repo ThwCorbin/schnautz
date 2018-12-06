@@ -4,28 +4,28 @@
 const cardTable = document.querySelector(".cardTable");
 const aCard = document.querySelectorAll(".aCard");
 const cardText = document.querySelectorAll(".card__text");
+const playerOneHand = document.querySelector(".playerOneHand");
 const playerOne = document.querySelector(".playerOne");
-const pOneHand = document.querySelector(".pOneHand");
 const card1A = document.querySelector(".card__p1A");
 const card1B = document.querySelector(".card__p1B");
 const card1C = document.querySelector(".card__p1C");
+const playerTwoHand = document.querySelector(".playerTwoHand");
 const playerTwo = document.querySelector(".playerTwo");
-const pTwoHand = document.querySelector(".pTwoHand");
 const card2A = document.querySelector(".card__p2A");
 const card2B = document.querySelector(".card__p2B");
 const card2C = document.querySelector(".card__p2C");
+const playerThreeHand = document.querySelector(".playerThreeHand");
 const playerThree = document.querySelector(".playerThree");
-const pThreeHand = document.querySelector(".pThreeHand");
 const card3A = document.querySelector(".card__p3A");
 const card3B = document.querySelector(".card__p3B");
 const card3C = document.querySelector(".card__p3C");
+const playerFourHand = document.querySelector(".playerFourHand");
 const playerFour = document.querySelector(".playerFour");
-const pFourHand = document.querySelector(".pFourHand");
 const card4A = document.querySelector(".card__p4A");
 const card4B = document.querySelector(".card__p4B");
 const card4C = document.querySelector(".card__p4C");
 const commonHand = document.querySelector(".commonHand");
-const cHand = document.querySelector(".cHand");
+const common_extra = document.querySelector(".common_extra");
 const card5A = document.querySelector(".card__p5A");
 const card5B = document.querySelector(".card__p5B");
 const card5C = document.querySelector(".card__p5C");
@@ -57,18 +57,18 @@ const clear = () => {
 // Change number of players
 const changeNum = () => {
   clear();
-  return num1to4.textContent === "4"
-    ? (num1to4.textContent = "3")
-    : num1to4.textContent === "3"
-    ? (num1to4.textContent = "2")
-    : (num1to4.textContent = "4");
+  return num1to4.textContent === "4" ?
+    (num1to4.textContent = "3") :
+    num1to4.textContent === "3" ?
+    (num1to4.textContent = "2") :
+    (num1to4.textContent = "4");
 };
 
 playersButton.addEventListener("click", changeNum);
 
 // Generate new deck to pass to shuffle function
 const newDeck = () => {
-  const suits = ["c", "d", "h", "s"];
+  const suits = ["♧", "♢", "♡", "♤"];
   const ranks = ["7", "8", "9", "10", "J", "Q", "K", "A"];
   const deck = [];
   // Build fresh deck as an array of objects.
@@ -85,6 +85,15 @@ const newDeck = () => {
   }
   return deck;
 };
+
+// White club suit 	♧ 	U+2667 	&#9831;
+// White diamond suit 	♢ 	U+2662 	&#9826; 	
+// White heart suit 	♡ 	U+2661 	&#9825; 	
+// White spade suit 	♤ 	U+2664 	&#9828; 	
+// Black club suit 	♣ 	U+2663 	&clubs; 	
+// Black diamond suit 	♦ 	U+2666 	&diams; 	
+// Black heart suit 	♥ 	U+2665 	&hearts; 	
+// Black spade suit 	♠ 	U+2660 	&spades; 	
 
 // Generate shuffled deck from new deck to pass to deal function
 const shuffle = (deckArray) => {
@@ -117,23 +126,23 @@ const deal = () => {
   let numCards;
   shuffle(newDeck());
   // Take subset of shuffledDeck based on number of players.
-  players === "4"
-    ? (numCards = 15)
-    : players === "3"
-    ? (numCards = 12)
-    : (numCards = 9);
+  players === "4" ?
+    (numCards = 15) :
+    players === "3" ?
+    (numCards = 12) :
+    (numCards = 9);
   dealtDeck = shuffledDeck.filter((val, idx) => idx < numCards);
   let dealThisManyCards = Number(players) + 1;
 
   // Set initial card positions for players and common hand.
   dealtDeck.map((val, idx) => {
-    idx < dealThisManyCards
-      ? (val.cardPosition = idx + 1)
-      : idx >= dealThisManyCards && idx < dealThisManyCards * 2
-      ? (val.cardPosition = idx - dealThisManyCards + 1)
-      : idx >= dealThisManyCards * 2
-      ? (val.cardPosition = idx - dealThisManyCards * 2 + 1)
-      : console.log("Error: Setting the card positions did not work!");
+    idx < dealThisManyCards ?
+      (val.cardPosition = idx + 1) :
+      idx >= dealThisManyCards && idx < dealThisManyCards * 2 ?
+      (val.cardPosition = idx - dealThisManyCards + 1) :
+      idx >= dealThisManyCards * 2 ?
+      (val.cardPosition = idx - dealThisManyCards * 2 + 1) :
+      console.log("Error: Setting the card positions did not work!");
   });
 
   // Sets cardPosition initial value in card objects
@@ -147,21 +156,22 @@ const deal = () => {
 
   // Add cards to players' hand and common hand arrays
   dealtDeck.forEach((val) => {
-    val.cardPosition === 1
-      ? currentHandp1.push(val)
-      : val.cardPosition === 2
-      ? currentHandp2.push(val)
-      : val.cardPosition === 3 && numCards === 9
-      ? currentHandCommon.push(val)
-      : val.cardPosition === 3
-      ? currentHandp3.push(val)
-      : val.cardPosition === 4 && numCards === 12
-      ? currentHandCommon.push(val)
-      : val.cardPosition === 4
-      ? currentHandp4.push(val)
-      : val.cardPosition === 5
-      ? currentHandCommon.push(val) // could end conditional here without === 5 above
-      : console.log("Nothing to push, love!");
+    val.cardPosition === 1 ?
+      currentHandp1.push(val) :
+      val.cardPosition === 2 ?
+      currentHandp2.push(val) :
+      val.cardPosition === 3 && numCards === 9 ?
+      currentHandCommon.push(val) :
+      val.cardPosition === 3 ?
+      currentHandp3.push(val) :
+      val.cardPosition === 4 && numCards === 12 ?
+      currentHandCommon.push(val) :
+      val.cardPosition === 4 ?
+      currentHandp4.push(val) :
+      val.cardPosition === 5 ?
+      currentHandCommon.push(val) // could end conditional here without === 5 above
+      :
+      console.log("Nothing to push, love!");
   });
 
   // Applies card positions to card table
@@ -215,7 +225,6 @@ const deal = () => {
     card4B.textContent = "";
     card4C.textContent = "";
   }
-
   console.log(dealtDeck);
   console.log(currentHandCommon);
   return dealtDeck;
@@ -229,40 +238,19 @@ const activeCard = (e) => {
   dealtDeck.filter((val) => {
     if (e.target.textContent === val.card) {
       val.selected === false ? (val.selected = true) : (val.selected = false);
-      val.selected === true
-        ? e.target.classList.add("is-active")
-        : e.target.classList.remove("is-active");
+      val.selected === true ?
+        e.target.classList.add("is-active") :
+        e.target.classList.remove("is-active");
     }
   });
 };
-
-// Select one or three cards to swap with common hand
-// const swapOneOrThree = (e) => {
-//   let activePlayerCards = [];
-//   let currentCard = e.target.textContent;
-//   if(dealtDeck.card[cu])
-//   dealtDeck.filter((val) => {
-//     if (e.target.className.includes(val.cardPosition)) {
-//       activePlayerArr.push(val);
-//     }
-//   });
-//   activePlayerCards.every((val) => {
-//     return val.selected === false ? (val.selected = true) : ;
-//   });
-//   // return true ? console.log("true") : console.log("nope");
-//   console.log(val.selected);
-// };
 
 for (var i = 0; i < aCard.length; i++) {
   aCard[i].addEventListener("click", activeCard);
 }
 
-// for (var i = 0; i < aCard.length; i++) {
-//   aCard[i].addEventListener("click", swapOneOrThree);
-// }
-
 // const exchangeCards = () => {
 //   if()
 // };
 
-exchangeButton.addEventListener("click", exchangeCards);
+// exchangeButton.addEventListener("click", exchangeCards);
