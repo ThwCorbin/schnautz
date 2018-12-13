@@ -45,6 +45,20 @@ let currentHandp3 = [];
 let currentHandp4 = [];
 let currentHandCommon = [];
 
+const player1Status = {
+  currentPlayer: null
+};
+const player2Status = {
+  currentPlayer: null
+};
+const player3Status = {
+  currentPlayer: null
+};
+const player4Status = {
+  currentPlayer: null
+};
+
+
 const clear = () => {
   roundActive = false;
   currentHandp1.length = 0;
@@ -52,6 +66,7 @@ const clear = () => {
   currentHandp3.length = 0;
   currentHandp4.length = 0;
   currentHandCommon.length = 0;
+  currentPlayer = null;
 };
 
 // Change number of players
@@ -79,7 +94,8 @@ const newDeck = () => {
         rank: ranks[i],
         suit: suits[j],
         cardPosition: 0,
-        selected: false
+        selected: false,
+        buyLastTurn: false
       });
     }
   }
@@ -225,6 +241,7 @@ const deal = () => {
     card4B.textContent = "";
     card4C.textContent = "";
   }
+  player1Status.currentPlayer = true;
   console.log(dealtDeck);
   console.log(currentHandCommon);
   return dealtDeck;
@@ -232,6 +249,43 @@ const deal = () => {
 };
 
 dealButton.addEventListener("click", deal);
+
+// Select current player
+const changeCurrentPlayer = () => {
+  // Player One is initial current player after each deal
+  if (player1Status.currentPlayer === true) {
+    player2Status.currentPlayer = true;
+    player1Status.currentPlayer = false;
+  } else if (player2Status.currentPlayer === true && dealtDeck.length > 9) {
+    player1Status.currentPlayer = true;
+    player2Status.currentPlayer = false;
+  } else if (player2Status.currentPlayer === true && dealtDeck.length > 9) {
+    player3Status.currentPlayer = true;
+    player2Status.currentPlayer = false;
+  } else if (player3Status.currentPlayer === true && dealtDeck.length > 12) {
+    player4Status.currentPlayer = true;
+    player3Status.currentPlayer = false;
+  } else {
+    player1Status.currentPlayer = true;
+    player4Status.currentPlayer = false;
+  }
+};
+
+// Current player can "buy" to skip turn without
+// exchanging any cards but must either exchange 
+// cards or "hold" on player's next turn
+const buy = (e) => {};
+
+buyButton.addEventListener("click", buy);
+
+// e.target.textContent
+// dealtDeck.filter((val) => {
+//   if (val.card.active === false) {
+// e.target.classList.add("is-active") :
+//     val.
+//   } else {
+//     e.target.classList.remove("is-active");
+// val.selected = true;
 
 // Select and deselect active card
 const activeCard = (e) => {
