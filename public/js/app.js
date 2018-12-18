@@ -66,7 +66,10 @@ const clear = () => {
   currentHandp3.length = 0;
   currentHandp4.length = 0;
   currentHandCommon.length = 0;
-  currentPlayer = null;
+  player1Status.currentPlayer = null;
+  player2Status.currentPlayer = null;
+  player3Status.currentPlayer = null;
+  player4Status.currentPlayer = null;
 };
 
 // Change number of players
