@@ -103,13 +103,13 @@ const newDeck = () => {
 };
 
 // White club suit 	♧ 	U+2667 	&#9831;
-// White diamond suit 	♢ 	U+2662 	&#9826; 	
-// White heart suit 	♡ 	U+2661 	&#9825; 	
-// White spade suit 	♤ 	U+2664 	&#9828; 	
-// Black club suit 	♣ 	U+2663 	&clubs; 	
-// Black diamond suit 	♦ 	U+2666 	&diams; 	
-// Black heart suit 	♥ 	U+2665 	&hearts; 	
-// Black spade suit 	♠ 	U+2660 	&spades; 	
+// White diamond suit 	♢ 	U+2662 	&#9826;
+// White heart suit 	♡ 	U+2661 	&#9825;
+// White spade suit 	♤ 	U+2664 	&#9828;
+// Black club suit 	♣ 	U+2663 	&clubs;
+// Black diamond suit 	♦ 	U+2666 	&diams;
+// Black heart suit 	♥ 	U+2665 	&hearts;
+// Black spade suit 	♠ 	U+2660 	&spades;
 
 // Generate shuffled deck from new deck to pass to deal function
 const shuffle = (deckArray) => {
@@ -272,7 +272,7 @@ const changeCurrentPlayer = () => {
 };
 
 // Current player can "buy" to skip turn without
-// exchanging any cards but must either exchange 
+// exchanging any cards but must either exchange
 // cards or "hold" on player's next turn
 const buy = (e) => {};
 

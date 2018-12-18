@@ -1,31 +1,47 @@
 {
   "name": "schnautz",
   "version": "1.0.0",
-  "description": "",
+  "description": "It's German. It has something to do with trousers. - Alex",
   "main": "index.js",
   "scripts": {
-    "pretest": "eslint --ignore-path .gitignore .",
     "start": "babel-node public/js/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThwCorbin/SchnautzCardGame.git"
+  },
+  "keywords": [
+    "Hosen",
+    "'runter",
+    "trousers",
+    "down",
+    "don't",
+    "panic",
+    "it's",
+    "a",
+    "card",
+    "game",
+    "www.pagat.com",
+    "Schwimmen"
+  ],
+  "author": "Tom Corbin",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ThwCorbin/SchnautzCardGame/issues"
+  },
+  "homepage": "https://github.com/ThwCorbin/SchnautzCardGame#readme",
   "devDependencies": {
-    "@ljharb/eslint-config": "^13.0.0",
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^10.0.1",
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.10.0",
-    "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^3.3.0",
-    "eslint-plugin-flowtype": "^3.2.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-prettier": "^3.0.0",
-    "eslint-plugin-react": "^7.11.1",
-    "nodemon": "^1.18.8",
     "prettier": "^1.15.3"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.5.0"
+    "express": "^4.16.4"
   }
 }
