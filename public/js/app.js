@@ -1,5 +1,3 @@
-"use strict";
-
 // Table and Player variables
 const cardTable = document.querySelector(".cardTable");
 const aCard = document.querySelectorAll(".aCard");
@@ -25,7 +23,7 @@ const card4A = document.querySelector(".card__p4A");
 const card4B = document.querySelector(".card__p4B");
 const card4C = document.querySelector(".card__p4C");
 const commonHand = document.querySelector(".commonHand");
-const common_extra = document.querySelector(".common_extra");
+const commonExtra = document.querySelector(".common_extra");
 const card5A = document.querySelector(".card__p5A");
 const card5B = document.querySelector(".card__p5B");
 const card5C = document.querySelector(".card__p5C");
@@ -58,7 +56,6 @@ const player4Status = {
   currentPlayer: null
 };
 
-
 const clear = () => {
   roundActive = false;
   currentHandp1.length = 0;
@@ -75,11 +72,11 @@ const clear = () => {
 // Change number of players
 const changeNum = () => {
   clear();
-  return num1to4.textContent === "4" ?
-    (num1to4.textContent = "3") :
-    num1to4.textContent === "3" ?
-    (num1to4.textContent = "2") :
-    (num1to4.textContent = "4");
+  return num1to4.textContent === "4"
+    ? (num1to4.textContent = "3")
+    : num1to4.textContent === "3"
+    ? (num1to4.textContent = "2")
+    : (num1to4.textContent = "4");
 };
 
 playersButton.addEventListener("click", changeNum);
@@ -115,8 +112,8 @@ const newDeck = () => {
 // Black spade suit 	♠ 	U+2660 	&spades;
 
 // Generate shuffled deck from new deck to pass to deal function
-const shuffle = (deckArray) => {
-  let numUnshuffledCards = deckArray.length;
+const shuffle = deck => {
+  let numUnshuffledCards = deck.length;
   let lastUnshuffledCard;
   let randomUnshuffledCard;
   // Fisher–Yates Shuffle
@@ -128,13 +125,13 @@ const shuffle = (deckArray) => {
     // and decrement the number of unshuffled cards by 1.
     randomUnshuffledCard = Math.floor(Math.random() * numUnshuffledCards--);
     // Assign the last card in the unshuffled portion of the array to a variable.
-    lastUnshuffledCard = deckArray[numUnshuffledCards];
+    lastUnshuffledCard = deck[numUnshuffledCards];
     // Move the random card to the last unshuffled card's position.
-    deckArray[numUnshuffledCards] = deckArray[randomUnshuffledCard];
+    deck[numUnshuffledCards] = deck[randomUnshuffledCard];
     // Move the last unshuffled card to the random card's previous position.
-    deckArray[randomUnshuffledCard] = lastUnshuffledCard;
+    deck[randomUnshuffledCard] = lastUnshuffledCard;
   }
-  shuffledDeck = deckArray;
+  shuffledDeck = deck;
   return shuffledDeck;
 };
 
@@ -145,23 +142,23 @@ const deal = () => {
   let numCards;
   shuffle(newDeck());
   // Take subset of shuffledDeck based on number of players.
-  players === "4" ?
-    (numCards = 15) :
-    players === "3" ?
-    (numCards = 12) :
-    (numCards = 9);
+  players === "4"
+    ? (numCards = 15)
+    : players === "3"
+    ? (numCards = 12)
+    : (numCards = 9);
   dealtDeck = shuffledDeck.filter((val, idx) => idx < numCards);
   let dealThisManyCards = Number(players) + 1;
 
   // Set initial card positions for players and common hand.
   dealtDeck.map((val, idx) => {
-    idx < dealThisManyCards ?
-      (val.cardPosition = idx + 1) :
-      idx >= dealThisManyCards && idx < dealThisManyCards * 2 ?
-      (val.cardPosition = idx - dealThisManyCards + 1) :
-      idx >= dealThisManyCards * 2 ?
-      (val.cardPosition = idx - dealThisManyCards * 2 + 1) :
-      console.log("Error: Setting the card positions did not work!");
+    idx < dealThisManyCards
+      ? (val.cardPosition = idx + 1)
+      : idx >= dealThisManyCards && idx < dealThisManyCards * 2
+      ? (val.cardPosition = idx - dealThisManyCards + 1)
+      : idx >= dealThisManyCards * 2
+      ? (val.cardPosition = idx - dealThisManyCards * 2 + 1)
+      : console.log("Error: Setting the card positions did not work!");
   });
 
   // Sets cardPosition initial value in card objects
@@ -174,23 +171,22 @@ const deal = () => {
   // numCards =            15  12   9
 
   // Add cards to players' hand and common hand arrays
-  dealtDeck.forEach((val) => {
-    val.cardPosition === 1 ?
-      currentHandp1.push(val) :
-      val.cardPosition === 2 ?
-      currentHandp2.push(val) :
-      val.cardPosition === 3 && numCards === 9 ?
-      currentHandCommon.push(val) :
-      val.cardPosition === 3 ?
-      currentHandp3.push(val) :
-      val.cardPosition === 4 && numCards === 12 ?
-      currentHandCommon.push(val) :
-      val.cardPosition === 4 ?
-      currentHandp4.push(val) :
-      val.cardPosition === 5 ?
-      currentHandCommon.push(val) // could end conditional here without === 5 above
-      :
-      console.log("Nothing to push, love!");
+  dealtDeck.forEach(val => {
+    val.cardPosition === 1
+      ? currentHandp1.push(val)
+      : val.cardPosition === 2
+      ? currentHandp2.push(val)
+      : val.cardPosition === 3 && numCards === 9
+      ? currentHandCommon.push(val)
+      : val.cardPosition === 3
+      ? currentHandp3.push(val)
+      : val.cardPosition === 4 && numCards === 12
+      ? currentHandCommon.push(val)
+      : val.cardPosition === 4
+      ? currentHandp4.push(val)
+      : val.cardPosition === 5
+      ? currentHandCommon.push(val) // could end conditional here without === 5 above
+      : console.log("Nothing to push, love!");
   });
 
   // Applies card positions to card table
@@ -277,7 +273,7 @@ const changeCurrentPlayer = () => {
 // Current player can "buy" to skip turn without
 // exchanging any cards but must either exchange
 // cards or "hold" on player's next turn
-const buy = (e) => {};
+const buy = e => {};
 
 buyButton.addEventListener("click", buy);
 
@@ -291,18 +287,18 @@ buyButton.addEventListener("click", buy);
 // val.selected = true;
 
 // Select and deselect active card
-const activeCard = (e) => {
-  dealtDeck.filter((val) => {
+const activeCard = e => {
+  dealtDeck.filter(val => {
     if (e.target.textContent === val.card) {
       val.selected === false ? (val.selected = true) : (val.selected = false);
-      val.selected === true ?
-        e.target.classList.add("is-active") :
-        e.target.classList.remove("is-active");
+      val.selected === true
+        ? e.target.classList.add("is-active")
+        : e.target.classList.remove("is-active");
     }
   });
 };
 
-for (var i = 0; i < aCard.length; i++) {
+for (let i = 0; i < aCard.length; i++) {
   aCard[i].addEventListener("click", activeCard);
 }
 
