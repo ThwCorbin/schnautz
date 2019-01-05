@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-node server/server.js",
+    "sarunodeman": "nodemon --exec babel-node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

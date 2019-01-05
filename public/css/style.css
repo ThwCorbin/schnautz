@@ -1,6 +1,117 @@
 /* font families */
-/* font-family: 'Ubuntu', sans-serif; */
 @import url("https://fonts.googleapis.com/css?family=Ubuntu");
+
+/* Reset/Base derived from: 
+ bitsofco.de/my-css-reset-base/
+ css-tricks.com style.css
+*/
+
+/* 0 margin, padding, border on all elements except form fields */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+/* Typography */
+html {
+  font-size: 62.5%; 
+  font-family: 'Ubuntu', sans-serif;
+}
+
+body {
+  font-size: 1.6rem;
+  line-height: 1.4;
+}
+
+* {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  /* Encourages thoughtful changes to font styles */
+}
+
+a,
+a:visited {
+  color: inherit;
+  /* Sets link color to body text color */
+  text-decoration: none;
+}
+
+/* Layout */
+article,
+aside,
+details,
+figcaption,
+figure, 
+footer,
+header,
+hgroup,
+menu,
+nav,
+section, 
+summary { 
+    display: block;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Elements */
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+img,
+video {
+  max-width: 100%;
+}
+
+img {
+  border-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:after,
+blockquote:before,
+q:after,
+q:before {
+  content: "";
+  content: none;
+}
+
+button,
+input,
+select,
+textarea {
+ vertical-align: baseline;
+}
 
 /* CSS Variables */
 :root {
@@ -15,24 +126,14 @@
   --white: #ffffff;
 }
 
+/* Body */
 body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  font-family: "Ubuntu", sans-serif;
-  font-size: 10px;
-  margin: 0;
 }
 
-p,
-h1,
-h2,
-h3 {
-  margin: 0;
-}
-
+/* Nav */
 .title {
   text-align: center;
   color: var(--blue);
@@ -40,15 +141,13 @@ h3 {
   font-size: 3rem;
 }
 
-
+/* Main section */
 .cardTable {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 320px;
   background: var(--blueGreen);
-  padding: 0;
-  margin: 0;
 }
 
 .playerPositions {
@@ -66,32 +165,28 @@ h3 {
   display: flex;
   justify-content: space-between;
   width: 300px;
-  padding: 0;
 }
 
 .gameControls {
   display: flex;
   flex-wrap: wrap;
-  /* flex-direction: column; */
   justify-content: center;
   align-content: center;
   width: 310px;
   background: var(--grey);
   border: solid var(--blueGreenLight) 5px;
-  padding: 0;
-  margin: 0;
 }
 
-button {
+.control-btn {
   width: 6rem;
   height: 2.5rem;
   font-size: 1rem;
-  border-radius: 5%;
   color: var(--pink);
   text-shadow: 1px 0 var(--blueGreenLight);
   background: var(--blue);
-  padding: 2px;
   margin: 2px;
+  border-radius: 5%;
+  padding: 2px;
 }
 
 .playerTitle {
@@ -100,35 +195,27 @@ button {
 
 .aCard {
   display: flex;
-  width: 5rem;
-  height: 7rem;
-  border: 1px solid var(--green);
-  border-radius: 5%;
+  width: 50px;
+  height: 70px;
   background: var(--white);
   font-size: 1rem;
   color: var(--pink);
-  margin: 0;
+  border: 1px solid var(--green);
+  border-radius: 5%;
+  padding: 2px;
+}
+
+.aCardBlack {
+  color: var(--blue);
 }
 
 .is-active {
+  background: var(--blue);
   border: 3px solid var(--pink);
-  background: var(--blueGreen);
 }
 
 
-/* #other {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 144px;
+/* 
   z-index: 1;
-  width: 150px;
-  height: 150px;
-  background: var(--blueGrey);
-  padding: 0;
-  border-radius: 50%;
-  box-shadow: 2px 2px 2px var(--violetDeep);
-  margin: 0;
-} */
+  box-shadow: 2px 2px 2px var(--blueGreen);
+*/

@@ -1,38 +1,38 @@
 // Table and Player variables
-const cardTable = document.querySelector(".cardTable");
+// const cardTable = document.querySelector(".cardTable");
 const aCard = document.querySelectorAll(".aCard");
-const cardText = document.querySelectorAll(".card__text");
-const playerOneHand = document.querySelector(".playerOneHand");
-const playerOne = document.querySelector(".playerOne");
+// const cardText = document.querySelectorAll(".card__text");
+// const playerOneHand = document.querySelector(".playerOneHand");
+// const playerOne = document.querySelector(".playerOne");
 const card1A = document.querySelector(".card__p1A");
 const card1B = document.querySelector(".card__p1B");
 const card1C = document.querySelector(".card__p1C");
-const playerTwoHand = document.querySelector(".playerTwoHand");
-const playerTwo = document.querySelector(".playerTwo");
+// const playerTwoHand = document.querySelector(".playerTwoHand");
+// const playerTwo = document.querySelector(".playerTwo");
 const card2A = document.querySelector(".card__p2A");
 const card2B = document.querySelector(".card__p2B");
 const card2C = document.querySelector(".card__p2C");
-const playerThreeHand = document.querySelector(".playerThreeHand");
-const playerThree = document.querySelector(".playerThree");
+// const playerThreeHand = document.querySelector(".playerThreeHand");
+// const playerThree = document.querySelector(".playerThree");
 const card3A = document.querySelector(".card__p3A");
 const card3B = document.querySelector(".card__p3B");
 const card3C = document.querySelector(".card__p3C");
-const playerFourHand = document.querySelector(".playerFourHand");
-const playerFour = document.querySelector(".playerFour");
+// const playerFourHand = document.querySelector(".playerFourHand");
+// const playerFour = document.querySelector(".playerFour");
 const card4A = document.querySelector(".card__p4A");
 const card4B = document.querySelector(".card__p4B");
 const card4C = document.querySelector(".card__p4C");
-const commonHand = document.querySelector(".commonHand");
-const commonExtra = document.querySelector(".common_extra");
+// const commonHand = document.querySelector(".commonHand");
+// const commonExtra = document.querySelector(".common_extra");
 const card5A = document.querySelector(".card__p5A");
 const card5B = document.querySelector(".card__p5B");
 const card5C = document.querySelector(".card__p5C");
 const num1to4 = document.querySelector(".num1to4");
 const playersButton = document.querySelector(".playersButton");
 const dealButton = document.querySelector(".dealButton");
-const exchangeButton = document.querySelector(".exchangeButton");
+// const exchangeButton = document.querySelector(".exchangeButton");
 const buyButton = document.querySelector(".buyButton");
-const holdButton = document.querySelector(".holdButton");
+// const holdButton = document.querySelector(".holdButton");
 let shuffledDeck;
 let dealtDeck;
 let roundActive = false;
@@ -95,7 +95,8 @@ const newDeck = () => {
         suit: suits[j],
         cardPosition: 0,
         selected: false,
-        buyLastTurn: false
+        buyLastTurn: false,
+        black: suits[j] === "♧" || "♤"
       });
     }
   }
@@ -112,11 +113,11 @@ const newDeck = () => {
 // Black spade suit 	♠ 	U+2660 	&spades;
 
 // Generate shuffled deck from new deck to pass to deal function
+// Fisher–Yates Shuffle
 const shuffle = deck => {
   let numUnshuffledCards = deck.length;
   let lastUnshuffledCard;
   let randomUnshuffledCard;
-  // Fisher–Yates Shuffle
   // While unshuffled cards remain...
   // Select and move a random unshuffled card to the shuffled portion of the array.
   // Move the card the random card replaced to the unshuffled portion of the array.
