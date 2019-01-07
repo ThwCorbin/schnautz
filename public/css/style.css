@@ -1,34 +1,101 @@
 /* font families */
 @import url("https://fonts.googleapis.com/css?family=Ubuntu");
 
-/* Reset/Base derived from: 
- bitsofco.de/my-css-reset-base/
- css-tricks.com style.css
+/* Reset/Base derived from: bitsofco.de/my-css-reset-base/ and
+   css-tricks.com style.css
 */
 
-/* 0 margin, padding, border on all elements except form fields */
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
+/* 0 margin, padding, border on all elements except form fields ***** */
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
-/* Typography */
+/* Typography  ************************************************************ */
 html {
-  font-size: 62.5%; 
-  font-family: 'Ubuntu', sans-serif;
+  font-size: 62.5%;
+  font-family: "Ubuntu", sans-serif;
 }
 
 body {
@@ -50,20 +117,20 @@ a:visited {
   text-decoration: none;
 }
 
-/* Layout */
+/* Layout ************************************************************ */
 article,
 aside,
 details,
 figcaption,
-figure, 
+figure,
 footer,
 header,
 hgroup,
 menu,
 nav,
-section, 
-summary { 
-    display: block;
+section,
+summary {
+  display: block;
 }
 
 *,
@@ -72,7 +139,7 @@ summary {
   box-sizing: border-box;
 }
 
-/* Elements */
+/* Elements ************************************************************  */
 
 table {
   border-collapse: collapse;
@@ -110,10 +177,10 @@ button,
 input,
 select,
 textarea {
- vertical-align: baseline;
+  vertical-align: baseline;
 }
 
-/* CSS Variables */
+/* CSS Variables ****************************************************** */
 :root {
   --blue: #1fadee;
   --blueGreen: #0ea181;
@@ -126,12 +193,12 @@ textarea {
   --white: #ffffff;
 }
 
-/* Body */
-body {
+/* Body  ************************************************************** */
+/* body {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
+} */
 
 /* Nav */
 .title {
@@ -141,12 +208,29 @@ body {
   font-size: 3rem;
 }
 
-/* Main section */
+/* Main section  ****************************************************** */
+
+.grid {
+  display: grid;
+  border: 2px red dotted;
+  grid-template-columns: repeat(3, 1fr [column-start]);
+  grid-template-rows: [common-hand] 1fr [player-one-hand] 1fr;
+  column-gap: 25px;
+  row-gap: 15px;
+  /* justify-content: center; */
+  /* align-content: center; */
+  width: 300px;
+}
+
+.card__text card__p5A {
+  grid-column-start: first;
+}
+
 .cardTable {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 320px;
+  width: 300px;
   background: var(--blueGreen);
 }
 
@@ -213,7 +297,6 @@ body {
   background: var(--blue);
   border: 3px solid var(--pink);
 }
-
 
 /* 
   z-index: 1;
