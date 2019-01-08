@@ -191,14 +191,15 @@ textarea {
   --pinkLight: #fdceea;
   --grey: #afabab;
   --white: #ffffff;
+  --blueBlack: rgb(3, 15, 37);
 }
 
 /* Body  ************************************************************** */
-/* body {
+body {
   display: flex;
   flex-direction: column;
   align-items: center;
-} */
+}
 
 /* Nav */
 .title {
@@ -216,9 +217,9 @@ textarea {
   grid-template-columns: repeat(3, 1fr [column-start]);
   grid-template-rows: [common-hand] 1fr [player-one-hand] 1fr;
   column-gap: 25px;
-  row-gap: 15px;
-  /* justify-content: center; */
-  /* align-content: center; */
+  row-gap: 25px;
+  justify-items: center;
+  align-items: center;
   width: 300px;
 }
 
@@ -256,7 +257,7 @@ textarea {
   flex-wrap: wrap;
   justify-content: center;
   align-content: center;
-  width: 310px;
+  width: 300px;
   background: var(--grey);
   border: solid var(--blueGreenLight) 5px;
 }
@@ -279,18 +280,18 @@ textarea {
 
 .aCard {
   display: flex;
-  width: 50px;
-  height: 70px;
+  width: 5rem;
+  height: 7rem;
   background: var(--white);
-  font-size: 1rem;
+  font-size: 2rem;
   color: var(--pink);
-  border: 1px solid var(--green);
+  border: 0.1rem solid var(--green);
   border-radius: 5%;
-  padding: 2px;
+  padding: 0.2rem;
 }
 
-.aCardBlack {
-  color: var(--blue);
+#aCardBlack {
+  color: var(--blueBlack);
 }
 
 .is-active {

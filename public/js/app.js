@@ -241,6 +241,15 @@ const deal = () => {
     card4B.textContent = "";
     card4C.textContent = "";
   }
+  aCard.forEach(val =>
+    val.textContent.includes("♤")
+      ? val.setAttribute("id", "aCardBlack")
+      : val.textContent.includes("♧")
+      ? val.setAttribute("id", "aCardBlack")
+      : val.removeAttribute("id", "aCardBlack")
+  );
+
+  // val => val.textContent.includes("♧" || "♤") ? val.setAttribute("class", "aCardBlack") : val.removeAttribute("class", "aCardBlack"));
   player1Status.currentPlayer = true;
   console.log(dealtDeck);
   console.log(currentHandCommon);
