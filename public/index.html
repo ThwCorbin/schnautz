@@ -1,101 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- <script defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script> -->
+    <link rel="stylesheet" href="css/style.css" />
+    <title>Schnautz Game</title>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script> -->
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- <script defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script> -->
-  <link rel="stylesheet" href="css/style.css">
-  <title>Schnautz Game</title>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script> -->
-</head>
-
-<body>
-
-  <nav>
-    <h1 class="title">Schnautz</h1>
-  </nav>
-
-  <div class="grid">
-    <div class="item aCard card__text card__p5A"></div>
-    <div class="item aCard card__text card__p5B"></div>
-    <div class="item aCard card__text card__p5C"></div>
-    <div class="item aCard card__text card__p1A"></div>
-    <div class="item aCard card__text card__p1B"></div>
-    <div class="item aCard card__text card__p1C"></div>
-  </div>
-
-  <div class="cardTable">
-
-    <div class="block control_block">
-      <div class="gameControls">
-        <button class="playersButton control-btn">Players: <span class="num1to4">4</span></button></h3>
+  <body>
+    <nav><h1 class="title">Schnautz</h1></nav>
+    <main>
+      <section class="controlsDealing">
+        <button class="playersButton control-btn">
+          Players: <span class="num1to4">4</span>
+        </button>
         <button class="dealButton  control-btn">Deal</button>
+      </section>
+      <section class="cardsArea">
+        <div class="aCard card__text card__p5A"></div>
+        <div class="aCard card__text card__p5B"></div>
+        <div class="aCard card__text card__p5C"></div>
+        <div class="aCard card__text card__p1A"></div>
+        <div class="aCard card__text card__p1B"></div>
+        <div class="aCard card__text card__p1C"></div>
+      </section>
+      <section class="controlsCardPlay">
         <button class="exchangeButton  control-btn">Exchange</button>
         <button class="buyButton  control-btn">Buy</button>
         <button class="holdButton control-btn">Hold</button>
-      </div>
-    </div>
+      </section>
+      <section class="cardsHidden">
+        <div class="aCard card__text card__p2A"></div>
+        <div class="aCard card__text card__p2B"></div>
+        <div class="aCard card__text card__p2C"></div>
+        <div class="aCard card__text card__p3A"></div>
+        <div class="aCard card__text card__p3B"></div>
+        <div class="aCard card__text card__p3C"></div>
+        <div class="aCard card__text card__p4A"></div>
+        <div class="aCard card__text card__p4B"></div>
+        <div class="aCard card__text card__p4C"></div>
+      </section>
+    </main>
 
-    <div class="block common_block">
-      <div class="playerPositions playerPositionsCommon">
-        <p class="playerTitle">Common/Extra: <span class="common_extra"> </span></p>
-      </div>
-      <div class="commonHand">
-        <h2 class="aCard card__text card__p5A"></h2>
-        <h2 class="aCard card__text card__p5B"></h2>
-        <h2 class="aCard card__text card__p5C"></h2>
-      </div>
-    </div>
+    <footer>An app by Tom Corbin</footer>
+  </body>
 
-    <div class="block playerOne_block">
-      <div class="playerPositions playerPositionsOne">
-        <p class="playerTitle">Player One: <span class="playerOne"> </span></p>
-      </div>
-      <div class="playerOneHand">
-        <h2 class="aCard card__text card__p1A"></h2>
-        <h2 class="aCard card__text card__p1B"></h2>
-        <h2 class="aCard card__text card__p1C"></h2>
-      </div>
-    </div>
-
-    <div class="block playerTwo_block">
-      <div class="playerPositions playerPositionsTwo">
-        <p class="playerTitle">Player Two: <span class="playerTwo"> </span></p>
-      </div>
-      <div class="playerTwoHand">
-        <h2 class="aCard card__text card__p2A"></h2>
-        <h2 class="aCard card__text card__p2B"></h2>
-        <h2 class="aCard card__text card__p2C"></h2>
-      </div>
-    </div>
-
-    <div class="block playerThree_block">
-      <div class="playerPositions playerPositionsThree">
-        <p class="playerTitle">Player Three: <span class="playerThree"> </span></p>
-      </div>
-      <div class="playerThreeHand">
-        <h2 class="aCard card__text card__p3A"></h2>
-        <h2 class="aCard card__text card__p3B"></h2>
-        <h2 class="aCard card__text card__p3C"></h2>
-      </div>
-    </div>
-
-    <div class="block playerFour_block">
-      <div class="playerPositions playerPositionsFour">
-        <p class="playerTitle">Player Four: <span class="playerFour"> </span></p>
-      </div>
-      <div class="playerFourHand">
-        <h2 class="aCard card__text card__p4A"></h2>
-        <h2 class="aCard card__text card__p4B"></h2>
-        <h2 class="aCard card__text card__p4C"></h2>
-      </div>
-    </div>
-
-  </div>
-
-</body>
-
-<script src="js/app.js"></script>
-
+  <script src="js/app.js"></script>
 </html>

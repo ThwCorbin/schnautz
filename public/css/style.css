@@ -199,6 +199,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 320px;
 }
 
 /* Nav */
@@ -210,10 +211,14 @@ body {
 }
 
 /* Main section  ****************************************************** */
-
-.grid {
+.controlsDealing {
   display: grid;
-  border: 2px red dotted;
+  grid-template-columns: repeat(2, 1fr [column-start]);
+  border: 0.2rem solid var(--blueGreen);
+}
+
+.cardsArea {
+  display: grid;
   grid-template-columns: repeat(3, 1fr [column-start]);
   grid-template-rows: [common-hand] 1fr [player-one-hand] 1fr;
   column-gap: 25px;
@@ -221,18 +226,25 @@ body {
   justify-items: center;
   align-items: center;
   width: 300px;
+  border: 0.2rem solid var(--pink);
 }
 
-.card__text card__p5A {
-  grid-column-start: first;
+.controlsCardsPlay {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr [column-start]);
+  border: 0.2rem solid var(--blueGreen);
 }
 
-.cardTable {
-  display: flex;
-  flex-direction: column;
+.cardsHidden {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr [column-start]);
+  grid-template-rows: [player-two-hand] 1fr [player-three-hand] 1fr [player-four-hand] 1fr;
+  column-gap: 25px;
+  row-gap: 25px;
+  justify-items: center;
   align-items: center;
   width: 300px;
-  background: var(--blueGreen);
+  border: 0.2rem solid var(--pink);
 }
 
 .playerPositions {
@@ -252,16 +264,6 @@ body {
   width: 300px;
 }
 
-.gameControls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-content: center;
-  width: 300px;
-  background: var(--grey);
-  border: solid var(--blueGreenLight) 5px;
-}
-
 .control-btn {
   width: 6rem;
   height: 2.5rem;
@@ -279,7 +281,6 @@ body {
 }
 
 .aCard {
-  display: flex;
   width: 5rem;
   height: 7rem;
   background: var(--white);
