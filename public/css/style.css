@@ -199,18 +199,23 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 320px;
+  width: 100%;
 }
 
 /* Nav */
 .title {
-  text-align: center;
   color: var(--blue);
   margin: 10px;
   font-size: 3rem;
 }
 
 /* Main section  ****************************************************** */
+section {
+  width: 320px;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+
 .controlsDealing {
   display: grid;
   grid-template-columns: repeat(2, 1fr [column-start]);
@@ -225,11 +230,10 @@ body {
   row-gap: 25px;
   justify-items: center;
   align-items: center;
-  width: 300px;
   border: 0.2rem solid var(--pink);
 }
 
-.controlsCardsPlay {
+.controlsCardPlay {
   display: grid;
   grid-template-columns: repeat(3, 1fr [column-start]);
   border: 0.2rem solid var(--blueGreen);
@@ -243,47 +247,20 @@ body {
   row-gap: 25px;
   justify-items: center;
   align-items: center;
-  width: 300px;
   border: 0.2rem solid var(--pink);
 }
 
-.playerPositions {
-  color: var(--pink);
-  text-shadow: 1px 0 var(--blueGreen);
-  font-size: 1rem;
-  padding: 5px;
-}
-
-.playerOneHand,
-.playerTwoHand,
-.playerThreeHand,
-.playerFourHand,
-.commonHand {
-  display: flex;
-  justify-content: space-between;
-  width: 300px;
-}
-
 .control-btn {
-  width: 6rem;
-  height: 2.5rem;
-  font-size: 1rem;
+  font-size: 2rem;
   color: var(--pink);
-  text-shadow: 1px 0 var(--blueGreenLight);
-  background: var(--blue);
-  margin: 2px;
   border-radius: 5%;
-  padding: 2px;
-}
-
-.playerTitle {
-  color: var(--pinkLight);
+  margin: 0.1rem;
+  padding: 0;
 }
 
 .aCard {
   width: 5rem;
   height: 7rem;
-  background: var(--white);
   font-size: 2rem;
   color: var(--pink);
   border: 0.1rem solid var(--green);
@@ -300,7 +277,12 @@ body {
   border: 3px solid var(--pink);
 }
 
+footer {
+  color: var(--blue);
+}
+
 /* 
   z-index: 1;
   box-shadow: 2px 2px 2px var(--blueGreen);
+  text-shadow: 1px 0 var(--blueGreenLight);
 */
