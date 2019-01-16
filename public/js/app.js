@@ -1,10 +1,13 @@
+// "use strict";
+
 // Control and deck variables
 const playersButton = document.querySelector(".playersButton");
 const num1to4 = document.querySelector(".num1to4");
 const dealButton = document.querySelector(".dealButton");
-const exchangeButton = document.querySelector(".exchangeButton");
+// const exchangeButton = document.querySelector(".exchangeButton");
 const buyButton = document.querySelector(".buyButton");
 const holdButton = document.querySelector(".holdButton");
+let numCards;
 let shuffledDeck;
 let dealtDeck;
 // Hand variables
@@ -17,6 +20,8 @@ const extraHand = [];
 const aCard = document.querySelectorAll(".aCard");
 const extraCard = document.querySelectorAll(".extraCard");
 const playerOneCard = document.querySelectorAll(".playerOneCard");
+// Player variables
+// let activePlayer = 0;
 
 // Reset
 const clear = () => {
@@ -25,16 +30,23 @@ const clear = () => {
   rightOfDealerHand.length = 0;
   dealerHand.length = 0;
   extraHand.length = 0;
+  aCard.forEach(val => val.classList.remove("is-active"));
 };
 
-// Change number of players
+// Change number of players and number of cards to deal
 const changeNum = () => {
   clear();
   return num1to4.textContent === "4"
-    ? (num1to4.textContent = "3")
+    ? ((num1to4.textContent = "3"), (numCards = 12))
     : num1to4.textContent === "3"
-    ? (num1to4.textContent = "2")
-    : (num1to4.textContent = "4");
+    ? ((num1to4.textContent = "2"), (numCards = 9))
+    : ((num1to4.textContent = "4"), (numCards = 15));
+
+  //   num1to4.textContent === "4"
+  //     ? (numCards = 15)
+  //     : num1to4.textContent === "3"
+  //     ? (numCards = 12)
+  //     : (numCards = 9);
 };
 playersButton.addEventListener("click", changeNum);
 
@@ -83,21 +95,10 @@ const shuffle = deck => {
   return shuffledDeck;
 };
 
-// Deal cards and record each player's hand
-const deal = () => {
-  clear();
-  let players = num1to4.textContent; // 4, 3, or 2 players
-  let numCards;
-  shuffle(newDeck());
-
+// Assign cards to players' hands and extra hand
+const assignCardsToPlayers = () => {
   // Select subset of shuffledDeck based on number of players
-  players === "4"
-    ? (numCards = 15)
-    : players === "3"
-    ? (numCards = 12)
-    : (numCards = 9);
   dealtDeck = shuffledDeck.filter((val, idx) => idx < numCards);
-
   // Assign card objects to players and extra hand
   switch (numCards) {
     case 15:
@@ -152,7 +153,13 @@ const deal = () => {
       });
       break;
   }
+};
 
+// Deal card objects
+const deal = () => {
+  clear();
+  shuffle(newDeck());
+  assignCardsToPlayers();
   // "Deal" cards to screen
   extraCard[0].textContent = extraHand[0].card;
   extraCard[1].textContent = extraHand[1].card;
@@ -160,7 +167,6 @@ const deal = () => {
   playerOneCard[0].textContent = dealerHand[0].card;
   playerOneCard[1].textContent = dealerHand[1].card;
   playerOneCard[2].textContent = dealerHand[2].card;
-
   // Style black cards
   aCard.forEach(val =>
     val.textContent.includes("♤")
@@ -176,43 +182,19 @@ const deal = () => {
 };
 dealButton.addEventListener("click", deal);
 
-// Select current player
-// const changeCurrentPlayer = () => {
-//   // Player One is initial current player after each deal
-//   if (player1Status.currentPlayer === true) {
-//     player2Status.currentPlayer = true;
-//     player1Status.currentPlayer = false;
-//   } else if (player2Status.currentPlayer === true && dealtDeck.length > 9) {
-//     player1Status.currentPlayer = true;
-//     player2Status.currentPlayer = false;
-//   } else if (player2Status.currentPlayer === true && dealtDeck.length > 9) {
-//     player3Status.currentPlayer = true;
-//     player2Status.currentPlayer = false;
-//   } else if (player3Status.currentPlayer === true && dealtDeck.length > 12) {
-//     player4Status.currentPlayer = true;
-//     player3Status.currentPlayer = false;
-//   } else {
-//     player1Status.currentPlayer = true;
-//     player4Status.currentPlayer = false;
-//   }
-// };
-
-// Current player can "buy" to skip turn without
-// exchanging any cards but must either exchange
-// cards or "hold" on player's next turn
-const buy = e => {};
-buyButton.addEventListener("click", buy);
-
 // Select/deselect cards to exchange and style elements
 const activeCard = e => {
-  dealtDeck.filter(val => {
+  dealtDeck.forEach(val => {
     if (e.target.textContent === val.card) {
-      val.selected === false ? (val.selected = true) : (val.selected = false);
+      return val.selected === false
+        ? ((val.selected = true), e.target.classList.add("is-active"))
+        : ((val.selected = false), e.target.classList.remove("is-active"));
 
-      val.selected === true
-        ? e.target.classList.add("is-active")
-        : e.target.classList.remove("is-active");
+      // return val.selected === true
+      //   ? e.target.classList.add("is-active")
+      //   : e.target.classList.remove("is-active");
     }
+    // return null; // eslint error: Expected to return a value at end of arrow function
   });
 };
 // Add event listener to aCard nodelist to trigger activeCard(e)
@@ -220,8 +202,12 @@ for (let i = 0; i < aCard.length; i++) {
   aCard[i].addEventListener("click", activeCard);
 }
 
+// Exchange 1 or 3 cards with extra hand
 // const exchangeCards = () => {
-//   if()
+//   if (activePlayer === 1) {
+
+//   }
+//   return null; // eslint error: Expected to return a value at end of arrow function
 // };
 // exchangeButton.addEventListener("click", exchangeCards);
 

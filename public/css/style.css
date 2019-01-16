@@ -218,8 +218,18 @@ section {
 
 .controlsDealing {
   display: grid;
-  grid-template-columns: repeat(2, 1fr [column-start]);
+  grid-template-columns: repeat(3, 1fr [column-start]);
   border: 0.2rem solid var(--blueGreen);
+}
+
+.activePlayer {
+  font-size: 1.5rem;
+  color: var(--blueGreen);
+  text-align: center;
+}
+
+.thisGuyActive {
+  color: var(--blue);
 }
 
 .cardsArea {
@@ -241,10 +251,10 @@ section {
 
 .cardsHidden {
   display: grid;
-  grid-template-columns: repeat(3, 1fr [column-start]);
-  grid-template-rows: [player-two-hand] 1fr [player-three-hand] 1fr [player-four-hand] 1fr;
-  column-gap: 25px;
-  row-gap: 25px;
+  grid-template-columns: repeat(9, 1fr [column-start]);
+  /* grid-template-rows: [player-two-hand] 1fr [player-three-hand] 1fr [player-four-hand] 1fr; */
+  column-gap: 5px;
+  /* row-gap: 25px; */
   justify-items: center;
   align-items: center;
   border: 0.2rem solid var(--pink);
@@ -268,12 +278,20 @@ section {
   padding: 0.2rem;
 }
 
+.playerTwoCard,
+.playerThreeCard,
+.playerFourCard {
+  width: 2.5rem;
+  height: 3.5rem;
+  color: var(--blueGreen);
+  background: var(--blueGreen);
+}
+
 #aCardBlack {
   color: var(--blueBlack);
 }
 
 .is-active {
-  background: var(--blue);
   border: 3px solid var(--pink);
 }
 
