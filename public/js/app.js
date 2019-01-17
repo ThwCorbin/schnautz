@@ -7,7 +7,7 @@ const dealButton = document.querySelector(".dealButton");
 // const exchangeButton = document.querySelector(".exchangeButton");
 const buyButton = document.querySelector(".buyButton");
 const holdButton = document.querySelector(".holdButton");
-let numCards;
+let numCards = 12;
 let shuffledDeck;
 let dealtDeck;
 // Hand variables
@@ -41,12 +41,6 @@ const changeNum = () => {
     : num1to4.textContent === "3"
     ? ((num1to4.textContent = "2"), (numCards = 9))
     : ((num1to4.textContent = "4"), (numCards = 15));
-
-  //   num1to4.textContent === "4"
-  //     ? (numCards = 15)
-  //     : num1to4.textContent === "3"
-  //     ? (numCards = 12)
-  //     : (numCards = 9);
 };
 playersButton.addEventListener("click", changeNum);
 
@@ -161,19 +155,19 @@ const deal = () => {
   shuffle(newDeck());
   assignCardsToPlayers();
   // "Deal" cards to screen
-  extraCard[0].textContent = extraHand[0].card;
   extraCard[1].textContent = extraHand[1].card;
   extraCard[2].textContent = extraHand[2].card;
+  extraCard[0].textContent = extraHand[0].card;
   playerOneCard[0].textContent = dealerHand[0].card;
   playerOneCard[1].textContent = dealerHand[1].card;
   playerOneCard[2].textContent = dealerHand[2].card;
   // Style black cards
   aCard.forEach(val =>
     val.textContent.includes("♤")
-      ? val.setAttribute("id", "aCardBlack")
+      ? val.classList.add("aCardBlack")
       : val.textContent.includes("♧")
-      ? val.setAttribute("id", "aCardBlack")
-      : val.removeAttribute("id", "aCardBlack")
+      ? val.classList.add("aCardBlack")
+      : val.classList.remove("aCardBlack")
   );
   console.log(dealtDeck);
   console.log(extraHand);
@@ -189,12 +183,8 @@ const activeCard = e => {
       return val.selected === false
         ? ((val.selected = true), e.target.classList.add("is-active"))
         : ((val.selected = false), e.target.classList.remove("is-active"));
-
-      // return val.selected === true
-      //   ? e.target.classList.add("is-active")
-      //   : e.target.classList.remove("is-active");
     }
-    // return null; // eslint error: Expected to return a value at end of arrow function
+    return null; // eslint error: Expected to return a value at end of arrow function
   });
 };
 // Add event listener to aCard nodelist to trigger activeCard(e)
