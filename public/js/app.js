@@ -28,6 +28,7 @@ let activeGame = false;
 let activeRound = false;
 
 const clearTable = () => {
+  activeRound = false;
   leftOfDealerHand.length = 0;
   acrossFromDealerHand.length = 0;
   rightOfDealerHand.length = 0;
@@ -204,9 +205,10 @@ const assignCardsToPlayers = () => {
 
 // Deal card objects
 const deal = () => {
-  if (activeGame) {
-    activeRound = true;
+  if (activeGame && activeRound === false) {
     clearTable();
+    activeRound = true;
+    dealButton.textContent = "Advice";
     shuffle(newDeck());
     assignCardsToPlayers();
     // "Deal" cards to screen
@@ -226,7 +228,9 @@ const deal = () => {
     );
     console.log(dealtDeck);
     console.log(extraHand);
-    return dealtDeck;
+    // return dealtDeck;
+  } else if (activeRound) {
+    alert("Study hard and keep your nose clean!");
   }
   // Note: deal() mutates object created in newDeck
 };
