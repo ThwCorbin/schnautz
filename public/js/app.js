@@ -1,16 +1,18 @@
-// "use strict";
-
-// Control and deck variables
+// Control and Players variables
+const beginEndGameButton = document.querySelector(".beginEndGameButton");
 const playersButton = document.querySelector(".playersButton");
-const num1to4 = document.querySelector(".num1to4");
 const dealButton = document.querySelector(".dealButton");
-// const exchangeButton = document.querySelector(".exchangeButton");
-const buyButton = document.querySelector(".buyButton");
-const holdButton = document.querySelector(".holdButton");
+const num1to4 = document.querySelector(".num1to4");
+const activePlayer = document.querySelector(".activePlayerName");
+const players = [];
+// Deck variables
+const exchangeButton = document.querySelector(".exchangeButton");
 let numCards = 12;
 let shuffledDeck;
 let dealtDeck;
 // Hand variables
+const buyButton = document.querySelector(".buyButton");
+const holdButton = document.querySelector(".holdButton");
 const leftOfDealerHand = [];
 const acrossFromDealerHand = [];
 const rightOfDealerHand = [];
@@ -20,29 +22,81 @@ const extraHand = [];
 const aCard = document.querySelectorAll(".aCard");
 const extraCard = document.querySelectorAll(".extraCard");
 const playerOneCard = document.querySelectorAll(".playerOneCard");
-// Player variables
-// let activePlayer = 0;
 
-// Reset
-const clear = () => {
+// Game variables and resets
+let activeGame = false;
+let activeRound = false;
+
+const clearTable = () => {
   leftOfDealerHand.length = 0;
   acrossFromDealerHand.length = 0;
   rightOfDealerHand.length = 0;
   dealerHand.length = 0;
   extraHand.length = 0;
-  aCard.forEach(val => val.classList.remove("is-active"));
+  aCard.forEach(val => {
+    val.classList.remove("is-active");
+    val.textContent = "";
+  });
+};
+
+const resetGame = () => {
+  activeGame = false;
+  players.length = 0;
+  dealButton.textContent = "Players?";
+  beginEndGameButton.textContent = "Start";
+  clearTable();
+};
+
+// Generate players
+const generatePlayers = numPlayers => {
+  clearTable();
+  for (let i = 1; i <= numPlayers; i++) {
+    players.push({
+      player: i,
+      position:
+        i === 1
+          ? "dealer"
+          : i === 2
+          ? "leftOfDealer"
+          : i === 3
+          ? "acrossFromDealer"
+          : "rightOfDealer",
+      activePlayer: i === 2,
+      buyLastTurn: false,
+      holdLastTurn: false,
+      tokens: 3,
+      currentScore: null
+    });
+  }
+  console.log(players);
 };
 
 // Change number of players and number of cards to deal
-const changeNum = () => {
-  clear();
-  return num1to4.textContent === "4"
-    ? ((num1to4.textContent = "3"), (numCards = 12))
-    : num1to4.textContent === "3"
-    ? ((num1to4.textContent = "2"), (numCards = 9))
-    : ((num1to4.textContent = "4"), (numCards = 15));
+const changePlayersNum = () => {
+  if (!activeGame) {
+    num1to4.textContent === "4"
+      ? ((num1to4.textContent = "3"), (numCards = 12))
+      : num1to4.textContent === "3"
+      ? ((num1to4.textContent = "2"), (numCards = 9))
+      : ((num1to4.textContent = "4"), (numCards = 15));
+  }
 };
-playersButton.addEventListener("click", changeNum);
+playersButton.addEventListener("click", changePlayersNum);
+
+// Begin and End Play
+const beginEndGame = () => {
+  if (!activeGame) {
+    activeGame = true;
+    generatePlayers(Number(num1to4.textContent));
+    playersButton.textContent = "Deal";
+    beginEndGameButton.textContent = "End Game";
+  } else if (activeGame && beginEndGameButton.textContent === "End Game") {
+    beginEndGameButton.textContent = "Sure?";
+  } else {
+    resetGame();
+  }
+};
+beginEndGameButton.addEventListener("click", beginEndGame);
 
 // Generate new deck to pass to shuffle function
 const newDeck = () => {
@@ -57,8 +111,7 @@ const newDeck = () => {
         rank: ranks[i],
         suit: suits[j],
         cardPosition: "",
-        selected: false,
-        buyLastTurn: false
+        selected: false
       });
     }
   }
@@ -151,27 +204,30 @@ const assignCardsToPlayers = () => {
 
 // Deal card objects
 const deal = () => {
-  clear();
-  shuffle(newDeck());
-  assignCardsToPlayers();
-  // "Deal" cards to screen
-  extraCard[1].textContent = extraHand[1].card;
-  extraCard[2].textContent = extraHand[2].card;
-  extraCard[0].textContent = extraHand[0].card;
-  playerOneCard[0].textContent = dealerHand[0].card;
-  playerOneCard[1].textContent = dealerHand[1].card;
-  playerOneCard[2].textContent = dealerHand[2].card;
-  // Style black cards
-  aCard.forEach(val =>
-    val.textContent.includes("♤")
-      ? val.classList.add("aCardBlack")
-      : val.textContent.includes("♧")
-      ? val.classList.add("aCardBlack")
-      : val.classList.remove("aCardBlack")
-  );
-  console.log(dealtDeck);
-  console.log(extraHand);
-  return dealtDeck;
+  if (activeGame) {
+    activeRound = true;
+    clearTable();
+    shuffle(newDeck());
+    assignCardsToPlayers();
+    // "Deal" cards to screen
+    extraCard[1].textContent = extraHand[1].card;
+    extraCard[2].textContent = extraHand[2].card;
+    extraCard[0].textContent = extraHand[0].card;
+    playerOneCard[0].textContent = dealerHand[0].card;
+    playerOneCard[1].textContent = dealerHand[1].card;
+    playerOneCard[2].textContent = dealerHand[2].card;
+    // Style black cards
+    aCard.forEach(val =>
+      val.textContent.includes("♤")
+        ? val.classList.add("aCardBlack")
+        : val.textContent.includes("♧")
+        ? val.classList.add("aCardBlack")
+        : val.classList.remove("aCardBlack")
+    );
+    console.log(dealtDeck);
+    console.log(extraHand);
+    return dealtDeck;
+  }
   // Note: deal() mutates object created in newDeck
 };
 dealButton.addEventListener("click", deal);
@@ -193,13 +249,13 @@ for (let i = 0; i < aCard.length; i++) {
 }
 
 // Exchange 1 or 3 cards with extra hand
-// const exchangeCards = () => {
-//   if (activePlayer === 1) {
-
-//   }
-//   return null; // eslint error: Expected to return a value at end of arrow function
-// };
-// exchangeButton.addEventListener("click", exchangeCards);
+const exchangeCards = () => {
+  if (activeGame && activeRound) {
+    // return null; // eslint error: Expected to return a value at end of arrow function
+    // change activePlayer to next player
+  }
+};
+exchangeButton.addEventListener("click", exchangeCards);
 
 // Alternatives for suits
 // White club suit 	♧ 	U+2667 	&#9831 -- Black club suit 	♣ 	U+2663 	&clubs

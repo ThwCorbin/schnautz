@@ -222,13 +222,13 @@ section {
   border: 0.2rem solid var(--blueGreen);
 }
 
-.activePlayer {
+.playersInfo {
   font-size: 1.5rem;
   color: var(--blueGreen);
   text-align: center;
 }
 
-.thisGuyActive {
+.playerData {
   color: var(--blue);
 }
 
