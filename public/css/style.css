@@ -210,62 +210,80 @@ body {
 }
 
 /* Main section  ****************************************************** */
-section {
-  width: 320px;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-}
-
-.controlsDealing {
+.mainGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr [column-start]);
+  grid-template-columns: repeat(4, 1fr);
+  width: 640px;
+  row-gap: 0.25rem;
   border: 0.2rem solid var(--blueGreen);
 }
 
-.playersInfo {
-  font-size: 1.5rem;
-  color: var(--blueGreen);
-  text-align: center;
-}
-
-.playerData {
-  color: var(--blue);
-}
-
-.cardsArea {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr [column-start]);
-  grid-template-rows: [common-hand] 1fr [player-one-hand] 1fr;
-  column-gap: 25px;
-  row-gap: 25px;
-  justify-items: center;
-  align-items: center;
-  border: 0.2rem solid var(--pink);
+.controls {
+  display: flex;
+  flex-direction: column;
+  border: 0.2rem solid var(--grey);
 }
 
 .controlsCardPlay {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr [column-start]);
-  border: 0.2rem solid var(--blueGreen);
+  grid-column-start: 2;
+  grid-column-end: 3;
 }
 
-.cardsHidden {
-  display: grid;
-  grid-template-columns: repeat(9, 1fr [column-start]);
-  /* grid-template-rows: [player-two-hand] 1fr [player-three-hand] 1fr [player-four-hand] 1fr; */
-  column-gap: 5px;
-  /* row-gap: 25px; */
-  justify-items: center;
-  align-items: center;
-  border: 0.2rem solid var(--pink);
+.controlsDealing {
+  grid-column-start: 3;
+  grid-column-end: 4;
 }
 
 .control-btn {
-  font-size: 2rem;
+  font-size: 1rem;
   color: var(--pink);
   border-radius: 5%;
   margin: 0.1rem;
   padding: 0;
+}
+
+.playersNum {
+  font-size: 1rem;
+  color: var(--blue);
+  text-align: center;
+}
+
+.playerNames {
+  grid-column-start: 2;
+  grid-column-end: 4;
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+}
+
+.playerNamesOneTwo {
+  align-items: flex-end;
+}
+
+.cardsArea {
+  grid-column-start: 2;
+  grid-column-end: 4;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 0.5rem;
+  border: 0.2rem solid var(--pink);
+}
+
+.playerArea {
+  display: flex;
+}
+
+.playerTwoArea,
+.playerFourArea {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  justify-content: flex-end;
+}
+
+.extraArea {
+  grid-column-start: 1;
+  grid-column-end: 5;
+  justify-self: center;
 }
 
 .aCard {
@@ -276,15 +294,6 @@ section {
   border: 0.1rem solid var(--green);
   border-radius: 5%;
   padding: 0.2rem;
-}
-
-.playerTwoCard,
-.playerThreeCard,
-.playerFourCard {
-  width: 2.5rem;
-  height: 3.5rem;
-  color: var(--blueGreen);
-  background: var(--blueGreen);
 }
 
 .aCardBlack {
@@ -298,9 +307,3 @@ section {
 footer {
   color: var(--blue);
 }
-
-/* 
-  z-index: 1;
-  box-shadow: 2px 2px 2px var(--blueGreen);
-  text-shadow: 1px 0 var(--blueGreenLight);
-*/

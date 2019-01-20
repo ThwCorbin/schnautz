@@ -3,14 +3,15 @@ const beginEndGameButton = document.querySelector(".beginEndGameButton");
 const playersButton = document.querySelector(".playersButton");
 const dealButton = document.querySelector(".dealButton");
 const num1to4 = document.querySelector(".num1to4");
-const activePlayer = document.querySelector(".activePlayerName");
+const activePlayerName = document.querySelector(".activePlayerName");
 const players = [];
+let activePlayer = "leftOfDealer";
 // Deck variables
-const exchangeButton = document.querySelector(".exchangeButton");
 let numCards = 12;
 let shuffledDeck;
 let dealtDeck;
 // Hand variables
+const exchangeButton = document.querySelector(".exchangeButton");
 const buyButton = document.querySelector(".buyButton");
 const holdButton = document.querySelector(".holdButton");
 const leftOfDealerHand = [];
@@ -22,6 +23,9 @@ const extraHand = [];
 const aCard = document.querySelectorAll(".aCard");
 const extraCard = document.querySelectorAll(".extraCard");
 const playerOneCard = document.querySelectorAll(".playerOneCard");
+const playerTwoCard = document.querySelectorAll(".playerTwoCard");
+const playerThreeCard = document.querySelectorAll(".playerThreeCard");
+const playerFourCard = document.querySelectorAll(".playerFourCard");
 
 // Game variables and resets
 let activeGame = false;
@@ -212,12 +216,44 @@ const deal = () => {
     shuffle(newDeck());
     assignCardsToPlayers();
     // "Deal" cards to screen
-    extraCard[1].textContent = extraHand[1].card;
-    extraCard[2].textContent = extraHand[2].card;
-    extraCard[0].textContent = extraHand[0].card;
-    playerOneCard[0].textContent = dealerHand[0].card;
-    playerOneCard[1].textContent = dealerHand[1].card;
-    playerOneCard[2].textContent = dealerHand[2].card;
+    if (numCards === 15) {
+      for (let i = 0; i <= 2; i++) {
+        extraCard[i].textContent = extraHand[i].card;
+        playerOneCard[i].textContent = dealerHand[i].card;
+        playerTwoCard[i].textContent = leftOfDealerHand[i].card;
+        playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
+        playerFourCard[i].textContent = rightOfDealerHand[i].card;
+      }
+    } else if (numCards === 12) {
+      for (let i = 0; i <= 2; i++) {
+        extraCard[i].textContent = extraHand[i].card;
+        playerOneCard[i].textContent = dealerHand[i].card;
+        playerTwoCard[i].textContent = leftOfDealerHand[i].card;
+        playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
+      }
+    } else {
+      for (let i = 0; i <= 2; i++) {
+        extraCard[i].textContent = extraHand[i].card;
+        playerOneCard[i].textContent = dealerHand[i].card;
+        playerTwoCard[i].textContent = leftOfDealerHand[i].card;
+      }
+    }
+    // extraCard[0].textContent = extraHand[0].card;
+    // extraCard[1].textContent = extraHand[1].card;
+    // extraCard[2].textContent = extraHand[2].card;
+    // playerOneCard[0].textContent = dealerHand[0].card;
+    // playerOneCard[1].textContent = dealerHand[1].card;
+    // playerOneCard[2].textContent = dealerHand[2].card;
+    // playerTwoCard[0].textContent = leftOfDealerHand[0].card;
+    // playerTwoCard[1].textContent = leftOfDealerHand[1].card;
+    // playerTwoCard[2].textContent = leftOfDealerHand[2].card;
+    // playerThreeCard[0].textContent = acrossFromDealerHand[0].card;
+    // playerThreeCard[1].textContent = acrossFromDealerHand[1].card;
+    // playerThreeCard[2].textContent = acrossFromDealerHand[2].card;
+    // playerFourCard[0].textContent = rightOfDealerHand[0].card;
+    // playerFourCard[1].textContent = rightOfDealerHand[1].card;
+    // playerFourCard[2].textContent = rightOfDealerHand[2].card;
+
     // Style black cards
     aCard.forEach(val =>
       val.textContent.includes("♤")
@@ -228,9 +264,10 @@ const deal = () => {
     );
     console.log(dealtDeck);
     console.log(extraHand);
-    // return dealtDeck;
   } else if (activeRound) {
-    alert("Study hard and keep your nose clean!");
+    alert(
+      "Exchange either one cards or three cards from your hand with the extra hand. But you can't exchange two cards!"
+    );
   }
   // Note: deal() mutates object created in newDeck
 };
@@ -251,6 +288,26 @@ const activeCard = e => {
 for (let i = 0; i < aCard.length; i++) {
   aCard[i].addEventListener("click", activeCard);
 }
+
+// Change the active player
+changeActivePlayer = () => {
+  activePlayer === "dealer" // leftOfDealer is always after dealer
+    ? (activePlayer = "leftOfDealer")
+    : activePlayer === "leftOfDealer" && numCards === 9 // when two players
+    ? (activePlayer = "dealer")
+    : activePlayer === "leftOfDealer" // when three or four players
+    ? (activePlayer = "acrossFromDealer")
+    : activePlayer === "acrossFromDealer" && numCards === 12 // when three players
+    ? (activePlayer = "dealer")
+    : activePlayer === "acrossFromDealer" // when four players
+    ? (activePlayer = "rightOfDealer")
+    : (activePlayer = "dealer"); // dealer is always after rightOfDealer
+};
+
+// const buy = () => {
+//   players.filter((val, idx) => {
+// See changeActivePlayer above to figure out...
+// };
 
 // Exchange 1 or 3 cards with extra hand
 const exchangeCards = () => {

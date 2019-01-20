@@ -12,38 +12,50 @@
   <body>
     <nav><h1 class="title">Schnautz</h1></nav>
     <main class="mainGrid">
-      <section class="controlsDealing">
-        <div class="playersInfo">
-          <h2>Players: <span class="num1to4 playerData">3</span></h2>
-          <h2 class="activePlayerName">Active Player:</h2>
-          <h2 class="playerData">Wait for it</h2>
-        </div>
-        <button class="playersButton dealButton control-btn">Players?</button>
-        <button class="beginEndGameButton control-btn">Start</button>
-      </section>
-      <section class="cardsArea">
-        <div class="aCard extraCard"></div>
-        <div class="aCard extraCard"></div>
-        <div class="aCard extraCard"></div>
-        <div class="aCard playerOneCard"></div>
-        <div class="aCard playerOneCard"></div>
-        <div class="aCard playerOneCard"></div>
-      </section>
-      <section class="controlsCardPlay">
+      <section class="controlsCardPlay controls">
         <button class="exchangeButton  control-btn">Exchange</button>
         <button class="buyButton  control-btn">Buy</button>
         <button class="holdButton control-btn">Hold</button>
       </section>
-      <section class="cardsHidden">
-        <div class="aCard playerTwoCard"></div>
-        <div class="aCard playerTwoCard"></div>
-        <div class="aCard playerTwoCard"></div>
-        <div class="aCard playerThreeCard"></div>
-        <div class="aCard playerThreeCard"></div>
-        <div class="aCard playerThreeCard"></div>
-        <div class="aCard playerFourCard"></div>
-        <div class="aCard playerFourCard"></div>
-        <div class="aCard playerFourCard"></div>
+      <section class="controlsDealing controls">
+        <button class="playersButton dealButton control-btn">Players?</button>
+        <h5 class="playersNum"><span class="num1to4 playerData">3</span></h5>
+        <button class="beginEndGameButton control-btn">Begin</button>
+      </section>
+      <section class="playerNamesOneTwo playerNames">
+        <h5>Player One</h5>
+        <h5>Player Two</h5>
+      </section>
+      <section class="cardsArea">
+        <ul class="playerOneArea playerArea">
+          <li class="aCard playerOneCard"></li>
+          <li class="aCard playerOneCard"></li>
+          <li class="aCard playerOneCard"></li>
+        </ul>
+        <ul class="playerTwoArea playerArea">
+          <li class="aCard playerTwoCard"></li>
+          <li class="aCard playerTwoCard"></li>
+          <li class="aCard playerTwoCard"></li>
+        </ul>
+        <ul class="extraArea playerArea">
+          <li class="aCard extraCard"></li>
+          <li class="aCard extraCard"></li>
+          <li class="aCard extraCard"></li>
+        </ul>
+        <ul class="playerThreeArea playerArea">
+          <li class="aCard playerThreeCard"></li>
+          <li class="aCard playerThreeCard"></li>
+          <li class="aCard playerThreeCard"></li>
+        </ul>
+        <ul class="playerFourArea playerArea">
+          <li class="aCard playerFourCard"></li>
+          <li class="aCard playerFourCard"></li>
+          <li class="aCard playerFourCard"></li>
+        </ul>
+      </section>
+      <section class="playerNamesThreeFour playerNames">
+        <h5>Player Three</h5>
+        <h5>Player Four</h5>
       </section>
     </main>
 
