@@ -267,14 +267,17 @@ body {
   grid-template-columns: repeat(3, 1fr);
   row-gap: 0.5rem;
   border: 0.2rem solid var(--pink);
+  padding: 0.5rem;
 }
 
 .playerArea {
   display: flex;
+  border: 0.2rem solid var(--blue);
+  padding: 0.5rem;
 }
 
 .playerTwoArea,
-.playerFourArea {
+.playerThreeArea {
   grid-column-start: 3;
   grid-column-end: 4;
   justify-content: flex-end;

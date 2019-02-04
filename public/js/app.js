@@ -3,7 +3,6 @@ const beginEndGameButton = document.querySelector(".beginEndGameButton");
 const playersButton = document.querySelector(".playersButton");
 const dealButton = document.querySelector(".dealButton");
 const num1to4 = document.querySelector(".num1to4");
-const activePlayerName = document.querySelector(".activePlayerName");
 const players = [];
 let activePlayer = "leftOfDealer";
 // Deck variables
@@ -238,21 +237,6 @@ const deal = () => {
         playerTwoCard[i].textContent = leftOfDealerHand[i].card;
       }
     }
-    // extraCard[0].textContent = extraHand[0].card;
-    // extraCard[1].textContent = extraHand[1].card;
-    // extraCard[2].textContent = extraHand[2].card;
-    // playerOneCard[0].textContent = dealerHand[0].card;
-    // playerOneCard[1].textContent = dealerHand[1].card;
-    // playerOneCard[2].textContent = dealerHand[2].card;
-    // playerTwoCard[0].textContent = leftOfDealerHand[0].card;
-    // playerTwoCard[1].textContent = leftOfDealerHand[1].card;
-    // playerTwoCard[2].textContent = leftOfDealerHand[2].card;
-    // playerThreeCard[0].textContent = acrossFromDealerHand[0].card;
-    // playerThreeCard[1].textContent = acrossFromDealerHand[1].card;
-    // playerThreeCard[2].textContent = acrossFromDealerHand[2].card;
-    // playerFourCard[0].textContent = rightOfDealerHand[0].card;
-    // playerFourCard[1].textContent = rightOfDealerHand[1].card;
-    // playerFourCard[2].textContent = rightOfDealerHand[2].card;
 
     // Style black cards
     aCard.forEach(val =>
@@ -289,8 +273,15 @@ for (let i = 0; i < aCard.length; i++) {
   aCard[i].addEventListener("click", activeCard);
 }
 
+// Change the dealer
+// const changeDealer {
+// or just change a dealer variable
+// }
+
 // Change the active player
-changeActivePlayer = () => {
+// ...or should this just be player 1 2 3 4
+// ...and then use player array of objects to track current dealer etc.
+const changeActivePlayer = () => {
   activePlayer === "dealer" // leftOfDealer is always after dealer
     ? (activePlayer = "leftOfDealer")
     : activePlayer === "leftOfDealer" && numCards === 9 // when two players
