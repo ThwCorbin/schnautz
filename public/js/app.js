@@ -25,6 +25,8 @@ const playerOneCard = document.querySelectorAll(".playerOneCard");
 const playerTwoCard = document.querySelectorAll(".playerTwoCard");
 const playerThreeCard = document.querySelectorAll(".playerThreeCard");
 const playerFourCard = document.querySelectorAll(".playerFourCard");
+const cardsToExtraHand = [];
+const cardsFromExtraHand = [];
 
 // Game variables and resets
 let activeGame = false;
@@ -41,6 +43,8 @@ const clearTable = () => {
     val.classList.remove("is-active");
     val.textContent = "";
   });
+  cardsToExtraHand.length = 0;
+  cardsFromExtraHand.length = 0;
 };
 
 const resetGame = () => {
@@ -257,16 +261,45 @@ const deal = () => {
 };
 dealButton.addEventListener("click", deal);
 
+// Manage cards that current player will be exchange with extra hand
+const manageCardsToExchange = (fromExtra, isSelected, cardObj) => {
+  fromExtra && isSelected
+    ? cardsFromExtraHand.push(cardObj.card)
+    : fromExtra && !isSelected
+    ? cardsFromExtraHand.splice(cardsFromExtraHand.indexOf(cardObj.card), 1)
+    : !fromExtra && isSelected
+    ? cardsToExtraHand.push(cardObj.card)
+    : cardsToExtraHand.splice(cardsToExtraHand.indexOf(cardObj.card), 1);
+};
+
 // Select/deselect cards to exchange and style elements
 const activeCard = e => {
   dealtDeck.forEach(val => {
-    if (e.target.textContent === val.card) {
-      return val.selected === false
-        ? ((val.selected = true), e.target.classList.add("is-active"))
-        : ((val.selected = false), e.target.classList.remove("is-active"));
+    if (
+      e.target.className.includes("extraCard") &&
+      e.target.textContent === val.card
+    ) {
+      // Modifies target if card is in the extra hand
+      val.selected === false
+        ? ((val.selected = true),
+          e.target.classList.add("is-active"),
+          manageCardsToExchange(true, true, val))
+        : ((val.selected = false),
+          e.target.classList.remove("is-active"),
+          manageCardsToExchange(true, false, val));
+    } else if (e.target.textContent === val.card) {
+      // Modifies target if card is in a player's hand
+      val.selected === false
+        ? ((val.selected = true),
+          e.target.classList.add("is-active"),
+          manageCardsToExchange(false, true, val))
+        : ((val.selected = false),
+          e.target.classList.remove("is-active"),
+          manageCardsToExchange(false, false, val));
     }
-    return null; // eslint error: Expected to return a value at end of arrow function
   });
+  console.log(cardsToExtraHand);
+  console.log(cardsFromExtraHand);
 };
 // Add event listener to aCard nodelist to trigger activeCard(e)
 for (let i = 0; i < aCard.length; i++) {
