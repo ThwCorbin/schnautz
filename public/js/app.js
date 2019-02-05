@@ -18,6 +18,13 @@ const acrossFromDealerHand = [];
 const rightOfDealerHand = [];
 const dealerHand = [];
 const extraHand = [];
+const allHands = [
+  leftOfDealerHand,
+  acrossFromDealerHand,
+  rightOfDealerHand,
+  dealerHand,
+  extraHand
+];
 // Card variables
 const aCard = document.querySelectorAll(".aCard");
 const extraCard = document.querySelectorAll(".extraCard");
@@ -106,7 +113,7 @@ const beginEndGame = () => {
 };
 beginEndGameButton.addEventListener("click", beginEndGame);
 
-// Generate new deck to pass to shuffle function
+// Generate new deck (an array of card objects) to pass to shuffle function
 const newDeck = () => {
   const suits = ["♧", "♢", "♡", "♤"];
   const ranks = ["7", "8", "9", "10", "J", "Q", "K", "A"];
@@ -126,7 +133,8 @@ const newDeck = () => {
   return deck;
 };
 
-// Generate shuffled deck from new deck to pass to deal function -- Fisher–Yates Shuffle
+// Generate shuffled deck from newDeck()'s array of card objects to pass to deal function
+// Fisher–Yates Shuffle
 const shuffle = deck => {
   let numUnshuffledCards = deck.length;
   // 32 card deck 7 through ace
@@ -152,58 +160,59 @@ const shuffle = deck => {
 
 // Assign cards to players' hands and extra hand
 const assignCardsToPlayers = () => {
+  // Note: assignCardsToPlayers() mutates the objects that newDeck() created inside an array
   // Select subset of shuffledDeck based on number of players
-  dealtDeck = shuffledDeck.filter((val, idx) => idx < numCards);
+  dealtDeck = shuffledDeck.filter((cardObj, idx) => idx < numCards);
   // Assign card objects to players and extra hand
   switch (numCards) {
     case 15:
-      dealtDeck.forEach((val, idx) => {
+      dealtDeck.forEach((cardObj, idx) => {
         if (idx === 0 || idx === 5 || idx === 10) {
-          val.cardPosition = "leftOfDealerHand";
-          leftOfDealerHand.push(val);
+          cardObj.cardPosition = "leftOfDealerHand";
+          leftOfDealerHand.push(cardObj);
         } else if (idx === 1 || idx === 6 || idx === 11) {
-          val.cardPosition = "acrossFromDealerHand";
-          acrossFromDealerHand.push(val);
+          cardObj.cardPosition = "acrossFromDealerHand";
+          acrossFromDealerHand.push(cardObj);
         } else if (idx === 2 || idx === 7 || idx === 12) {
-          val.cardPosition = "rightOfDealerHand";
-          rightOfDealerHand.push(val);
+          cardObj.cardPosition = "rightOfDealerHand";
+          rightOfDealerHand.push(cardObj);
         } else if (idx === 3 || idx === 8 || idx === 13) {
-          val.cardPosition = "dealerHand";
-          dealerHand.push(val);
+          cardObj.cardPosition = "dealerHand";
+          dealerHand.push(cardObj);
         } else {
-          val.cardPosition = "extraHand";
-          extraHand.push(val);
+          cardObj.cardPosition = "extraHand";
+          extraHand.push(cardObj);
         }
       });
       break;
     case 12:
-      dealtDeck.forEach((val, idx) => {
+      dealtDeck.forEach((cardObj, idx) => {
         if (idx === 0 || idx === 4 || idx === 8) {
-          val.cardPosition = "leftOfDealerHand";
-          leftOfDealerHand.push(val);
+          cardObj.cardPosition = "leftOfDealerHand";
+          leftOfDealerHand.push(cardObj);
         } else if (idx === 1 || idx === 5 || idx === 9) {
-          val.cardPosition = "acrossFromDealerHand";
-          acrossFromDealerHand.push(val);
+          cardObj.cardPosition = "acrossFromDealerHand";
+          acrossFromDealerHand.push(cardObj);
         } else if (idx === 2 || idx === 6 || idx === 10) {
-          val.cardPosition = "dealerHand";
-          dealerHand.push(val);
+          cardObj.cardPosition = "dealerHand";
+          dealerHand.push(cardObj);
         } else {
-          val.cardPosition = "extraHand";
-          extraHand.push(val);
+          cardObj.cardPosition = "extraHand";
+          extraHand.push(cardObj);
         }
       });
       break;
     default:
-      dealtDeck.forEach((val, idx) => {
+      dealtDeck.forEach((cardObj, idx) => {
         if (idx === 0 || idx === 3 || idx === 6) {
-          val.cardPosition = "leftOfDealerHand";
-          leftOfDealerHand.push(val);
+          cardObj.cardPosition = "leftOfDealerHand";
+          leftOfDealerHand.push(cardObj);
         } else if (idx === 1 || idx === 4 || idx === 7) {
-          val.cardPosition = "dealerHand";
-          dealerHand.push(val);
+          cardObj.cardPosition = "dealerHand";
+          dealerHand.push(cardObj);
         } else {
-          val.cardPosition = "extraHand";
-          extraHand.push(val);
+          cardObj.cardPosition = "extraHand";
+          extraHand.push(cardObj);
         }
       });
       break;
@@ -257,7 +266,6 @@ const deal = () => {
       "Exchange either one cards or three cards from your hand with the extra hand. But you can't exchange two cards!"
     );
   }
-  // Note: deal() mutates object created in newDeck
 };
 dealButton.addEventListener("click", deal);
 
@@ -272,38 +280,39 @@ const manageCardsToExchange = (fromExtra, isSelected, cardObj) => {
     : cardsToExtraHand.splice(cardsToExtraHand.indexOf(cardObj.card), 1);
 };
 
-// Select/deselect cards to exchange and style elements
-const activeCard = e => {
-  dealtDeck.forEach(val => {
+// Select and deselect cards in active player's and extra hands
+const selectDeselectCard = e => {
+  dealtDeck.forEach(cardObj => {
+    // Toggles boolean "selected" property in card objects
+    // Toggles event target's classList "is-active" for styling
+    // Calls manageCardsToExchange with params (fromExtra, isSelected, cardObj)
     if (
       e.target.className.includes("extraCard") &&
-      e.target.textContent === val.card
+      e.target.textContent === cardObj.card
     ) {
-      // Modifies target if card is in the extra hand
-      val.selected === false
-        ? ((val.selected = true),
+      cardObj.selected === false
+        ? ((cardObj.selected = true),
           e.target.classList.add("is-active"),
-          manageCardsToExchange(true, true, val))
-        : ((val.selected = false),
+          manageCardsToExchange(true, true, cardObj))
+        : ((cardObj.selected = false),
           e.target.classList.remove("is-active"),
-          manageCardsToExchange(true, false, val));
-    } else if (e.target.textContent === val.card) {
-      // Modifies target if card is in a player's hand
-      val.selected === false
-        ? ((val.selected = true),
+          manageCardsToExchange(true, false, cardObj));
+    } else if (e.target.textContent === cardObj.card) {
+      cardObj.selected === false
+        ? ((cardObj.selected = true),
           e.target.classList.add("is-active"),
-          manageCardsToExchange(false, true, val))
-        : ((val.selected = false),
+          manageCardsToExchange(false, true, cardObj))
+        : ((cardObj.selected = false),
           e.target.classList.remove("is-active"),
-          manageCardsToExchange(false, false, val));
+          manageCardsToExchange(false, false, cardObj));
     }
   });
   console.log(cardsToExtraHand);
   console.log(cardsFromExtraHand);
 };
-// Add event listener to aCard nodelist to trigger activeCard(e)
+// Add event listener to aCard nodelist to trigger selectDeselectCard(e)
 for (let i = 0; i < aCard.length; i++) {
-  aCard[i].addEventListener("click", activeCard);
+  aCard[i].addEventListener("click", selectDeselectCard);
 }
 
 // Change the dealer
@@ -329,15 +338,46 @@ const changeActivePlayer = () => {
 };
 
 // const buy = () => {
-//   players.filter((val, idx) => {
-// See changeActivePlayer above to figure out...
+// if player did not buy or hold on last turn...
+// ...change players array buy property to true for current player
+// changeActivePlayer();
+// need to change buy property back to false after player's next turn?
 // };
 
-// Exchange 1 or 3 cards with extra hand
+// Exchange 1 or 3 cards from a player's hand with the extra hand
 const exchangeCards = () => {
   if (activeGame && activeRound) {
-    // return null; // eslint error: Expected to return a value at end of arrow function
-    // change activePlayer to next player
+    //if all three active just swop between arrays
+    //if one active find the one in each and swop
+    //if 0 or two alert message
+    for (let cardObj of dealtDeck) {
+    }
+    // if(activePlayer === "leftOfDealer") {
+    //   for(let cardCurrent of leftOfDealerHand) {
+    //     for(let cardNew of cardsFromExtraHand )
+    //   }
+    // }
+    // for (let hand of allHands) {
+    //   console.log(hand);
+    // }
+    // console.log(activePlayer);
+    console.log(leftOfDealerHand);
+    // leftOfDealerHand
+    // acrossFromDealerHand
+    // rightOfDealerHand
+    // dealerHand
+    // extraHand
+    // for(let cardObj of dealtDeck){
+    //   cardObj.position === activePlayer
+
+    // based on activePlayer string value...
+    // use values from cardsToExtraHand and cardsFromExtraHand arrays...
+    // to update cardPosition property in card objects in dealtDeck array...
+    // and to update DOM with changes to aCard textContent...
+    // render changes
+    // changeActivePlayer();
+  } else {
+    alert("Players have no cards to exchange");
   }
 };
 exchangeButton.addEventListener("click", exchangeCards);
