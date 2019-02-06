@@ -188,6 +188,7 @@ textarea {
   --green: #06b130;
   --greenLight: #00ff55;
   --pink: #f80d83;
+  --violet: #d135f8;
   --pinkLight: #fdceea;
   --grey: #afabab;
   --white: #ffffff;
@@ -287,6 +288,10 @@ body {
   grid-column-start: 1;
   grid-column-end: 5;
   justify-self: center;
+}
+
+.active-area {
+  border-color: var(--violet);
 }
 
 .aCard {

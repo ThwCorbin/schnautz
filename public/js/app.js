@@ -13,6 +13,11 @@ let dealtDeck;
 const exchangeButton = document.querySelector(".exchangeButton");
 const buyButton = document.querySelector(".buyButton");
 const holdButton = document.querySelector(".holdButton");
+const playerTwoArea = document.querySelector(".playerTwoArea");
+const playerThreeArea = document.querySelector(".playerThreeArea");
+const playerFourArea = document.querySelector(".playerFourArea");
+const playerOneArea = document.querySelector(".playerOneArea");
+const extraArea = document.querySelector(".extraArea");
 const leftOfDealerHand = [];
 const acrossFromDealerHand = [];
 const rightOfDealerHand = [];
@@ -83,14 +88,14 @@ const generatePlayers = numPlayers => {
           : i === 3
           ? "acrossFromDealer"
           : "rightOfDealer",
-      activePlayer: i === 2,
+      activePlayer: i === 2, // default leftOfDealer
       buyLastTurn: false,
       holdLastTurn: false,
       tokens: 3,
       currentScore: null
     });
   }
-  // console.log(players);
+  console.log(players);
 };
 
 // Change number of players and number of cards to deal
@@ -274,6 +279,7 @@ const deal = () => {
     }
     // Style card colors
     styleBlackCards();
+    playerTwoArea.classList.add("active-area");
     // console.log(dealtDeck);
     console.log(extraHand);
   } else if (activeRound) {
@@ -286,17 +292,48 @@ dealButton.addEventListener("click", deal);
 // ...or should this just be player 1 2 3 4
 // ...and then use player array of objects to track current dealer etc.
 const changeActivePlayer = () => {
-  activePlayer === "dealer" // leftOfDealer is always after dealer
-    ? (activePlayer = "leftOfDealer")
-    : activePlayer === "leftOfDealer" && numCards === 9 // when two players
-    ? (activePlayer = "dealer")
-    : activePlayer === "leftOfDealer" // when three or four players
-    ? (activePlayer = "acrossFromDealer")
-    : activePlayer === "acrossFromDealer" && numCards === 12 // when three players
-    ? (activePlayer = "dealer")
-    : activePlayer === "acrossFromDealer" // when four players
-    ? (activePlayer = "rightOfDealer")
-    : (activePlayer = "dealer"); // dealer is always after rightOfDealer
+  activePlayer === "dealer"
+    ? // leftOfDealer is always after dealer
+      ((activePlayer = "leftOfDealer"),
+      (players[0].activePlayer = false),
+      (players[1].activePlayer = true),
+      playerOneArea.classList.remove("active-area"),
+      playerTwoArea.classList.add("active-area"))
+    : activePlayer === "leftOfDealer" && numCards === 9
+    ? // when there are two players, dealer is after leftOfDealer
+      ((activePlayer = "dealer"),
+      (players[1].activePlayer = false),
+      (players[0].activePlayer = true),
+      playerTwoArea.classList.remove("active-area"),
+      playerOneArea.classList.add("active-area"))
+    : activePlayer === "leftOfDealer"
+    ? // when there are three or four players, accrossFromDealer is next
+      ((activePlayer = "acrossFromDealer"),
+      (players[1].activePlayer = false),
+      (players[2].activePlayer = true),
+      playerTwoArea.classList.remove("active-area"),
+      playerThreeArea.classList.add("active-area"))
+    : activePlayer === "acrossFromDealer" && numCards === 12
+    ? // when there three players, dealer is next
+      ((activePlayer = "dealer"),
+      (players[2].activePlayer = false),
+      (players[0].activePlayer = true),
+      playerThreeArea.classList.remove("active-area"),
+      playerOneArea.classList.add("active-area"))
+    : activePlayer === "acrossFromDealer"
+    ? // when there are four players, rightOfDealer is next
+      ((activePlayer = "rightOfDealer"),
+      (players[2].activePlayer = false),
+      (players[3].activePlayer = true),
+      playerThreeArea.classList.remove("active-area"),
+      playerFourArea.classList.add("active-area"))
+    : // dealer is always after rightOfDealer
+      ((activePlayer = "dealer"),
+      (players[3].activePlayer = false),
+      (players[0].activePlayer = true),
+      playerFourArea.classList.remove("active-area"),
+      playerOneArea.classList.add("active-area"));
+  console.log(activePlayer);
 };
 
 // Manage cards that current player will be exchange with extra hand
@@ -408,15 +445,18 @@ const exchangeCards = () => {
       cardsFromExtraHand.length = 0;
       for (let i = 0; i <= 2; i++) {
         extraCard[i].textContent = extraHand[i].card;
+        extraCard[i].classList.remove("is-active");
         // playerOneCard[i].textContent = dealerHand[i].card;
         playerTwoCard[i].textContent = leftOfDealerHand[i].card;
+        playerTwoCard[i].classList.remove("is-active");
         // playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
         // playerFourCard[i].textContent = rightOfDealerHand[i].card;
       }
+      changeActivePlayer();
+      styleBlackCards();
     } else {
       alert("Select either one or three cards to exchange.");
     }
-    styleBlackCards();
     console.log(extraHand);
   } else {
     alert("Game or round is not active.");
