@@ -46,6 +46,13 @@ const clearTable = () => {
   rightOfDealerHand.length = 0;
   dealerHand.length = 0;
   extraHand.length = 0;
+  // allHands.push(
+  //   leftOfDealerHand,
+  //   acrossFromDealerHand,
+  //   rightOfDealerHand,
+  //   dealerHand,
+  //   extraHand
+  // );
   aCard.forEach(val => {
     val.classList.remove("is-active");
     val.textContent = "";
@@ -259,25 +266,40 @@ const deal = () => {
         ? val.classList.add("aCardBlack")
         : val.classList.remove("aCardBlack")
     );
-    console.log(dealtDeck);
-    console.log(extraHand);
+    // console.log(dealtDeck);
+    // console.log(extraHand);
   } else if (activeRound) {
-    alert(
-      "Exchange either one cards or three cards from your hand with the extra hand. But you can't exchange two cards!"
-    );
+    alert("Exchange one or three cards from your hand with the extra hand.");
   }
 };
 dealButton.addEventListener("click", deal);
 
+// Change the active player
+// ...or should this just be player 1 2 3 4
+// ...and then use player array of objects to track current dealer etc.
+const changeActivePlayer = () => {
+  activePlayer === "dealer" // leftOfDealer is always after dealer
+    ? (activePlayer = "leftOfDealer")
+    : activePlayer === "leftOfDealer" && numCards === 9 // when two players
+    ? (activePlayer = "dealer")
+    : activePlayer === "leftOfDealer" // when three or four players
+    ? (activePlayer = "acrossFromDealer")
+    : activePlayer === "acrossFromDealer" && numCards === 12 // when three players
+    ? (activePlayer = "dealer")
+    : activePlayer === "acrossFromDealer" // when four players
+    ? (activePlayer = "rightOfDealer")
+    : (activePlayer = "dealer"); // dealer is always after rightOfDealer
+};
+
 // Manage cards that current player will be exchange with extra hand
 const manageCardsToExchange = (fromExtra, isSelected, cardObj) => {
   fromExtra && isSelected
-    ? cardsFromExtraHand.push(cardObj.card)
+    ? cardsFromExtraHand.push(cardObj)
     : fromExtra && !isSelected
-    ? cardsFromExtraHand.splice(cardsFromExtraHand.indexOf(cardObj.card), 1)
+    ? cardsFromExtraHand.splice(cardsFromExtraHand.indexOf(cardObj), 1)
     : !fromExtra && isSelected
-    ? cardsToExtraHand.push(cardObj.card)
-    : cardsToExtraHand.splice(cardsToExtraHand.indexOf(cardObj.card), 1);
+    ? cardsToExtraHand.push(cardObj)
+    : cardsToExtraHand.splice(cardsToExtraHand.indexOf(cardObj), 1);
 };
 
 // Select and deselect cards in active player's and extra hands
@@ -307,79 +329,71 @@ const selectDeselectCard = e => {
           manageCardsToExchange(false, false, cardObj));
     }
   });
-  console.log(cardsToExtraHand);
-  console.log(cardsFromExtraHand);
+  // console.log(cardsToExtraHand);
+  // console.log(cardsFromExtraHand);
 };
-// Add event listener to aCard nodelist to trigger selectDeselectCard(e)
-for (let i = 0; i < aCard.length; i++) {
-  aCard[i].addEventListener("click", selectDeselectCard);
-}
+
+// Add event listeners to playerOneCard, etc., & extraCard nodelists
+// Note to fix: !activePlayer can "click" extraCard...
+extraCard.forEach(val => val.addEventListener("click", selectDeselectCard));
+activePlayer === "dealer"
+  ? playerOneCard.forEach(val =>
+      val.addEventListener("click", selectDeselectCard)
+    )
+  : activePlayer === "leftOfDealer"
+  ? playerTwoCard.forEach(val =>
+      val.addEventListener("click", selectDeselectCard)
+    )
+  : activePlayer === "acrossFromDealer"
+  ? playerThreeCard.forEach(val =>
+      val.addEventListener("click", selectDeselectCard)
+    )
+  : playerFourCard.forEach(val =>
+      val.addEventListener("click", selectDeselectCard)
+    );
 
 // Change the dealer
-// const changeDealer {
-// or just change a dealer variable
-// }
-
-// Change the active player
-// ...or should this just be player 1 2 3 4
-// ...and then use player array of objects to track current dealer etc.
-const changeActivePlayer = () => {
-  activePlayer === "dealer" // leftOfDealer is always after dealer
-    ? (activePlayer = "leftOfDealer")
-    : activePlayer === "leftOfDealer" && numCards === 9 // when two players
-    ? (activePlayer = "dealer")
-    : activePlayer === "leftOfDealer" // when three or four players
-    ? (activePlayer = "acrossFromDealer")
-    : activePlayer === "acrossFromDealer" && numCards === 12 // when three players
-    ? (activePlayer = "dealer")
-    : activePlayer === "acrossFromDealer" // when four players
-    ? (activePlayer = "rightOfDealer")
-    : (activePlayer = "dealer"); // dealer is always after rightOfDealer
+const changeDealer = () => {
+  // or just change a dealer variable
 };
 
-// const buy = () => {
-// if player did not buy or hold on last turn...
-// ...change players array buy property to true for current player
-// changeActivePlayer();
-// need to change buy property back to false after player's next turn?
-// };
+const buy = () => {
+  // if player did not buy or hold on last turn...
+  // ...change players array buy property to true for current player
+  // changeActivePlayer();
+  // need to change buy property back to false after player's next turn?
+};
 
 // Exchange 1 or 3 cards from a player's hand with the extra hand
 const exchangeCards = () => {
   if (activeGame && activeRound) {
-    //if all three active just swop between arrays
-    //if one active find the one in each and swop
-    //if 0 or two alert message
-    for (let cardObj of dealtDeck) {
+    if (
+      (cardsToExtraHand.length === 1 && cardsFromExtraHand.length === 1) ||
+      (cardsToExtraHand.length === 3 && cardsFromExtraHand.length === 3)
+    ) {
+      dealtDeck.forEach(cardObj => {
+        cardsToExtraHand.forEach(obj => {
+          if (obj.card === cardObj.card) {
+            cardObj.cardPosition = "extraHand";
+            extraHand.push(cardObj);
+            console.log(cardObj);
+          }
+        });
+      });
+      dealtDeck.forEach(cardObj => {
+        cardsFromExtraHand.forEach(obj => {
+          if (obj.card === cardObj.card) {
+            cardObj.cardPosition = activePlayer;
+            extraHand.splice(extraHand.indexOf(cardObj, 1));
+            console.log(cardObj);
+          }
+        });
+      });
     }
-    // if(activePlayer === "leftOfDealer") {
-    //   for(let cardCurrent of leftOfDealerHand) {
-    //     for(let cardNew of cardsFromExtraHand )
-    //   }
-    // }
-    // for (let hand of allHands) {
-    //   console.log(hand);
-    // }
-    // console.log(activePlayer);
-    console.log(leftOfDealerHand);
-    // leftOfDealerHand
-    // acrossFromDealerHand
-    // rightOfDealerHand
-    // dealerHand
-    // extraHand
-    // for(let cardObj of dealtDeck){
-    //   cardObj.position === activePlayer
-
-    // based on activePlayer string value...
-    // use values from cardsToExtraHand and cardsFromExtraHand arrays...
-    // to update cardPosition property in card objects in dealtDeck array...
-    // and to update DOM with changes to aCard textContent...
-    // render changes
-    // changeActivePlayer();
-  } else {
-    alert("Players have no cards to exchange");
+    console.log(extraHand);
   }
 };
+
 exchangeButton.addEventListener("click", exchangeCards);
 
 // Alternatives for suits
@@ -387,3 +401,32 @@ exchangeButton.addEventListener("click", exchangeCards);
 // White diamond suit 	♢ 	U+2662 	&#9826 -- Black diamond suit 	♦ 	U+2666 	&diams
 // White heart suit 	♡ 	U+2661 	&#9825 -- Black heart suit 	♥ 	U+2665 	&hearts
 // White spade suit 	♤ 	U+2664 	&#9828 -- Black spade suit 	♠ 	U+2660 	&spade
+//
+// Alternatives for: Add event listener to aCard nodelist to trigger selectDeselectCard(e)
+// for (let i = 0; i < aCard.length; i++) {
+//   aCard[i].addEventListener("click", selectDeselectCard);
+// }
+//
+// if(activePlayer === "leftOfDealer") {
+//   for(let cardCurrent of leftOfDealerHand) {
+//     for(let cardNew of cardsFromExtraHand )
+//   }
+// }
+// for (let hand of allHands) {
+//   console.log(hand);
+// }
+// console.log(activePlayer);
+// leftOfDealerHand
+// acrossFromDealerHand
+// rightOfDealerHand
+// dealerHand
+// extraHand
+// for(let cardObj of dealtDeck){
+//   cardObj.position === activePlayer
+
+// based on activePlayer string value...
+// use values from cardsToExtraHand and cardsFromExtraHand arrays...
+// to update cardPosition property in card objects in dealtDeck array...
+// and to update DOM with changes to aCard textContent...
+// render changes
+// changeActivePlayer();
