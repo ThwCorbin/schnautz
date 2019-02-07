@@ -4,8 +4,7 @@ const playersButton = document.querySelector(".playersButton");
 const dealButton = document.querySelector(".dealButton");
 const num1to4 = document.querySelector(".num1to4");
 const players = [];
-let activePlayer = "leftOfDealer";
-// Deck variables
+let activePlayer = "dealer";
 let numCards = 12;
 let shuffledDeck;
 let dealtDeck;
@@ -17,19 +16,19 @@ const playerTwoArea = document.querySelector(".playerTwoArea");
 const playerThreeArea = document.querySelector(".playerThreeArea");
 const playerFourArea = document.querySelector(".playerFourArea");
 const playerOneArea = document.querySelector(".playerOneArea");
-const extraArea = document.querySelector(".extraArea");
+// const extraArea = document.querySelector(".extraArea");
 const leftOfDealerHand = [];
 const acrossFromDealerHand = [];
 const rightOfDealerHand = [];
 const dealerHand = [];
 const extraHand = [];
-const allHands = [
-  leftOfDealerHand,
-  acrossFromDealerHand,
-  rightOfDealerHand,
-  dealerHand,
-  extraHand
-];
+// const allHands = [
+//   leftOfDealerHand,
+//   acrossFromDealerHand,
+//   rightOfDealerHand,
+//   dealerHand,
+//   extraHand
+// ];
 // Card variables
 const aCard = document.querySelectorAll(".aCard");
 const extraCard = document.querySelectorAll(".extraCard");
@@ -46,6 +45,7 @@ let activeRound = false;
 
 const clearTable = () => {
   activeRound = false;
+  activePlayer = "dealer";
   leftOfDealerHand.length = 0;
   acrossFromDealerHand.length = 0;
   rightOfDealerHand.length = 0;
@@ -246,51 +246,7 @@ const styleBlackCards = () => {
   );
 };
 
-// Deal card objects
-const deal = () => {
-  if (activeGame && activeRound === false) {
-    clearTable();
-    activeRound = true;
-    dealButton.textContent = "Advice";
-    shuffle(newDeck());
-    assignCardsToPlayers();
-    // "Deal" cards to screen
-    if (numCards === 15) {
-      for (let i = 0; i <= 2; i++) {
-        extraCard[i].textContent = extraHand[i].card;
-        playerOneCard[i].textContent = dealerHand[i].card;
-        playerTwoCard[i].textContent = leftOfDealerHand[i].card;
-        playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
-        playerFourCard[i].textContent = rightOfDealerHand[i].card;
-      }
-    } else if (numCards === 12) {
-      for (let i = 0; i <= 2; i++) {
-        extraCard[i].textContent = extraHand[i].card;
-        playerOneCard[i].textContent = dealerHand[i].card;
-        playerTwoCard[i].textContent = leftOfDealerHand[i].card;
-        playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
-      }
-    } else {
-      for (let i = 0; i <= 2; i++) {
-        extraCard[i].textContent = extraHand[i].card;
-        playerOneCard[i].textContent = dealerHand[i].card;
-        playerTwoCard[i].textContent = leftOfDealerHand[i].card;
-      }
-    }
-    // Style card colors
-    styleBlackCards();
-    playerTwoArea.classList.add("active-area");
-    // console.log(dealtDeck);
-    console.log(extraHand);
-  } else if (activeRound) {
-    alert("Select cards to exchange.");
-  }
-};
-dealButton.addEventListener("click", deal);
-
 // Change the active player
-// ...or should this just be player 1 2 3 4
-// ...and then use player array of objects to track current dealer etc.
 const changeActivePlayer = () => {
   activePlayer === "dealer"
     ? // leftOfDealer is always after dealer
@@ -336,6 +292,48 @@ const changeActivePlayer = () => {
   console.log(activePlayer);
 };
 
+// Deal card objects
+const deal = () => {
+  if (activeGame && activeRound === false) {
+    clearTable();
+    activeRound = true;
+    dealButton.textContent = "Advice";
+    shuffle(newDeck());
+    assignCardsToPlayers();
+    // "Deal" cards to screen
+    if (numCards === 15) {
+      for (let i = 0; i <= 2; i++) {
+        extraCard[i].textContent = extraHand[i].card;
+        playerOneCard[i].textContent = dealerHand[i].card;
+        playerTwoCard[i].textContent = leftOfDealerHand[i].card;
+        playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
+        playerFourCard[i].textContent = rightOfDealerHand[i].card;
+      }
+    } else if (numCards === 12) {
+      for (let i = 0; i <= 2; i++) {
+        extraCard[i].textContent = extraHand[i].card;
+        playerOneCard[i].textContent = dealerHand[i].card;
+        playerTwoCard[i].textContent = leftOfDealerHand[i].card;
+        playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
+      }
+    } else {
+      for (let i = 0; i <= 2; i++) {
+        extraCard[i].textContent = extraHand[i].card;
+        playerOneCard[i].textContent = dealerHand[i].card;
+        playerTwoCard[i].textContent = leftOfDealerHand[i].card;
+      }
+    }
+    playerTwoArea.classList.add("active-area");
+    styleBlackCards();
+    changeActivePlayer();
+    // console.log(dealtDeck);
+    console.log(extraHand);
+  } else if (activeRound) {
+    alert("Select cards to exchange.");
+  }
+};
+dealButton.addEventListener("click", deal);
+
 // Manage cards that current player will be exchange with extra hand
 const manageCardsToExchange = (fromExtra, isSelected, cardObj) => {
   fromExtra && isSelected
@@ -373,6 +371,8 @@ const selectDeselectCard = e => {
         : ((cardObj.selected = false),
           e.target.classList.remove("is-active"),
           manageCardsToExchange(false, false, cardObj));
+    } else {
+      console.log("error selecting deselecting card");
     }
   });
   // console.log(cardsToExtraHand);
@@ -382,21 +382,10 @@ const selectDeselectCard = e => {
 // Add event listeners to playerOneCard, etc., & extraCard nodelists
 // Note to fix: !activePlayer can "click" extraCard...
 extraCard.forEach(val => val.addEventListener("click", selectDeselectCard));
-activePlayer === "dealer"
-  ? playerOneCard.forEach(val =>
-      val.addEventListener("click", selectDeselectCard)
-    )
-  : activePlayer === "leftOfDealer"
-  ? playerTwoCard.forEach(val =>
-      val.addEventListener("click", selectDeselectCard)
-    )
-  : activePlayer === "acrossFromDealer"
-  ? playerThreeCard.forEach(val =>
-      val.addEventListener("click", selectDeselectCard)
-    )
-  : playerFourCard.forEach(val =>
-      val.addEventListener("click", selectDeselectCard)
-    );
+playerOneCard.forEach(val => val.addEventListener("click", selectDeselectCard));
+playerTwoCard.forEach(val => val.addEventListener("click", selectDeselectCard));
+playerThreeCard.forEach(v => v.addEventListener("click", selectDeselectCard));
+playerFourCard.forEach(v => v.addEventListener("click", selectDeselectCard));
 
 // Change the dealer
 const changeDealer = () => {
@@ -446,14 +435,18 @@ const exchangeCards = () => {
       for (let i = 0; i <= 2; i++) {
         extraCard[i].textContent = extraHand[i].card;
         extraCard[i].classList.remove("is-active");
+        extraHand[i].cardPosition = "extraHand";
+        extraHand[i].selected = false;
         // playerOneCard[i].textContent = dealerHand[i].card;
         playerTwoCard[i].textContent = leftOfDealerHand[i].card;
         playerTwoCard[i].classList.remove("is-active");
+        leftOfDealerHand[i].cardPosition = "leftOfDealer";
+        leftOfDealerHand[i].selected = false;
         // playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
         // playerFourCard[i].textContent = rightOfDealerHand[i].card;
       }
-      changeActivePlayer();
       styleBlackCards();
+      changeActivePlayer();
     } else {
       alert("Select either one or three cards to exchange.");
     }
@@ -499,3 +492,19 @@ exchangeButton.addEventListener("click", exchangeCards);
 // and to update DOM with changes to aCard textContent...
 // render changes
 // changeActivePlayer();
+
+// activePlayer === "dealer"
+//   ? playerOneCard.forEach(val =>
+//       val.addEventListener("click", selectDeselectCard)
+//     )
+//   : activePlayer === "leftOfDealer"
+//   ? playerTwoCard.forEach(val =>
+//       val.addEventListener("click", selectDeselectCard)
+//     )
+//   : activePlayer === "acrossFromDealer"
+//   ? playerThreeCard.forEach(val =>
+//       val.addEventListener("click", selectDeselectCard)
+//     )
+//   : playerFourCard.forEach(val =>
+//       val.addEventListener("click", selectDeselectCard)
+//     );

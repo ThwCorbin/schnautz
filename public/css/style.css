@@ -288,6 +288,7 @@ body {
   grid-column-start: 1;
   grid-column-end: 5;
   justify-self: center;
+  border-color: var(--violet);
 }
 
 .active-area {
