@@ -95,7 +95,7 @@ const generatePlayers = numPlayers => {
       currentScore: null
     });
   }
-  console.log(players);
+  // console.log(players);
 };
 
 // Change number of players and number of cards to deal
@@ -289,7 +289,6 @@ const changeActivePlayer = () => {
       (players[0].activePlayer = true),
       playerFourArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"));
-  console.log(activePlayer);
 };
 
 // Deal card objects
@@ -371,8 +370,6 @@ const selectDeselectCard = e => {
         : ((cardObj.selected = false),
           e.target.classList.remove("is-active"),
           manageCardsToExchange(false, false, cardObj));
-    } else {
-      console.log("error selecting deselecting card");
     }
   });
   // console.log(cardsToExtraHand);
@@ -417,7 +414,7 @@ const exchangeCards = () => {
       dealtDeck.forEach(cardFromExtra => {
         cardsFromExtraHand.forEach(obj => {
           if (obj.card === cardFromExtra.card) {
-            cardFromExtra.cardPosition = activePlayer;
+            cardFromExtra.cardPosition = `${activePlayer}hand`;
             extraHand.splice(extraHand.indexOf(cardFromExtra, 1));
           }
         });
@@ -427,24 +424,56 @@ const exchangeCards = () => {
       cardsToExtraHand.length === 3 &&
       cardsFromExtraHand.length === 3
     ) {
-      // swapping three cards
+      // swapping three cards for extraHand
       extraHand.splice(0, 3, ...cardsToExtraHand);
-      leftOfDealerHand.splice(0, 3, ...cardsFromExtraHand);
-      cardsToExtraHand.length = 0;
-      cardsFromExtraHand.length = 0;
       for (let i = 0; i <= 2; i++) {
         extraCard[i].textContent = extraHand[i].card;
         extraCard[i].classList.remove("is-active");
         extraHand[i].cardPosition = "extraHand";
         extraHand[i].selected = false;
-        // playerOneCard[i].textContent = dealerHand[i].card;
-        playerTwoCard[i].textContent = leftOfDealerHand[i].card;
-        playerTwoCard[i].classList.remove("is-active");
-        leftOfDealerHand[i].cardPosition = "leftOfDealer";
-        leftOfDealerHand[i].selected = false;
-        // playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
-        // playerFourCard[i].textContent = rightOfDealerHand[i].card;
       }
+      cardsToExtraHand.length = 0;
+      // swapping three cards for activePlayer
+      if (activePlayer === "leftOfDealer") {
+        leftOfDealerHand.splice(0, 3, ...cardsFromExtraHand);
+        for (let i = 0; i <= 2; i++) {
+          playerTwoCard[i].textContent = leftOfDealerHand[i].card;
+          playerTwoCard[i].classList.remove("is-active");
+          leftOfDealerHand[i].cardPosition = "leftOfDealerHand";
+          leftOfDealerHand[i].selected = false;
+        }
+        cardsFromExtraHand.length = 0;
+      } else if (activePlayer === "acrossFromDealer") {
+        acrossFromDealerHand.splice(0, 3, ...cardsFromExtraHand);
+        for (let i = 0; i <= 2; i++) {
+          playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
+          playerThreeCard[i].classList.remove("is-active");
+          acrossFromDealerHand[i].cardPosition = "acrossFromDealerHand";
+          acrossFromDealerHand[i].selected = false;
+        }
+        cardsFromExtraHand.length = 0;
+      } else if (activePlayer === "rightOfDealer") {
+        rightOfDealerHand.splice(0, 3, ...cardsFromExtraHand);
+        for (let i = 0; i <= 2; i++) {
+          playerFourCard[i].classList.remove("is-active");
+          playerFourCard[i].textContent = rightOfDealerHand[i].card;
+          rightOfDealerHand[i].cardPosition = "rightOfDealerHand";
+          rightOfDealerHand[i].selected = false;
+        }
+        cardsFromExtraHand.length = 0;
+      } else if (activePlayer === "dealer") {
+        dealerHand.splice(0, 3, ...cardsFromExtraHand);
+        for (let i = 0; i <= 2; i++) {
+          playerOneCard[i].classList.remove("is-active");
+          playerOneCard[i].textContent = dealerHand[i].card;
+          dealerHand[i].cardPosition = "dealerHand";
+          dealerHand[i].selected = false;
+        }
+        cardsFromExtraHand.length = 0;
+      } else {
+        console.log("error");
+      }
+      // Fix: even if error above, below will still set cardsFromExtraHand.length = 0;
       styleBlackCards();
       changeActivePlayer();
     } else {
@@ -468,31 +497,8 @@ exchangeButton.addEventListener("click", exchangeCards);
 // for (let i = 0; i < aCard.length; i++) {
 //   aCard[i].addEventListener("click", selectDeselectCard);
 // }
-//
-// if(activePlayer === "leftOfDealer") {
-//   for(let cardCurrent of leftOfDealerHand) {
-//     for(let cardNew of cardsFromExtraHand )
-//   }
-// }
-// for (let hand of allHands) {
-//   console.log(hand);
-// }
-// console.log(activePlayer);
-// leftOfDealerHand
-// acrossFromDealerHand
-// rightOfDealerHand
-// dealerHand
-// extraHand
-// for(let cardObj of dealtDeck){
-//   cardObj.position === activePlayer
 
-// based on activePlayer string value...
-// use values from cardsToExtraHand and cardsFromExtraHand arrays...
-// to update cardPosition property in card objects in dealtDeck array...
-// and to update DOM with changes to aCard textContent...
-// render changes
-// changeActivePlayer();
-
+// Below didn't work...
 // activePlayer === "dealer"
 //   ? playerOneCard.forEach(val =>
 //       val.addEventListener("click", selectDeselectCard)
