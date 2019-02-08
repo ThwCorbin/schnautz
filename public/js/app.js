@@ -376,7 +376,7 @@ const selectDeselectCard = e => {
   // console.log(cardsFromExtraHand);
 };
 
-// Add event listeners to playerOneCard, etc., & extraCard nodelists
+// Add event listeners to playerOneCard, etc., & extraCard NodeLists
 // Note to fix: !activePlayer can "click" extraCard...
 extraCard.forEach(val => val.addEventListener("click", selectDeselectCard));
 playerOneCard.forEach(val => val.addEventListener("click", selectDeselectCard));
@@ -400,26 +400,57 @@ const buy = () => {
 const exchangeCards = () => {
   // Note: mutates the objects that newDeck() created inside an array
   if (activeGame && activeRound) {
+    // Note: All arrays below reference the same deck card objects
     if (cardsToExtraHand.length === 1 && cardsFromExtraHand.length === 1) {
-      // swapping one card
-      dealtDeck.forEach(cardToExtra => {
-        cardsToExtraHand.forEach(obj => {
-          if (obj.card === cardToExtra.card) {
-            cardToExtra.cardPosition = "extraHand";
-            extraHand.push(cardToExtra);
+      let swapToCardPosition = cardsToExtraHand[0].cardPosition;
+      let idxFromExtraHand = extraHand.indexOf(cardsFromExtraHand[0]);
+      let idxFromExtraNode;
+      let idxToExtraHand;
+      let idxToPlayNode;
+
+      // Switch .cardPosition property values e.g. "leftOfDealerHand" for "extraHand"
+      cardsFromExtraHand[0].cardPosition = swapToCardPosition;
+      cardsToExtraHand[0].cardPosition = "extraHand";
+      cardsFromExtraHand[0].selected = false;
+      cardsToExtraHand[0].selected = false;
+      // Remove and replace one card object from extraHand
+      extraHand.splice(idxFromExtraHand, 1, cardsToExtraHand[0]);
+      // Retrieve index from NodeList and modify textContent && classlist
+      extraCard.forEach((val, idx) => {
+        if (val.textContent === cardsFromExtraHand[0].card) {
+          idxFromExtraNode = idx;
+        }
+      });
+      extraCard[idxFromExtraNode].textContent = cardsToExtraHand[0].card;
+      extraCard[idxFromExtraNode].classList.remove("is-active");
+
+      if (swapToCardPosition === "leftOfDealerHand") {
+        idxToExtraHand = leftOfDealerHand.indexOf(cardsToExtraHand[0]);
+        // Remove and replace one card object from leftOfDealerHand
+        leftOfDealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
+        // Retrieve index from NodeList and modify textContent && classlist
+        playerTwoCard.forEach((val, idx) => {
+          if (val.textContent === cardsToExtraHand[0].card) {
+            idxToPlayNode = idx;
           }
         });
-        console.log(cardsToExtraHand);
-      });
-      dealtDeck.forEach(cardFromExtra => {
-        cardsFromExtraHand.forEach(obj => {
-          if (obj.card === cardFromExtra.card) {
-            cardFromExtra.cardPosition = `${activePlayer}hand`;
-            extraHand.splice(extraHand.indexOf(cardFromExtra, 1));
+        playerTwoCard[idxToPlayNode].textContent = cardsFromExtraHand[0].card;
+        playerTwoCard[idxToPlayNode].classList.remove("is-active");
+      } else if (swapToCardPosition === "acrossFromDealerHand") {
+        idxToExtraHand = acrossFromDealerHand.indexOf(cardsToExtraHand[0]);
+        // Remove and replace one card object from acrossFromDealerHand
+        acrossFromDealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
+        // Retrieve index from NodeList and modify textContent && classlist
+        playerThreeCard.forEach((val, idx) => {
+          if (val.textContent === cardsToExtraHand[0].card) {
+            idxToPlayNode = idx;
           }
         });
-        console.log(cardsFromExtraHand);
-      });
+        playerThreeCard[idxToPlayNode].textContent = cardsFromExtraHand[0].card;
+        playerThreeCard[idxToPlayNode].classList.remove("is-active");
+      }
+      styleBlackCards();
+      changeActivePlayer();
     } else if (
       cardsToExtraHand.length === 3 &&
       cardsFromExtraHand.length === 3
@@ -477,12 +508,10 @@ const exchangeCards = () => {
       styleBlackCards();
       changeActivePlayer();
     } else {
-      alert("Select either one or three cards to exchange.");
+      alert("Game or round is not active.");
     }
-    console.log(extraHand);
-  } else {
-    alert("Game or round is not active.");
   }
+  console.log(extraHand);
 };
 
 exchangeButton.addEventListener("click", exchangeCards);
@@ -493,7 +522,7 @@ exchangeButton.addEventListener("click", exchangeCards);
 // White heart suit 	♡ 	U+2661 	&#9825 -- Black heart suit 	♥ 	U+2665 	&hearts
 // White spade suit 	♤ 	U+2664 	&#9828 -- Black spade suit 	♠ 	U+2660 	&spade
 //
-// Alternatives for: Add event listener to aCard nodelist to trigger selectDeselectCard(e)
+// Alternatives for: Add event listener to aCard NodeList to trigger selectDeselectCard(e)
 // for (let i = 0; i < aCard.length; i++) {
 //   aCard[i].addEventListener("click", selectDeselectCard);
 // }
@@ -514,3 +543,24 @@ exchangeButton.addEventListener("click", exchangeCards);
 //   : playerFourCard.forEach(val =>
 //       val.addEventListener("click", selectDeselectCard)
 //     );
+
+// dealtDeck.forEach(cardToExtra => {
+//   cardsToExtraHand.forEach(obj => {
+//     if (obj.card === cardToExtra.card) {
+//       cardToExtra.cardPosition = "extraHand";
+//       cardToExtra.selected = false;
+//       extraHand.push(cardToExtra);
+//     }
+//   });
+//   console.log(cardsToExtraHand);
+// });
+
+//   dealtDeck.forEach(cardFromExtra => {
+//     cardsFromExtraHand.forEach(obj => {
+//       if (obj.card === cardFromExtra.card) {
+//         cardFromExtra.cardPosition = `${activePlayer}hand`;
+//         extraHand.splice(extraHand.indexOf(cardFromExtra, 1));
+//       }
+//     });
+//     console.log(cardsFromExtraHand);
+//   });
