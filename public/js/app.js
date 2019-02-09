@@ -289,6 +289,9 @@ const changeActivePlayer = () => {
       (players[0].activePlayer = true),
       playerFourArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"));
+  // Clear arrays for next player
+  cardsToExtraHand.length = 0;
+  cardsFromExtraHand.length = 0;
 };
 
 // Deal card objects
@@ -448,6 +451,30 @@ const exchangeCards = () => {
         });
         playerThreeCard[idxToPlayNode].textContent = cardsFromExtraHand[0].card;
         playerThreeCard[idxToPlayNode].classList.remove("is-active");
+      } else if (swapToCardPosition === "rightOfDealerHand") {
+        idxToExtraHand = rightOfDealerHand.indexOf(cardsToExtraHand[0]);
+        // Remove and replace one card object from acrossFromDealerHand
+        rightOfDealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
+        // Retrieve index from NodeList and modify textContent && classlist
+        playerFourCard.forEach((val, idx) => {
+          if (val.textContent === cardsToExtraHand[0].card) {
+            idxToPlayNode = idx;
+          }
+        });
+        playerFourCard[idxToPlayNode].textContent = cardsFromExtraHand[0].card;
+        playerFourCard[idxToPlayNode].classList.remove("is-active");
+      } else if (swapToCardPosition === "dealerHand") {
+        idxToExtraHand = dealerHand.indexOf(cardsToExtraHand[0]);
+        // Remove and replace one card object from acrossFromDealerHand
+        dealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
+        // Retrieve index from NodeList and modify textContent && classlist
+        playerOneCard.forEach((val, idx) => {
+          if (val.textContent === cardsToExtraHand[0].card) {
+            idxToPlayNode = idx;
+          }
+        });
+        playerOneCard[idxToPlayNode].textContent = cardsFromExtraHand[0].card;
+        playerOneCard[idxToPlayNode].classList.remove("is-active");
       }
       styleBlackCards();
       changeActivePlayer();
@@ -463,8 +490,7 @@ const exchangeCards = () => {
         extraHand[i].cardPosition = "extraHand";
         extraHand[i].selected = false;
       }
-      cardsToExtraHand.length = 0;
-      // swapping three cards for activePlayer
+      // swapping three cards for the activePlayer
       if (activePlayer === "leftOfDealer") {
         leftOfDealerHand.splice(0, 3, ...cardsFromExtraHand);
         for (let i = 0; i <= 2; i++) {
@@ -473,7 +499,6 @@ const exchangeCards = () => {
           leftOfDealerHand[i].cardPosition = "leftOfDealerHand";
           leftOfDealerHand[i].selected = false;
         }
-        cardsFromExtraHand.length = 0;
       } else if (activePlayer === "acrossFromDealer") {
         acrossFromDealerHand.splice(0, 3, ...cardsFromExtraHand);
         for (let i = 0; i <= 2; i++) {
@@ -482,7 +507,6 @@ const exchangeCards = () => {
           acrossFromDealerHand[i].cardPosition = "acrossFromDealerHand";
           acrossFromDealerHand[i].selected = false;
         }
-        cardsFromExtraHand.length = 0;
       } else if (activePlayer === "rightOfDealer") {
         rightOfDealerHand.splice(0, 3, ...cardsFromExtraHand);
         for (let i = 0; i <= 2; i++) {
@@ -491,7 +515,6 @@ const exchangeCards = () => {
           rightOfDealerHand[i].cardPosition = "rightOfDealerHand";
           rightOfDealerHand[i].selected = false;
         }
-        cardsFromExtraHand.length = 0;
       } else if (activePlayer === "dealer") {
         dealerHand.splice(0, 3, ...cardsFromExtraHand);
         for (let i = 0; i <= 2; i++) {
@@ -500,15 +523,14 @@ const exchangeCards = () => {
           dealerHand[i].cardPosition = "dealerHand";
           dealerHand[i].selected = false;
         }
-        cardsFromExtraHand.length = 0;
       } else {
-        console.log("error");
+        console.log("Error");
       }
       // Fix: even if error above, below will still set cardsFromExtraHand.length = 0;
       styleBlackCards();
       changeActivePlayer();
     } else {
-      alert("Game or round is not active.");
+      alert("Error");
     }
   }
   console.log(extraHand);
