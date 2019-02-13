@@ -7,6 +7,7 @@ const players = [];
 let activeNum = 1;
 let numCards = 12;
 let eventsCards;
+// let removeListener;
 let shuffledDeck;
 let dealtDeck;
 // Hand variables
@@ -23,13 +24,7 @@ const dealerHand = [];
 const leftOfDealerHand = [];
 const acrossFromDealerHand = [];
 const rightOfDealerHand = [];
-const allHands = [
-  extraHand,
-  dealerHand,
-  leftOfDealerHand,
-  acrossFromDealerHand,
-  rightOfDealerHand
-];
+const allHands = [];
 // Card variables
 const aCard = document.querySelectorAll(".aCard");
 const extraCard = document.querySelectorAll(".extraCard");
@@ -37,9 +32,15 @@ const playerOneCard = document.querySelectorAll(".playerOneCard");
 const playerTwoCard = document.querySelectorAll(".playerTwoCard");
 const playerThreeCard = document.querySelectorAll(".playerThreeCard");
 const playerFourCard = document.querySelectorAll(".playerFourCard");
+let activeCards;
+// const cardsToListen = [
+//   playerOneCard,
+//   playerTwoCard,
+//   playerThreeCard,
+//   playerFourCard
+// ];
 const cardsToExtraHand = [];
 const cardsFromExtraHand = [];
-let activeCards = playerTwoCard;
 
 // Game variables and resets
 let activeGame = false;
@@ -48,19 +49,13 @@ let activeRound = false;
 const clearTable = () => {
   activeRound = false;
   activeNum = 1;
-  // activeCards = playerTwoCard;
+  activeCards = playerOneCard;
   leftOfDealerHand.length = 0;
   acrossFromDealerHand.length = 0;
   rightOfDealerHand.length = 0;
   dealerHand.length = 0;
   extraHand.length = 0;
-  allHands.push(
-    extraHand,
-    dealerHand,
-    leftOfDealerHand,
-    acrossFromDealerHand,
-    rightOfDealerHand
-  );
+  allHands.length = 0;
   aCard.forEach(val => {
     val.classList.remove("is-active");
     val.textContent = "";
@@ -140,6 +135,8 @@ const newDeck = () => {
         card: ranks[i] + suits[j],
         rank: ranks[i],
         suit: suits[j],
+        points:
+          i === 4 || i === 5 || i === 6 ? 10 : i === 7 ? 11 : Number(ranks[i]),
         cardPosition: "",
         selected: false
       });
@@ -173,9 +170,49 @@ const shuffle = deck => {
   return shuffledDeck;
 };
 
-// ///////////////////////////////////////////////////////////////////////
-// !!! Lets mutate some objects !!!
-// ///////////////////////////////////////////////////////////////////////
+const updateScore = num => {
+  let index = num - 1;
+
+  allHands[num][0].suit === allHands[num][1].suit &&
+  allHands[num][0].suit === allHands[num][2].suit
+    ? (players[index].currentScore =
+        allHands[num][0].points +
+        allHands[num][1].points +
+        allHands[num][2].points)
+    : allHands[num][0].suit === allHands[num][1].suit
+    ? (players[index].currentScore =
+        allHands[num][0].points + allHands[num][1].points)
+    : allHands[num][0].suit === allHands[num][2].suit
+    ? (players[index].currentScore =
+        allHands[num][0].points + allHands[num][2].points)
+    : allHands[num][1].suit === allHands[num][2].suit
+    ? (players[index].currentScore =
+        allHands[num][1].points + allHands[num][2].points)
+    : allHands[num][0].rank === "A" &&
+      allHands[num][1].rank === "A" &&
+      allHands[num][2].rank === "A"
+    ? (players[index].currentScore = 31)
+    : allHands[num][0].rank === "10" &&
+      allHands[num][1].rank === "10" &&
+      allHands[num][2].rank === "10"
+    ? (players[index].currentScore = 30)
+    : allHands[num][0].rank === allHands[num][1].rank &&
+      allHands[num][0].rank === allHands[num][2].rank
+    ? (players[index].currentScore = 30.5)
+    : allHands[num][0].points >= allHands[num][1].points &&
+      allHands[num][0].points >= allHands[num][2].points
+    ? (players[index].currentScore = allHands[num][0].points)
+    : allHands[num][0].points >= allHands[num][1].points &&
+      allHands[num][0].points <= allHands[num][2].points
+    ? (players[index].currentScore = allHands[num][2].points)
+    : allHands[num][0].points <= allHands[num][1].points &&
+      allHands[num][1].points >= allHands[num][2].points
+    ? (players[index].currentScore = allHands[num][1].points)
+    : (players[index].currentScore = allHands[num][2].points);
+  console.log(
+    `Player ${players[index].player} score: ${players[index].currentScore}`
+  );
+};
 
 // Assign cards to players' hands and extra hand
 const assignCardsToPlayers = () => {
@@ -203,6 +240,13 @@ const assignCardsToPlayers = () => {
           extraHand.push(cardObj);
         }
       });
+      allHands.push(
+        extraHand,
+        dealerHand,
+        leftOfDealerHand,
+        acrossFromDealerHand,
+        rightOfDealerHand
+      );
       break;
     case 12:
       dealtDeck.forEach((cardObj, idx) => {
@@ -220,6 +264,12 @@ const assignCardsToPlayers = () => {
           extraHand.push(cardObj);
         }
       });
+      allHands.push(
+        extraHand,
+        dealerHand,
+        leftOfDealerHand,
+        acrossFromDealerHand
+      );
       break;
     default:
       dealtDeck.forEach((cardObj, idx) => {
@@ -234,7 +284,11 @@ const assignCardsToPlayers = () => {
           extraHand.push(cardObj);
         }
       });
+      allHands.push(extraHand, dealerHand, leftOfDealerHand);
       break;
+  }
+  for (let i = 1; i < allHands.length; i++) {
+    updateScore(i);
   }
 };
 
@@ -249,6 +303,49 @@ const styleBlackCards = () => {
   );
 };
 
+// Manage cards that current player will be exchange with extra hand
+const manageCardsToExchange = (fromExtra, isSelected, cardObj) => {
+  fromExtra && isSelected
+    ? cardsFromExtraHand.push(cardObj)
+    : fromExtra && !isSelected
+    ? cardsFromExtraHand.splice(cardsFromExtraHand.indexOf(cardObj), 1)
+    : !fromExtra && isSelected
+    ? cardsToExtraHand.push(cardObj)
+    : cardsToExtraHand.splice(cardsToExtraHand.indexOf(cardObj), 1);
+};
+
+// Select and deselect cards in active player's and extra hands
+const selectDeselectCard = e => {
+  // Note: mutates the objects that newDeck() created inside an array
+  dealtDeck.forEach(cardObj => {
+    // Toggles boolean "selected" property in card objects
+    // Toggles event target's classList "is-active" for styling
+    // Calls manageCardsToExchange with params (fromExtra, isSelected, cardObj)
+    if (
+      e.target.className.includes("extraCard") &&
+      e.target.textContent === cardObj.card
+    ) {
+      cardObj.selected === false
+        ? ((cardObj.selected = true),
+          e.target.classList.add("is-active"),
+          manageCardsToExchange(true, true, cardObj))
+        : ((cardObj.selected = false),
+          e.target.classList.remove("is-active"),
+          manageCardsToExchange(true, false, cardObj));
+    } else if (e.target.textContent === cardObj.card) {
+      cardObj.selected === false
+        ? ((cardObj.selected = true),
+          e.target.classList.add("is-active"),
+          manageCardsToExchange(false, true, cardObj))
+        : ((cardObj.selected = false),
+          e.target.classList.remove("is-active"),
+          manageCardsToExchange(false, false, cardObj));
+    }
+  });
+  // console.log(cardsToExtraHand);
+  // console.log(cardsFromExtraHand);
+};
+
 // Change the active player
 const changeActivePlayer = () => {
   activeNum === 1
@@ -258,47 +355,59 @@ const changeActivePlayer = () => {
       (players[1].activePlayer = true),
       playerOneArea.classList.remove("active-area"),
       playerTwoArea.classList.add("active-area"),
-      (activeCards = playerTwoCard))
-    : activeNum === 2 && numCards === 9
+      (activeCards = playerTwoCard),
+      eventsCards(playerTwoCard))
+    : // playerOneCard.removeEventListener("click", selectDeselectCard),
+    activeNum === 2 && numCards === 9
     ? // when there are two players, dealer is after leftOfDealer
       ((activeNum = 1),
       (players[1].activePlayer = false),
       (players[0].activePlayer = true),
       playerTwoArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"),
-      (activeCards = playerOneCard))
-    : activeNum === 2
+      (activeCards = playerOneCard),
+      eventsCards(playerOneCard))
+    : // playerTwoCard.removeEventListener("click", selectDeselectCard),
+    activeNum === 2
     ? // when there are three or four players, accrossFromDealer is next
       ((activeNum = 3),
       (players[1].activePlayer = false),
       (players[2].activePlayer = true),
       playerTwoArea.classList.remove("active-area"),
       playerThreeArea.classList.add("active-area"),
-      (activeCards = playerThreeCard))
-    : activeNum === 3 && numCards === 12
+      (activeCards = playerThreeCard),
+      eventsCards(playerThreeCard))
+    : // playerTwoCard.removeEventListener("click", selectDeselectCard),
+    activeNum === 3 && numCards === 12
     ? // when there three players, dealer is next
       ((activeNum = 1),
       (players[2].activePlayer = false),
       (players[0].activePlayer = true),
       playerThreeArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"),
-      (activeCards = playerOneCard))
-    : activeNum === 3
+      (activeCards = playerOneCard),
+      eventsCards(playerOneCard))
+    : // playerThreeCard.removeEventListener("click", selectDeselectCard),
+    activeNum === 3
     ? // when there are four players, rightOfDealer is next
       ((activeNum = 4),
       (players[2].activePlayer = false),
       (players[3].activePlayer = true),
       playerThreeArea.classList.remove("active-area"),
       playerFourArea.classList.add("active-area"),
-      (activeCards = playerFourCard))
-    : // dealer is always after rightOfDealer
+      (activeCards = playerFourCard),
+      eventsCards(playerFourCard))
+    : // playerThreeCard.removeEventListener("click", selectDeselectCard),
+      // dealer is always after rightOfDealer
       ((activeNum = 1),
       (players[3].activePlayer = false),
       (players[0].activePlayer = true),
       playerFourArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"),
-      (activeCards = playerOneCard));
-  eventsCards();
+      (activeCards = playerOneCard),
+      eventsCards(playerOneCard));
+  // playerFourCard.removeEventListener("click", selectDeselectCard),
+
   // Clear arrays for next player
   cardsToExtraHand.length = 0;
   cardsFromExtraHand.length = 0;
@@ -347,64 +456,12 @@ const deal = () => {
 };
 dealButton.addEventListener("click", deal);
 
-// Manage cards that current player will be exchange with extra hand
-const manageCardsToExchange = (fromExtra, isSelected, cardObj) => {
-  fromExtra && isSelected
-    ? cardsFromExtraHand.push(cardObj)
-    : fromExtra && !isSelected
-    ? cardsFromExtraHand.splice(cardsFromExtraHand.indexOf(cardObj), 1)
-    : !fromExtra && isSelected
-    ? cardsToExtraHand.push(cardObj)
-    : cardsToExtraHand.splice(cardsToExtraHand.indexOf(cardObj), 1);
-};
-
-// Select and deselect cards in active player's and extra hands
-const selectDeselectCard = e => {
-  // Note: mutates the objects that newDeck() created inside an array
-  dealtDeck.forEach(cardObj => {
-    // Toggles boolean "selected" property in card objects
-    // Toggles event target's classList "is-active" for styling
-    // Calls manageCardsToExchange with params (fromExtra, isSelected, cardObj)
-    if (
-      e.target.className.includes("extraCard") &&
-      e.target.textContent === cardObj.card
-    ) {
-      cardObj.selected === false
-        ? ((cardObj.selected = true),
-          e.target.classList.add("is-active"),
-          manageCardsToExchange(true, true, cardObj))
-        : ((cardObj.selected = false),
-          e.target.classList.remove("is-active"),
-          manageCardsToExchange(true, false, cardObj));
-    } else if (e.target.textContent === cardObj.card) {
-      cardObj.selected === false
-        ? ((cardObj.selected = true),
-          e.target.classList.add("is-active"),
-          manageCardsToExchange(false, true, cardObj))
-        : ((cardObj.selected = false),
-          e.target.classList.remove("is-active"),
-          manageCardsToExchange(false, false, cardObj));
-    }
-  });
-  // console.log(cardsToExtraHand);
-  // console.log(cardsFromExtraHand);
-};
-
 // Add event listeners to playerOneCard, etc., & extraCard NodeLists
 extraCard.forEach(val => val.addEventListener("click", selectDeselectCard));
 eventsCards = () =>
   activeCards.forEach(val => val.addEventListener("click", selectDeselectCard));
 
 // Check score
-// const updateScore = (aValue, bValue) => {
-//   // (if leftOfDealerHand[0].suit === leftOfDealerHand[0].suit)
-//   // leftOfDealerHand.reduce((acc, next) => leftOfDealerHand.);
-//   if (activeNum === 2) {
-//     (if leftOfDealerHand[0].suit === leftOfDealerHand[0].suit) {
-//       return;
-//     }
-// };
-
 const checkScore = () => {
   players.forEach(player => {
     if (player.activePlayer) {
@@ -503,6 +560,7 @@ const exchangeCards = () => {
         playerOneCard[idxToPlayNode].classList.remove("is-active");
       }
       styleBlackCards();
+      updateScore(activeNum);
       changeActivePlayer();
     } else if (
       cardsToExtraHand.length === 3 &&
@@ -554,6 +612,7 @@ const exchangeCards = () => {
       }
       // Fix: even if error above, below will still set cardsFromExtraHand.length = 0;
       styleBlackCards();
+      updateScore(activeNum);
       changeActivePlayer();
     } else {
       alert("Error");
@@ -579,11 +638,3 @@ exchangeButton.addEventListener("click", exchangeCards);
 // playerTwoCard.forEach(val => val.addEventListener("click", selectDeselectCard));
 // playerThreeCard.forEach(v => v.addEventListener("click", selectDeselectCard));
 // playerFourCard.forEach(v => v.addEventListener("click", selectDeselectCard));
-
-// activeNum === 1
-//   ? activeCards = playerOneCard
-//   : activeNum === 2
-//   ? activeCards = playerTwoCard
-//   : activeNum === 3
-//   ? activeCards = playerThreeCard
-//   : activeCards = playerFourCard
