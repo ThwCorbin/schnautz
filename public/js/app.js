@@ -4,7 +4,7 @@ const playersButton = document.querySelector(".playersButton");
 const dealButton = document.querySelector(".dealButton");
 const num1to4 = document.querySelector(".num1to4");
 const players = [];
-let activePlayer = "dealer";
+let activeNum = 1;
 let numCards = 12;
 let shuffledDeck;
 let dealtDeck;
@@ -17,18 +17,18 @@ const playerThreeArea = document.querySelector(".playerThreeArea");
 const playerFourArea = document.querySelector(".playerFourArea");
 const playerOneArea = document.querySelector(".playerOneArea");
 // const extraArea = document.querySelector(".extraArea");
+const extraHand = [];
+const dealerHand = [];
 const leftOfDealerHand = [];
 const acrossFromDealerHand = [];
 const rightOfDealerHand = [];
-const dealerHand = [];
-const extraHand = [];
-// const allHands = [
-//   leftOfDealerHand,
-//   acrossFromDealerHand,
-//   rightOfDealerHand,
-//   dealerHand,
-//   extraHand
-// ];
+const allHands = [
+  extraHand,
+  dealerHand,
+  leftOfDealerHand,
+  acrossFromDealerHand,
+  rightOfDealerHand
+];
 // Card variables
 const aCard = document.querySelectorAll(".aCard");
 const extraCard = document.querySelectorAll(".extraCard");
@@ -38,6 +38,7 @@ const playerThreeCard = document.querySelectorAll(".playerThreeCard");
 const playerFourCard = document.querySelectorAll(".playerFourCard");
 const cardsToExtraHand = [];
 const cardsFromExtraHand = [];
+let activeCards = playerTwoCard;
 
 // Game variables and resets
 let activeGame = false;
@@ -45,19 +46,20 @@ let activeRound = false;
 
 const clearTable = () => {
   activeRound = false;
-  activePlayer = "dealer";
+  activeNum = 1;
+  // activeCards = playerTwoCard;
   leftOfDealerHand.length = 0;
   acrossFromDealerHand.length = 0;
   rightOfDealerHand.length = 0;
   dealerHand.length = 0;
   extraHand.length = 0;
-  // allHands.push(
-  //   leftOfDealerHand,
-  //   acrossFromDealerHand,
-  //   rightOfDealerHand,
-  //   dealerHand,
-  //   extraHand
-  // );
+  allHands.push(
+    extraHand,
+    dealerHand,
+    leftOfDealerHand,
+    acrossFromDealerHand,
+    rightOfDealerHand
+  );
   aCard.forEach(val => {
     val.classList.remove("is-active");
     val.textContent = "";
@@ -88,7 +90,7 @@ const generatePlayers = numPlayers => {
           : i === 3
           ? "acrossFromDealer"
           : "rightOfDealer",
-      activePlayer: i === 2, // default leftOfDealer
+      activePlayer: i === 2, // boolean - default is leftOfDealer
       buyLastTurn: false,
       holdLastTurn: false,
       tokens: 3,
@@ -248,43 +250,49 @@ const styleBlackCards = () => {
 
 // Change the active player
 const changeActivePlayer = () => {
-  activePlayer === "dealer"
+  activeNum === 1
     ? // leftOfDealer is always after dealer
-      ((activePlayer = "leftOfDealer"),
+      ((activeNum = 2),
+      (activeCards = playerTwoCard),
       (players[0].activePlayer = false),
       (players[1].activePlayer = true),
       playerOneArea.classList.remove("active-area"),
       playerTwoArea.classList.add("active-area"))
-    : activePlayer === "leftOfDealer" && numCards === 9
+    : activeNum === 2 && numCards === 9
     ? // when there are two players, dealer is after leftOfDealer
-      ((activePlayer = "dealer"),
+      ((activeNum = 1),
+      (activeCards = playerOneCard),
       (players[1].activePlayer = false),
       (players[0].activePlayer = true),
       playerTwoArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"))
-    : activePlayer === "leftOfDealer"
+    : activeNum === 2
     ? // when there are three or four players, accrossFromDealer is next
-      ((activePlayer = "acrossFromDealer"),
+      ((activeNum = 3),
+      (activeCards = playerThreeCard),
       (players[1].activePlayer = false),
       (players[2].activePlayer = true),
       playerTwoArea.classList.remove("active-area"),
       playerThreeArea.classList.add("active-area"))
-    : activePlayer === "acrossFromDealer" && numCards === 12
+    : activeNum === 3 && numCards === 12
     ? // when there three players, dealer is next
-      ((activePlayer = "dealer"),
+      ((activeNum = 1),
+      (activeCards = playerOneCard),
       (players[2].activePlayer = false),
       (players[0].activePlayer = true),
       playerThreeArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"))
-    : activePlayer === "acrossFromDealer"
+    : activeNum === 3
     ? // when there are four players, rightOfDealer is next
-      ((activePlayer = "rightOfDealer"),
+      ((activeNum = 4),
+      (activeCards = playerFourCard),
       (players[2].activePlayer = false),
       (players[3].activePlayer = true),
       playerThreeArea.classList.remove("active-area"),
       playerFourArea.classList.add("active-area"))
     : // dealer is always after rightOfDealer
-      ((activePlayer = "dealer"),
+      ((activeNum = 1),
+      (activeCards = playerOneCard),
       (players[3].activePlayer = false),
       (players[0].activePlayer = true),
       playerFourArea.classList.remove("active-area"),
@@ -299,7 +307,7 @@ const deal = () => {
   if (activeGame && activeRound === false) {
     clearTable();
     activeRound = true;
-    dealButton.textContent = "Advice";
+    dealButton.textContent = "Score";
     shuffle(newDeck());
     assignCardsToPlayers();
     // "Deal" cards to screen
@@ -330,8 +338,9 @@ const deal = () => {
     changeActivePlayer();
     // console.log(dealtDeck);
     console.log(extraHand);
-  } else if (activeRound) {
-    alert("Select cards to exchange.");
+  } else if (activeRound && dealButton.textContent === "Score") {
+    // Temp code to call and test checkScore()
+    // checkScore();
   }
 };
 dealButton.addEventListener("click", deal);
@@ -380,12 +389,51 @@ const selectDeselectCard = e => {
 };
 
 // Add event listeners to playerOneCard, etc., & extraCard NodeLists
-// Note to fix: !activePlayer can "click" extraCard...
+// Note to fix: only the active player should be able to "click" extraCard...
 extraCard.forEach(val => val.addEventListener("click", selectDeselectCard));
-playerOneCard.forEach(val => val.addEventListener("click", selectDeselectCard));
-playerTwoCard.forEach(val => val.addEventListener("click", selectDeselectCard));
-playerThreeCard.forEach(v => v.addEventListener("click", selectDeselectCard));
-playerFourCard.forEach(v => v.addEventListener("click", selectDeselectCard));
+activeCards.forEach(val => val.addEventListener("click", selectDeselectCard));
+
+// Note to fix: only one player's cards should be "click"-able at a time...
+// activeNum === 1
+//   ? (activeCards = playerOneCard)
+//   : activeNum === 2
+//   ? (activeCards = playerTwoCard)
+//   : activeNum === 3
+//   ? (activeCards = playerThreeCard)
+//   : (activeCards = playerFourCard);
+
+
+// playerOneCard.forEach(val => val.addEventListener("click", selectDeselectCard));
+// playerTwoCard.forEach(val => val.addEventListener("click", selectDeselectCard));
+// playerThreeCard.forEach(v => v.addEventListener("click", selectDeselectCard));
+// playerFourCard.forEach(v => v.addEventListener("click", selectDeselectCard));
+
+// activeNum === 1
+//   ? activeCards = playerOneCard
+//   : activeNum === 2
+//   ? activeCards = playerTwoCard
+//   : activeNum === 3
+//   ? activeCards = playerThreeCard
+//   : activeCards = playerFourCard
+
+// Check score
+// const updateScore = (aValue, bValue) => {
+//   // (if leftOfDealerHand[0].suit === leftOfDealerHand[0].suit)
+//   // leftOfDealerHand.reduce((acc, next) => leftOfDealerHand.);
+//   if (activeNum === 2) {
+//     (if leftOfDealerHand[0].suit === leftOfDealerHand[0].suit) {
+//       return;
+//     }
+
+// };
+
+const checkScore = () => {
+  players.forEach(player => {
+    if (player.activePlayer) {
+      console.log(player.currentScore);
+    }
+  });
+};
 
 // Change the dealer
 const changeDealer = () => {
@@ -490,8 +538,8 @@ const exchangeCards = () => {
         extraHand[i].cardPosition = "extraHand";
         extraHand[i].selected = false;
       }
-      // swapping three cards for the activePlayer
-      if (activePlayer === "leftOfDealer") {
+      // swapping three cards for the current player
+      if (activeNum === 2) {
         leftOfDealerHand.splice(0, 3, ...cardsFromExtraHand);
         for (let i = 0; i <= 2; i++) {
           playerTwoCard[i].textContent = leftOfDealerHand[i].card;
@@ -499,7 +547,7 @@ const exchangeCards = () => {
           leftOfDealerHand[i].cardPosition = "leftOfDealerHand";
           leftOfDealerHand[i].selected = false;
         }
-      } else if (activePlayer === "acrossFromDealer") {
+      } else if (activeNum === 3) {
         acrossFromDealerHand.splice(0, 3, ...cardsFromExtraHand);
         for (let i = 0; i <= 2; i++) {
           playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
@@ -507,7 +555,7 @@ const exchangeCards = () => {
           acrossFromDealerHand[i].cardPosition = "acrossFromDealerHand";
           acrossFromDealerHand[i].selected = false;
         }
-      } else if (activePlayer === "rightOfDealer") {
+      } else if (activeNum === 4) {
         rightOfDealerHand.splice(0, 3, ...cardsFromExtraHand);
         for (let i = 0; i <= 2; i++) {
           playerFourCard[i].classList.remove("is-active");
@@ -515,7 +563,7 @@ const exchangeCards = () => {
           rightOfDealerHand[i].cardPosition = "rightOfDealerHand";
           rightOfDealerHand[i].selected = false;
         }
-      } else if (activePlayer === "dealer") {
+      } else if (activeNum === 1) {
         dealerHand.splice(0, 3, ...cardsFromExtraHand);
         for (let i = 0; i <= 2; i++) {
           playerOneCard[i].classList.remove("is-active");
@@ -548,41 +596,3 @@ exchangeButton.addEventListener("click", exchangeCards);
 // for (let i = 0; i < aCard.length; i++) {
 //   aCard[i].addEventListener("click", selectDeselectCard);
 // }
-
-// Below didn't work...
-// activePlayer === "dealer"
-//   ? playerOneCard.forEach(val =>
-//       val.addEventListener("click", selectDeselectCard)
-//     )
-//   : activePlayer === "leftOfDealer"
-//   ? playerTwoCard.forEach(val =>
-//       val.addEventListener("click", selectDeselectCard)
-//     )
-//   : activePlayer === "acrossFromDealer"
-//   ? playerThreeCard.forEach(val =>
-//       val.addEventListener("click", selectDeselectCard)
-//     )
-//   : playerFourCard.forEach(val =>
-//       val.addEventListener("click", selectDeselectCard)
-//     );
-
-// dealtDeck.forEach(cardToExtra => {
-//   cardsToExtraHand.forEach(obj => {
-//     if (obj.card === cardToExtra.card) {
-//       cardToExtra.cardPosition = "extraHand";
-//       cardToExtra.selected = false;
-//       extraHand.push(cardToExtra);
-//     }
-//   });
-//   console.log(cardsToExtraHand);
-// });
-
-//   dealtDeck.forEach(cardFromExtra => {
-//     cardsFromExtraHand.forEach(obj => {
-//       if (obj.card === cardFromExtra.card) {
-//         cardFromExtra.cardPosition = `${activePlayer}hand`;
-//         extraHand.splice(extraHand.indexOf(cardFromExtra, 1));
-//       }
-//     });
-//     console.log(cardsFromExtraHand);
-//   });
