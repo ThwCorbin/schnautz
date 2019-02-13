@@ -6,6 +6,7 @@ const num1to4 = document.querySelector(".num1to4");
 const players = [];
 let activeNum = 1;
 let numCards = 12;
+let eventsCards;
 let shuffledDeck;
 let dealtDeck;
 // Hand variables
@@ -90,7 +91,7 @@ const generatePlayers = numPlayers => {
           : i === 3
           ? "acrossFromDealer"
           : "rightOfDealer",
-      activePlayer: i === 2, // boolean - default is leftOfDealer
+      activePlayer: i === 1, // boolean - default is dealer
       buyLastTurn: false,
       holdLastTurn: false,
       tokens: 3,
@@ -253,50 +254,51 @@ const changeActivePlayer = () => {
   activeNum === 1
     ? // leftOfDealer is always after dealer
       ((activeNum = 2),
-      (activeCards = playerTwoCard),
       (players[0].activePlayer = false),
       (players[1].activePlayer = true),
       playerOneArea.classList.remove("active-area"),
-      playerTwoArea.classList.add("active-area"))
+      playerTwoArea.classList.add("active-area"),
+      (activeCards = playerTwoCard))
     : activeNum === 2 && numCards === 9
     ? // when there are two players, dealer is after leftOfDealer
       ((activeNum = 1),
-      (activeCards = playerOneCard),
       (players[1].activePlayer = false),
       (players[0].activePlayer = true),
       playerTwoArea.classList.remove("active-area"),
-      playerOneArea.classList.add("active-area"))
+      playerOneArea.classList.add("active-area"),
+      (activeCards = playerOneCard))
     : activeNum === 2
     ? // when there are three or four players, accrossFromDealer is next
       ((activeNum = 3),
-      (activeCards = playerThreeCard),
       (players[1].activePlayer = false),
       (players[2].activePlayer = true),
       playerTwoArea.classList.remove("active-area"),
-      playerThreeArea.classList.add("active-area"))
+      playerThreeArea.classList.add("active-area"),
+      (activeCards = playerThreeCard))
     : activeNum === 3 && numCards === 12
     ? // when there three players, dealer is next
       ((activeNum = 1),
-      (activeCards = playerOneCard),
       (players[2].activePlayer = false),
       (players[0].activePlayer = true),
       playerThreeArea.classList.remove("active-area"),
-      playerOneArea.classList.add("active-area"))
+      playerOneArea.classList.add("active-area"),
+      (activeCards = playerOneCard))
     : activeNum === 3
     ? // when there are four players, rightOfDealer is next
       ((activeNum = 4),
-      (activeCards = playerFourCard),
       (players[2].activePlayer = false),
       (players[3].activePlayer = true),
       playerThreeArea.classList.remove("active-area"),
-      playerFourArea.classList.add("active-area"))
+      playerFourArea.classList.add("active-area"),
+      (activeCards = playerFourCard))
     : // dealer is always after rightOfDealer
       ((activeNum = 1),
-      (activeCards = playerOneCard),
       (players[3].activePlayer = false),
       (players[0].activePlayer = true),
       playerFourArea.classList.remove("active-area"),
-      playerOneArea.classList.add("active-area"));
+      playerOneArea.classList.add("active-area"),
+      (activeCards = playerOneCard));
+  eventsCards();
   // Clear arrays for next player
   cardsToExtraHand.length = 0;
   cardsFromExtraHand.length = 0;
@@ -389,32 +391,9 @@ const selectDeselectCard = e => {
 };
 
 // Add event listeners to playerOneCard, etc., & extraCard NodeLists
-// Note to fix: only the active player should be able to "click" extraCard...
 extraCard.forEach(val => val.addEventListener("click", selectDeselectCard));
-activeCards.forEach(val => val.addEventListener("click", selectDeselectCard));
-
-// Note to fix: only one player's cards should be "click"-able at a time...
-// activeNum === 1
-//   ? (activeCards = playerOneCard)
-//   : activeNum === 2
-//   ? (activeCards = playerTwoCard)
-//   : activeNum === 3
-//   ? (activeCards = playerThreeCard)
-//   : (activeCards = playerFourCard);
-
-
-// playerOneCard.forEach(val => val.addEventListener("click", selectDeselectCard));
-// playerTwoCard.forEach(val => val.addEventListener("click", selectDeselectCard));
-// playerThreeCard.forEach(v => v.addEventListener("click", selectDeselectCard));
-// playerFourCard.forEach(v => v.addEventListener("click", selectDeselectCard));
-
-// activeNum === 1
-//   ? activeCards = playerOneCard
-//   : activeNum === 2
-//   ? activeCards = playerTwoCard
-//   : activeNum === 3
-//   ? activeCards = playerThreeCard
-//   : activeCards = playerFourCard
+eventsCards = () =>
+  activeCards.forEach(val => val.addEventListener("click", selectDeselectCard));
 
 // Check score
 // const updateScore = (aValue, bValue) => {
@@ -424,7 +403,6 @@ activeCards.forEach(val => val.addEventListener("click", selectDeselectCard));
 //     (if leftOfDealerHand[0].suit === leftOfDealerHand[0].suit) {
 //       return;
 //     }
-
 // };
 
 const checkScore = () => {
@@ -596,3 +574,16 @@ exchangeButton.addEventListener("click", exchangeCards);
 // for (let i = 0; i < aCard.length; i++) {
 //   aCard[i].addEventListener("click", selectDeselectCard);
 // }
+
+// playerOneCard.forEach(val => val.addEventListener("click", selectDeselectCard));
+// playerTwoCard.forEach(val => val.addEventListener("click", selectDeselectCard));
+// playerThreeCard.forEach(v => v.addEventListener("click", selectDeselectCard));
+// playerFourCard.forEach(v => v.addEventListener("click", selectDeselectCard));
+
+// activeNum === 1
+//   ? activeCards = playerOneCard
+//   : activeNum === 2
+//   ? activeCards = playerTwoCard
+//   : activeNum === 3
+//   ? activeCards = playerThreeCard
+//   : activeCards = playerFourCard
