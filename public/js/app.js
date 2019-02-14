@@ -348,6 +348,13 @@ const selectDeselectCard = e => {
 
 // Change the active player
 const changeActivePlayer = () => {
+  // Remove event listener for the current player's three cards
+  activeCards.forEach(val =>
+    val.removeEventListener("click", selectDeselectCard)
+  );
+  // Update players array of player objects
+  // Update player areas in DOM
+  // Add event listeners to the next player's three cards
   activeNum === 1
     ? // leftOfDealer is always after dealer
       ((activeNum = 2),
@@ -356,9 +363,8 @@ const changeActivePlayer = () => {
       playerOneArea.classList.remove("active-area"),
       playerTwoArea.classList.add("active-area"),
       (activeCards = playerTwoCard),
-      eventsCards(playerTwoCard))
-    : // playerOneCard.removeEventListener("click", selectDeselectCard),
-    activeNum === 2 && numCards === 9
+      eventsCards())
+    : activeNum === 2 && numCards === 9
     ? // when there are two players, dealer is after leftOfDealer
       ((activeNum = 1),
       (players[1].activePlayer = false),
@@ -366,9 +372,8 @@ const changeActivePlayer = () => {
       playerTwoArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"),
       (activeCards = playerOneCard),
-      eventsCards(playerOneCard))
-    : // playerTwoCard.removeEventListener("click", selectDeselectCard),
-    activeNum === 2
+      eventsCards())
+    : activeNum === 2
     ? // when there are three or four players, accrossFromDealer is next
       ((activeNum = 3),
       (players[1].activePlayer = false),
@@ -376,9 +381,8 @@ const changeActivePlayer = () => {
       playerTwoArea.classList.remove("active-area"),
       playerThreeArea.classList.add("active-area"),
       (activeCards = playerThreeCard),
-      eventsCards(playerThreeCard))
-    : // playerTwoCard.removeEventListener("click", selectDeselectCard),
-    activeNum === 3 && numCards === 12
+      eventsCards())
+    : activeNum === 3 && numCards === 12
     ? // when there three players, dealer is next
       ((activeNum = 1),
       (players[2].activePlayer = false),
@@ -386,9 +390,8 @@ const changeActivePlayer = () => {
       playerThreeArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"),
       (activeCards = playerOneCard),
-      eventsCards(playerOneCard))
-    : // playerThreeCard.removeEventListener("click", selectDeselectCard),
-    activeNum === 3
+      eventsCards())
+    : activeNum === 3
     ? // when there are four players, rightOfDealer is next
       ((activeNum = 4),
       (players[2].activePlayer = false),
@@ -396,17 +399,15 @@ const changeActivePlayer = () => {
       playerThreeArea.classList.remove("active-area"),
       playerFourArea.classList.add("active-area"),
       (activeCards = playerFourCard),
-      eventsCards(playerFourCard))
-    : // playerThreeCard.removeEventListener("click", selectDeselectCard),
-      // dealer is always after rightOfDealer
+      eventsCards())
+    : // dealer is always after rightOfDealer
       ((activeNum = 1),
       (players[3].activePlayer = false),
       (players[0].activePlayer = true),
       playerFourArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"),
       (activeCards = playerOneCard),
-      eventsCards(playerOneCard));
-  // playerFourCard.removeEventListener("click", selectDeselectCard),
+      eventsCards());
 
   // Clear arrays for next player
   cardsToExtraHand.length = 0;
@@ -458,8 +459,9 @@ dealButton.addEventListener("click", deal);
 
 // Add event listeners to playerOneCard, etc., & extraCard NodeLists
 extraCard.forEach(val => val.addEventListener("click", selectDeselectCard));
-eventsCards = () =>
+eventsCards = () => {
   activeCards.forEach(val => val.addEventListener("click", selectDeselectCard));
+};
 
 // Check score
 const checkScore = () => {
