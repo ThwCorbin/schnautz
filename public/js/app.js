@@ -171,46 +171,46 @@ const shuffle = deck => {
 };
 
 const updateScore = num => {
-  let index = num - 1;
+  let idx = num - 1;
 
   allHands[num][0].suit === allHands[num][1].suit &&
   allHands[num][0].suit === allHands[num][2].suit
-    ? (players[index].currentScore =
+    ? (players[idx].currentScore =
         allHands[num][0].points +
         allHands[num][1].points +
         allHands[num][2].points)
     : allHands[num][0].suit === allHands[num][1].suit
-    ? (players[index].currentScore =
+    ? (players[idx].currentScore =
         allHands[num][0].points + allHands[num][1].points)
     : allHands[num][0].suit === allHands[num][2].suit
-    ? (players[index].currentScore =
+    ? (players[idx].currentScore =
         allHands[num][0].points + allHands[num][2].points)
     : allHands[num][1].suit === allHands[num][2].suit
-    ? (players[index].currentScore =
+    ? (players[idx].currentScore =
         allHands[num][1].points + allHands[num][2].points)
     : allHands[num][0].rank === "A" &&
       allHands[num][1].rank === "A" &&
       allHands[num][2].rank === "A"
-    ? (players[index].currentScore = 31)
+    ? (players[idx].currentScore = 31)
     : allHands[num][0].rank === "10" &&
       allHands[num][1].rank === "10" &&
       allHands[num][2].rank === "10"
-    ? (players[index].currentScore = 30)
+    ? (players[idx].currentScore = 30)
     : allHands[num][0].rank === allHands[num][1].rank &&
       allHands[num][0].rank === allHands[num][2].rank
-    ? (players[index].currentScore = 30.5)
+    ? (players[idx].currentScore = 30.5)
     : allHands[num][0].points >= allHands[num][1].points &&
       allHands[num][0].points >= allHands[num][2].points
-    ? (players[index].currentScore = allHands[num][0].points)
+    ? (players[idx].currentScore = allHands[num][0].points)
     : allHands[num][0].points >= allHands[num][1].points &&
       allHands[num][0].points <= allHands[num][2].points
-    ? (players[index].currentScore = allHands[num][2].points)
+    ? (players[idx].currentScore = allHands[num][2].points)
     : allHands[num][0].points <= allHands[num][1].points &&
       allHands[num][1].points >= allHands[num][2].points
-    ? (players[index].currentScore = allHands[num][1].points)
-    : (players[index].currentScore = allHands[num][2].points);
+    ? (players[idx].currentScore = allHands[num][1].points)
+    : (players[idx].currentScore = allHands[num][2].points);
   console.log(
-    `Player ${players[index].player} score: ${players[index].currentScore}`
+    `Player ${players[idx].player} score: ${players[idx].currentScore}`
   );
 };
 
@@ -303,6 +303,15 @@ const styleBlackCards = () => {
   );
 };
 
+const endRound = () => {
+  let message = ``;
+  players.forEach(val => {
+    message += `Player ${val.player} score: ${val.currentScore} 
+`;
+  });
+  alert(message);
+};
+
 // Manage cards that current player will be exchange with extra hand
 const manageCardsToExchange = (fromExtra, isSelected, cardObj) => {
   fromExtra && isSelected
@@ -348,6 +357,7 @@ const selectDeselectCard = e => {
 
 // Change the active player
 const changeActivePlayer = () => {
+  let idx = activeNum - 1;
   // Remove event listener for the current player's three cards
   activeCards.forEach(val =>
     val.removeEventListener("click", selectDeselectCard)
@@ -412,6 +422,15 @@ const changeActivePlayer = () => {
   // Clear arrays for next player
   cardsToExtraHand.length = 0;
   cardsFromExtraHand.length = 0;
+  // Check if current player used "buy" on last turn
+  if (players[idx].buyLastTurn) {
+    players[idx].buyLastTurn = false;
+  }
+  // Check if the next player used "hold" on last turn
+  idx = activeNum - 1;
+  if (players[idx].holdLastTurn) {
+    endRound();
+  }
 };
 
 // Deal card objects
@@ -463,26 +482,27 @@ eventsCards = () => {
   activeCards.forEach(val => val.addEventListener("click", selectDeselectCard));
 };
 
-// Check score
-const checkScore = () => {
-  players.forEach(player => {
-    if (player.activePlayer) {
-      console.log(player.currentScore);
-    }
-  });
-};
-
-// Change the dealer
-const changeDealer = () => {
-  // or just change a dealer variable
-};
-
+// Current player skips turn but cannot skip two turns in a row
 const buy = () => {
-  // if player did not buy or hold on last turn...
-  // ...change players array buy property to true for current player
-  // changeActivePlayer();
-  // need to change buy property back to false after player's next turn?
+  let idx = activeNum - 1;
+  // check if player used "buy" on last turn
+  if (players[idx].buyLastTurn === true) {
+    alert(`Player ${activeNum} cannot buy this turn.`);
+  } else {
+    players[idx].buyLastTurn = true;
+    changeActivePlayer();
+  }
 };
+buyButton.addEventListener("click", buy);
+
+// Current player skips turn and signals this round is ending
+const hold = () => {
+  let idx = activeNum - 1;
+  players[idx].holdLastTurn = true;
+  changeActivePlayer();
+  // Other players have one more turn (but not current player)
+};
+holdButton.addEventListener("click", hold);
 
 // Exchange 1 or 3 cards from a player's hand with the extra hand
 const exchangeCards = () => {
