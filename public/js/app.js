@@ -1,3 +1,4 @@
+// ///// VARIABLES /////////////////////////////////////////////
 // Control and Players variables
 const beginEndGameButton = document.querySelector(".beginEndGameButton");
 const playersButton = document.querySelector(".playersButton");
@@ -7,7 +8,6 @@ const players = [];
 let activeNum = 1;
 let numCards = 12;
 let eventsCards;
-// let removeListener;
 let shuffledDeck;
 let dealtDeck;
 // Hand variables
@@ -33,18 +33,13 @@ const playerTwoCard = document.querySelectorAll(".playerTwoCard");
 const playerThreeCard = document.querySelectorAll(".playerThreeCard");
 const playerFourCard = document.querySelectorAll(".playerFourCard");
 let activeCards;
-// const cardsToListen = [
-//   playerOneCard,
-//   playerTwoCard,
-//   playerThreeCard,
-//   playerFourCard
-// ];
 const cardsToExtraHand = [];
 const cardsFromExtraHand = [];
-
-// Game variables and resets
+// Game/round active and reset variables
 let activeGame = false;
 let activeRound = false;
+
+// ///// RESET GAME/ROUND FUNCTIONS ////////////////////////////
 
 const clearTable = () => {
   activeRound = false;
@@ -72,6 +67,20 @@ const resetGame = () => {
   clearTable();
 };
 
+// ///// GAME MANAGEMENT FUNCTIONS ///////////////////////////////
+
+// Change number of players and number of cards to deal
+const changePlayersNum = () => {
+  if (!activeGame) {
+    num1to4.textContent === "4"
+      ? ((num1to4.textContent = "3"), (numCards = 12))
+      : num1to4.textContent === "3"
+      ? ((num1to4.textContent = "2"), (numCards = 9))
+      : ((num1to4.textContent = "4"), (numCards = 15));
+  }
+};
+playersButton.addEventListener("click", changePlayersNum);
+
 // Generate players
 const generatePlayers = numPlayers => {
   clearTable();
@@ -96,19 +105,7 @@ const generatePlayers = numPlayers => {
   // console.log(players);
 };
 
-// Change number of players and number of cards to deal
-const changePlayersNum = () => {
-  if (!activeGame) {
-    num1to4.textContent === "4"
-      ? ((num1to4.textContent = "3"), (numCards = 12))
-      : num1to4.textContent === "3"
-      ? ((num1to4.textContent = "2"), (numCards = 9))
-      : ((num1to4.textContent = "4"), (numCards = 15));
-  }
-};
-playersButton.addEventListener("click", changePlayersNum);
-
-// Begin and End Play
+// Begin play
 const beginEndGame = () => {
   if (!activeGame) {
     activeGame = true;
@@ -122,6 +119,66 @@ const beginEndGame = () => {
   }
 };
 beginEndGameButton.addEventListener("click", beginEndGame);
+
+// End the round
+const endRound = () => {
+  let message = ``;
+  players.forEach(val => {
+    message += `Player ${val.player} score: ${val.currentScore} 
+`;
+  });
+  alert(message);
+  setTimeout(clearTable, 3000);
+  playersButton.textContent = "Deal";
+  beginEndGameButton.textContent = "End Game";
+};
+
+// Update player scores
+const updateScore = num => {
+  let idx = num - 1;
+
+  allHands[num][0].suit === allHands[num][1].suit &&
+  allHands[num][0].suit === allHands[num][2].suit
+    ? (players[idx].currentScore =
+        allHands[num][0].points +
+        allHands[num][1].points +
+        allHands[num][2].points)
+    : allHands[num][0].suit === allHands[num][1].suit
+    ? (players[idx].currentScore =
+        allHands[num][0].points + allHands[num][1].points)
+    : allHands[num][0].suit === allHands[num][2].suit
+    ? (players[idx].currentScore =
+        allHands[num][0].points + allHands[num][2].points)
+    : allHands[num][1].suit === allHands[num][2].suit
+    ? (players[idx].currentScore =
+        allHands[num][1].points + allHands[num][2].points)
+    : allHands[num][0].rank === "A" &&
+      allHands[num][1].rank === "A" &&
+      allHands[num][2].rank === "A"
+    ? (players[idx].currentScore = 31)
+    : allHands[num][0].rank === "10" &&
+      allHands[num][1].rank === "10" &&
+      allHands[num][2].rank === "10"
+    ? (players[idx].currentScore = 30)
+    : allHands[num][0].rank === allHands[num][1].rank &&
+      allHands[num][0].rank === allHands[num][2].rank
+    ? (players[idx].currentScore = 30.5)
+    : allHands[num][0].points >= allHands[num][1].points &&
+      allHands[num][0].points >= allHands[num][2].points
+    ? (players[idx].currentScore = allHands[num][0].points)
+    : allHands[num][0].points >= allHands[num][1].points &&
+      allHands[num][0].points <= allHands[num][2].points
+    ? (players[idx].currentScore = allHands[num][2].points)
+    : allHands[num][0].points <= allHands[num][1].points &&
+      allHands[num][1].points >= allHands[num][2].points
+    ? (players[idx].currentScore = allHands[num][1].points)
+    : (players[idx].currentScore = allHands[num][2].points);
+  console.log(
+    `Player ${players[idx].player} score: ${players[idx].currentScore}`
+  );
+};
+
+// ///// CARD AND DECK FUNCTIONS ////////////////////////////////
 
 // Generate new deck (an array of card objects) to pass to shuffle function
 const newDeck = () => {
@@ -170,47 +227,14 @@ const shuffle = deck => {
   return shuffledDeck;
 };
 
-const updateScore = num => {
-  let idx = num - 1;
-
-  allHands[num][0].suit === allHands[num][1].suit &&
-  allHands[num][0].suit === allHands[num][2].suit
-    ? (players[idx].currentScore =
-        allHands[num][0].points +
-        allHands[num][1].points +
-        allHands[num][2].points)
-    : allHands[num][0].suit === allHands[num][1].suit
-    ? (players[idx].currentScore =
-        allHands[num][0].points + allHands[num][1].points)
-    : allHands[num][0].suit === allHands[num][2].suit
-    ? (players[idx].currentScore =
-        allHands[num][0].points + allHands[num][2].points)
-    : allHands[num][1].suit === allHands[num][2].suit
-    ? (players[idx].currentScore =
-        allHands[num][1].points + allHands[num][2].points)
-    : allHands[num][0].rank === "A" &&
-      allHands[num][1].rank === "A" &&
-      allHands[num][2].rank === "A"
-    ? (players[idx].currentScore = 31)
-    : allHands[num][0].rank === "10" &&
-      allHands[num][1].rank === "10" &&
-      allHands[num][2].rank === "10"
-    ? (players[idx].currentScore = 30)
-    : allHands[num][0].rank === allHands[num][1].rank &&
-      allHands[num][0].rank === allHands[num][2].rank
-    ? (players[idx].currentScore = 30.5)
-    : allHands[num][0].points >= allHands[num][1].points &&
-      allHands[num][0].points >= allHands[num][2].points
-    ? (players[idx].currentScore = allHands[num][0].points)
-    : allHands[num][0].points >= allHands[num][1].points &&
-      allHands[num][0].points <= allHands[num][2].points
-    ? (players[idx].currentScore = allHands[num][2].points)
-    : allHands[num][0].points <= allHands[num][1].points &&
-      allHands[num][1].points >= allHands[num][2].points
-    ? (players[idx].currentScore = allHands[num][1].points)
-    : (players[idx].currentScore = allHands[num][2].points);
-  console.log(
-    `Player ${players[idx].player} score: ${players[idx].currentScore}`
+// Style black cards
+const styleBlackCards = () => {
+  aCard.forEach(val =>
+    val.textContent.includes("♤")
+      ? val.classList.add("aCardBlack")
+      : val.textContent.includes("♧")
+      ? val.classList.add("aCardBlack")
+      : val.classList.remove("aCardBlack")
   );
 };
 
@@ -292,30 +316,6 @@ const assignCardsToPlayers = () => {
   }
 };
 
-// Style black cards
-const styleBlackCards = () => {
-  aCard.forEach(val =>
-    val.textContent.includes("♤")
-      ? val.classList.add("aCardBlack")
-      : val.textContent.includes("♧")
-      ? val.classList.add("aCardBlack")
-      : val.classList.remove("aCardBlack")
-  );
-};
-
-// End the round
-const endRound = () => {
-  let message = ``;
-  players.forEach(val => {
-    message += `Player ${val.player} score: ${val.currentScore} 
-`;
-  });
-  alert(message);
-  setTimeout(clearTable, 3000);
-  playersButton.textContent = "Deal";
-  beginEndGameButton.textContent = "End Game";
-};
-
 // Manage cards that current player will be exchange with extra hand
 const manageCardsToExchange = (fromExtra, isSelected, cardObj) => {
   fromExtra && isSelected
@@ -357,6 +357,11 @@ const selectDeselectCard = e => {
   });
   // console.log(cardsToExtraHand);
   // console.log(cardsFromExtraHand);
+};
+// Add event listeners to playerOneCard, etc., & extraCard NodeLists
+extraCard.forEach(val => val.addEventListener("click", selectDeselectCard));
+eventsCards = () => {
+  activeCards.forEach(val => val.addEventListener("click", selectDeselectCard));
 };
 
 // Change the active player
@@ -480,33 +485,7 @@ const deal = () => {
 };
 dealButton.addEventListener("click", deal);
 
-// Add event listeners to playerOneCard, etc., & extraCard NodeLists
-extraCard.forEach(val => val.addEventListener("click", selectDeselectCard));
-eventsCards = () => {
-  activeCards.forEach(val => val.addEventListener("click", selectDeselectCard));
-};
-
-// Current player skips turn but cannot skip two turns in a row
-const buy = () => {
-  let idx = activeNum - 1;
-  // check if player used "buy" on last turn
-  if (players[idx].buyLastTurn === true) {
-    alert(`Player ${activeNum} cannot buy this turn.`);
-  } else {
-    changeActivePlayer();
-    players[idx].buyLastTurn = true;
-  }
-};
-buyButton.addEventListener("click", buy);
-
-// Current player skips turn and signals this round is ending
-const hold = () => {
-  let idx = activeNum - 1;
-  players[idx].holdLastTurn = true;
-  changeActivePlayer();
-  // Other players have one more turn (but not current player)
-};
-holdButton.addEventListener("click", hold);
+// ///// GAME PLAY FUNCTIONS ///////////////////////////////////
 
 // Exchange 1 or 3 cards from a player's hand with the extra hand
 const exchangeCards = () => {
@@ -650,21 +629,32 @@ const exchangeCards = () => {
   }
   // console.log(extraHand);
 };
-
 exchangeButton.addEventListener("click", exchangeCards);
+
+// Current player skips turn but cannot skip two turns in a row
+const buy = () => {
+  let idx = activeNum - 1;
+  // check if player used "buy" on last turn
+  if (players[idx].buyLastTurn === true) {
+    alert(`Player ${activeNum} cannot buy this turn.`);
+  } else {
+    changeActivePlayer();
+    players[idx].buyLastTurn = true;
+  }
+};
+buyButton.addEventListener("click", buy);
+
+// Current player skips turn and signals this round is ending
+const hold = () => {
+  let idx = activeNum - 1;
+  players[idx].holdLastTurn = true;
+  changeActivePlayer();
+  // Other players have one more turn (but not current player)
+};
+holdButton.addEventListener("click", hold);
 
 // Alternatives for suits
 // White club suit 	♧ 	U+2667 	&#9831 -- Black club suit 	♣ 	U+2663 	&clubs
 // White diamond suit 	♢ 	U+2662 	&#9826 -- Black diamond suit 	♦ 	U+2666 	&diams
 // White heart suit 	♡ 	U+2661 	&#9825 -- Black heart suit 	♥ 	U+2665 	&hearts
 // White spade suit 	♤ 	U+2664 	&#9828 -- Black spade suit 	♠ 	U+2660 	&spade
-//
-// Alternatives for: Add event listener to aCard NodeList to trigger selectDeselectCard(e)
-// for (let i = 0; i < aCard.length; i++) {
-//   aCard[i].addEventListener("click", selectDeselectCard);
-// }
-
-// playerOneCard.forEach(val => val.addEventListener("click", selectDeselectCard));
-// playerTwoCard.forEach(val => val.addEventListener("click", selectDeselectCard));
-// playerThreeCard.forEach(v => v.addEventListener("click", selectDeselectCard));
-// playerFourCard.forEach(v => v.addEventListener("click", selectDeselectCard));
