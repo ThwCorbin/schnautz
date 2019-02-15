@@ -303,6 +303,7 @@ const styleBlackCards = () => {
   );
 };
 
+// End the round
 const endRound = () => {
   let message = ``;
   players.forEach(val => {
@@ -310,6 +311,9 @@ const endRound = () => {
 `;
   });
   alert(message);
+  setTimeout(clearTable, 3000);
+  playersButton.textContent = "Deal";
+  beginEndGameButton.textContent = "End Game";
 };
 
 // Manage cards that current player will be exchange with extra hand
@@ -468,7 +472,7 @@ const deal = () => {
     styleBlackCards();
     changeActivePlayer();
     // console.log(dealtDeck);
-    console.log(extraHand);
+    // console.log(extraHand);
   } else if (activeRound && dealButton.textContent === "Score") {
     // Temp code to call and test checkScore()
     // checkScore();
@@ -489,8 +493,8 @@ const buy = () => {
   if (players[idx].buyLastTurn === true) {
     alert(`Player ${activeNum} cannot buy this turn.`);
   } else {
-    players[idx].buyLastTurn = true;
     changeActivePlayer();
+    players[idx].buyLastTurn = true;
   }
 };
 buyButton.addEventListener("click", buy);
@@ -580,6 +584,8 @@ const exchangeCards = () => {
         });
         playerOneCard[idxToPlayNode].textContent = cardsFromExtraHand[0].card;
         playerOneCard[idxToPlayNode].classList.remove("is-active");
+      } else {
+        alert("Error: Unable to exchange one card");
       }
       styleBlackCards();
       updateScore(activeNum);
@@ -630,17 +636,19 @@ const exchangeCards = () => {
           dealerHand[i].selected = false;
         }
       } else {
-        console.log("Error");
+        alert("Error: Unable to exchange three cards.");
       }
       // Fix: even if error above, below will still set cardsFromExtraHand.length = 0;
       styleBlackCards();
       updateScore(activeNum);
       changeActivePlayer();
     } else {
-      alert("Error");
+      alert("Error: Unable to exchange cards.");
     }
+  } else {
+    alert("Error: Unable to exchange cards.");
   }
-  console.log(extraHand);
+  // console.log(extraHand);
 };
 
 exchangeButton.addEventListener("click", exchangeCards);
