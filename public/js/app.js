@@ -38,6 +38,7 @@ const cardsFromExtraHand = [];
 // Game/round active and reset variables
 let activeGame = false;
 let activeRound = false;
+let changeActivePlayer;
 
 // ///// RESET GAME/ROUND FUNCTIONS ////////////////////////////
 
@@ -55,16 +56,20 @@ const clearTable = () => {
     val.classList.remove("is-active");
     val.textContent = "";
   });
+  eventsCards();
+  // activeCards.forEach(val =>
+  //   val.removeEventListener("click", selectDeselectCard)
+  // );
   cardsToExtraHand.length = 0;
   cardsFromExtraHand.length = 0;
 };
 
 const resetGame = () => {
+  clearTable();
   activeGame = false;
-  players.length = 0;
   dealButton.textContent = "Players?";
   beginEndGameButton.textContent = "Start";
-  clearTable();
+  players.length = 0;
 };
 
 // ///// GAME MANAGEMENT FUNCTIONS ///////////////////////////////
@@ -121,61 +126,85 @@ const beginEndGame = () => {
 beginEndGameButton.addEventListener("click", beginEndGame);
 
 // End the round
-const endRound = () => {
+const endRound = (playerNum, msgSchnautzFeuer, num31Or33) => {
   let message = ``;
   players.forEach(val => {
     message += `Player ${val.player} score: ${val.currentScore} 
 `;
   });
-  alert(message);
-  setTimeout(clearTable, 3000);
+  // A player with 31 (Schnautz) or 33 (Feuer) points wins the round immediately
+  num31Or33
+    ? alert(
+        `${msgSchnautzFeuer}!!!
+
+        Player ${playerNum} has ${num31Or33}!`
+      )
+    : alert(message);
+  clearTable();
+  // setTimeout(clearTable, 1000);
   playersButton.textContent = "Deal";
   beginEndGameButton.textContent = "End Game";
 };
 
-// Update player scores
-const updateScore = num => {
-  let idx = num - 1;
+// Update player scores and check for 31 (Schnautz) or 33 (Feuer)
+const updateScore = playerNum => {
+  let idx = playerNum - 1; // Convert player number to zero-based index
+  // Use idx for players array because extra is not a player
+  // Use playerNum for allHands (not idx) because allHands[0] is extraHand
+  // .points property stores point value of A(11),K(10),Q(10),J(10),10,9,8,7
 
-  allHands[num][0].suit === allHands[num][1].suit &&
-  allHands[num][0].suit === allHands[num][2].suit
+  // If all three cards are the same suit, add the points
+  allHands[playerNum][0].suit === allHands[playerNum][1].suit &&
+  allHands[playerNum][0].suit === allHands[playerNum][2].suit
     ? (players[idx].currentScore =
-        allHands[num][0].points +
-        allHands[num][1].points +
-        allHands[num][2].points)
-    : allHands[num][0].suit === allHands[num][1].suit
+        allHands[playerNum][0].points +
+        allHands[playerNum][1].points +
+        allHands[playerNum][2].points)
+    : // If two cards are the same suit, add the points
+    allHands[playerNum][0].suit === allHands[playerNum][1].suit
     ? (players[idx].currentScore =
-        allHands[num][0].points + allHands[num][1].points)
-    : allHands[num][0].suit === allHands[num][2].suit
+        allHands[playerNum][0].points + allHands[playerNum][1].points)
+    : allHands[playerNum][0].suit === allHands[playerNum][2].suit
     ? (players[idx].currentScore =
-        allHands[num][0].points + allHands[num][2].points)
-    : allHands[num][1].suit === allHands[num][2].suit
+        allHands[playerNum][0].points + allHands[playerNum][2].points)
+    : allHands[playerNum][1].suit === allHands[playerNum][2].suit
     ? (players[idx].currentScore =
-        allHands[num][1].points + allHands[num][2].points)
-    : allHands[num][0].rank === "A" &&
-      allHands[num][1].rank === "A" &&
-      allHands[num][2].rank === "A"
-    ? (players[idx].currentScore = 31)
-    : allHands[num][0].rank === "10" &&
-      allHands[num][1].rank === "10" &&
-      allHands[num][2].rank === "10"
+        allHands[playerNum][1].points + allHands[playerNum][2].points)
+    : // If all three cards are aces, the score is 33
+    allHands[playerNum][0].rank === "A" &&
+      allHands[playerNum][1].rank === "A" &&
+      allHands[playerNum][2].rank === "A"
+    ? (players[idx].currentScore = 33)
+    : // If all three cards are tens, the score is 30
+    allHands[playerNum][0].rank === "10" &&
+      allHands[playerNum][1].rank === "10" &&
+      allHands[playerNum][2].rank === "10"
     ? (players[idx].currentScore = 30)
-    : allHands[num][0].rank === allHands[num][1].rank &&
-      allHands[num][0].rank === allHands[num][2].rank
+    : // If all three cards are the same rank, the score is 30.5
+    allHands[playerNum][0].rank === allHands[playerNum][1].rank &&
+      allHands[playerNum][0].rank === allHands[playerNum][2].rank
     ? (players[idx].currentScore = 30.5)
-    : allHands[num][0].points >= allHands[num][1].points &&
-      allHands[num][0].points >= allHands[num][2].points
-    ? (players[idx].currentScore = allHands[num][0].points)
-    : allHands[num][0].points >= allHands[num][1].points &&
-      allHands[num][0].points <= allHands[num][2].points
-    ? (players[idx].currentScore = allHands[num][2].points)
-    : allHands[num][0].points <= allHands[num][1].points &&
-      allHands[num][1].points >= allHands[num][2].points
-    ? (players[idx].currentScore = allHands[num][1].points)
-    : (players[idx].currentScore = allHands[num][2].points);
+    : // Otherwise, the score is the point value of the highest card
+    allHands[playerNum][0].points >= allHands[playerNum][1].points &&
+      allHands[playerNum][0].points >= allHands[playerNum][2].points
+    ? (players[idx].currentScore = allHands[playerNum][0].points)
+    : allHands[playerNum][0].points >= allHands[playerNum][1].points &&
+      allHands[playerNum][0].points <= allHands[playerNum][2].points
+    ? (players[idx].currentScore = allHands[playerNum][2].points)
+    : allHands[playerNum][0].points <= allHands[playerNum][1].points &&
+      allHands[playerNum][1].points >= allHands[playerNum][2].points
+    ? (players[idx].currentScore = allHands[playerNum][1].points)
+    : (players[idx].currentScore = allHands[playerNum][2].points);
   console.log(
     `Player ${players[idx].player} score: ${players[idx].currentScore}`
   );
+
+  // If the player's score is 31 or 33, the round ends immediately
+  players[idx].currentScore === 31
+    ? endRound(playerNum, "Schnautz", 31)
+    : players[idx].currentScore === 33
+    ? endRound(playerNum, "Feuer", 33)
+    : changeActivePlayer();
 };
 
 // ///// CARD AND DECK FUNCTIONS ////////////////////////////////
@@ -365,8 +394,8 @@ eventsCards = () => {
 };
 
 // Change the active player
-const changeActivePlayer = () => {
-  let idx = activeNum - 1;
+changeActivePlayer = () => {
+  let idx = activeNum - 1; // Convert player number to zero-based index
   // Remove event listener for the current player's three cards
   activeCards.forEach(val =>
     val.removeEventListener("click", selectDeselectCard)
@@ -438,6 +467,7 @@ const changeActivePlayer = () => {
   // Check if the next player used "hold" on last turn
   idx = activeNum - 1;
   if (players[idx].holdLastTurn) {
+    players.forEach(val => (val.holdLastTurn = false));
     endRound();
   }
 };
@@ -568,7 +598,6 @@ const exchangeCards = () => {
       }
       styleBlackCards();
       updateScore(activeNum);
-      changeActivePlayer();
     } else if (
       cardsToExtraHand.length === 3 &&
       cardsFromExtraHand.length === 3
@@ -617,10 +646,8 @@ const exchangeCards = () => {
       } else {
         alert("Error: Unable to exchange three cards.");
       }
-      // Fix: even if error above, below will still set cardsFromExtraHand.length = 0;
       styleBlackCards();
       updateScore(activeNum);
-      changeActivePlayer();
     } else {
       alert("Error: Unable to exchange cards.");
     }
@@ -653,6 +680,7 @@ const hold = () => {
 };
 holdButton.addEventListener("click", hold);
 
+// ///// KEEPERS ///////////////////////////////////////////////
 // Alternatives for suits
 // White club suit 	♧ 	U+2667 	&#9831 -- Black club suit 	♣ 	U+2663 	&clubs
 // White diamond suit 	♢ 	U+2662 	&#9826 -- Black diamond suit 	♦ 	U+2666 	&diams
