@@ -5,7 +5,8 @@ const playersButton = document.querySelector(".playersButton");
 const dealButton = document.querySelector(".dealButton");
 const num1to4 = document.querySelector(".num1to4");
 const players = [];
-let activeNum = 1;
+let activePlayerNum = 1;
+let numPlayers;
 let numCards = 12;
 let eventsCards;
 let shuffledDeck;
@@ -44,8 +45,8 @@ let changeActivePlayer;
 
 const clearTable = () => {
   activeRound = false;
-  activeNum = 1;
-  activeCards = playerOneCard;
+  // activePlayerNum = 1; // set this somewhere else
+  // activeCards = playerOneCard; // set this somewhere else
   leftOfDealerHand.length = 0;
   acrossFromDealerHand.length = 0;
   rightOfDealerHand.length = 0;
@@ -87,7 +88,7 @@ const changePlayersNum = () => {
 playersButton.addEventListener("click", changePlayersNum);
 
 // Generate players
-const generatePlayers = numPlayers => {
+const generatePlayers = () => {
   clearTable();
   for (let i = 1; i <= numPlayers; i++) {
     players.push({
@@ -114,7 +115,8 @@ const generatePlayers = numPlayers => {
 const beginEndGame = () => {
   if (!activeGame) {
     activeGame = true;
-    generatePlayers(Number(num1to4.textContent));
+    numPlayers = Number(num1to4.textContent);
+    generatePlayers();
     playersButton.textContent = "Deal";
     beginEndGameButton.textContent = "End Game";
   } else if (activeGame && beginEndGameButton.textContent === "End Game") {
@@ -124,6 +126,35 @@ const beginEndGame = () => {
   }
 };
 beginEndGameButton.addEventListener("click", beginEndGame);
+
+const changeDealer = () => {
+  // Check numPlayers and use players[index] to update position properties
+  if (numPlayers === 4) {
+    let player4position = players[3].position;
+    players[3].position = players[2].position;
+    players[2].position = players[1].position;
+    players[1].position = players[0].position;
+    players[0].position = player4position;
+  } else if (numPlayers === 3) {
+    let player3position = players[2].position;
+    players[2].position = players[1].position;
+    players[1].position = players[0].position;
+    players[0].position = player3position;
+  } else if (numPlayers === 2) {
+    let player2position = players[1].position;
+    players[1].position = players[0].position;
+    players[0].position = player2position;
+  }
+  // Find the new "dealer" and set the property .activePlayer: true
+  // ...set non-dealers' property .activePlayer: false
+  players.forEach(val => {
+    val.position === "dealer"
+      ? (val.activePlayer = true)
+      : (val.activePlayer = false);
+    val.buyLastTurn = false;
+    val.holdLastTurn = false;
+  });
+};
 
 // End the round
 const endRound = (playerNum, msgSchnautzFeuer, num31Or33) => {
@@ -141,68 +172,78 @@ const endRound = (playerNum, msgSchnautzFeuer, num31Or33) => {
       )
     : alert(message);
   clearTable();
-  // setTimeout(clearTable, 1000);
+  changeDealer();
   playersButton.textContent = "Deal";
   beginEndGameButton.textContent = "End Game";
 };
 
 // Update player scores and check for 31 (Schnautz) or 33 (Feuer)
 const updateScore = playerNum => {
-  let idx = playerNum - 1; // Convert player number to zero-based index
-  // Use idx for players array because extra is not a player
-  // Use playerNum for allHands (not idx) because allHands[0] is extraHand
+  let idxPlayers = playerNum - 1; // Convert player number to zero-based index
+  let idxAllHands; // Set using players[idxPlayers].position property
+  // Note: allHands[0] is extraHand, allHands[1] is dealerHand, etc
+  players[idxPlayers].position === "dealer"
+    ? (idxAllHands = 1)
+    : players[idxPlayers].position === "leftOfDealer"
+    ? (idxAllHands = 2)
+    : players[idxPlayers].position === "acrossFromDealer"
+    ? (idxAllHands = 3)
+    : (idxAllHands = 4);
+
   // .points property stores point value of A(11),K(10),Q(10),J(10),10,9,8,7
 
   // If all three cards are the same suit, add the points
-  allHands[playerNum][0].suit === allHands[playerNum][1].suit &&
-  allHands[playerNum][0].suit === allHands[playerNum][2].suit
-    ? (players[idx].currentScore =
-        allHands[playerNum][0].points +
-        allHands[playerNum][1].points +
-        allHands[playerNum][2].points)
+  allHands[idxAllHands][0].suit === allHands[idxAllHands][1].suit &&
+  allHands[idxAllHands][0].suit === allHands[idxAllHands][2].suit
+    ? (players[idxPlayers].currentScore =
+        allHands[idxAllHands][0].points +
+        allHands[idxAllHands][1].points +
+        allHands[idxAllHands][2].points)
     : // If two cards are the same suit, add the points
-    allHands[playerNum][0].suit === allHands[playerNum][1].suit
-    ? (players[idx].currentScore =
-        allHands[playerNum][0].points + allHands[playerNum][1].points)
-    : allHands[playerNum][0].suit === allHands[playerNum][2].suit
-    ? (players[idx].currentScore =
-        allHands[playerNum][0].points + allHands[playerNum][2].points)
-    : allHands[playerNum][1].suit === allHands[playerNum][2].suit
-    ? (players[idx].currentScore =
-        allHands[playerNum][1].points + allHands[playerNum][2].points)
+    allHands[idxAllHands][0].suit === allHands[idxAllHands][1].suit
+    ? (players[idxPlayers].currentScore =
+        allHands[idxAllHands][0].points + allHands[idxAllHands][1].points)
+    : allHands[idxAllHands][0].suit === allHands[idxAllHands][2].suit
+    ? (players[idxPlayers].currentScore =
+        allHands[idxAllHands][0].points + allHands[idxAllHands][2].points)
+    : allHands[idxAllHands][1].suit === allHands[idxAllHands][2].suit
+    ? (players[idxPlayers].currentScore =
+        allHands[idxAllHands][1].points + allHands[idxAllHands][2].points)
     : // If all three cards are aces, the score is 33
-    allHands[playerNum][0].rank === "A" &&
-      allHands[playerNum][1].rank === "A" &&
-      allHands[playerNum][2].rank === "A"
-    ? (players[idx].currentScore = 33)
+    allHands[idxAllHands][0].rank === "A" &&
+      allHands[idxAllHands][1].rank === "A" &&
+      allHands[idxAllHands][2].rank === "A"
+    ? (players[idxPlayers].currentScore = 33)
     : // If all three cards are tens, the score is 30
-    allHands[playerNum][0].rank === "10" &&
-      allHands[playerNum][1].rank === "10" &&
-      allHands[playerNum][2].rank === "10"
-    ? (players[idx].currentScore = 30)
+    allHands[idxAllHands][0].rank === "10" &&
+      allHands[idxAllHands][1].rank === "10" &&
+      allHands[idxAllHands][2].rank === "10"
+    ? (players[idxPlayers].currentScore = 30)
     : // If all three cards are the same rank, the score is 30.5
-    allHands[playerNum][0].rank === allHands[playerNum][1].rank &&
-      allHands[playerNum][0].rank === allHands[playerNum][2].rank
-    ? (players[idx].currentScore = 30.5)
+    allHands[idxAllHands][0].rank === allHands[idxAllHands][1].rank &&
+      allHands[idxAllHands][0].rank === allHands[idxAllHands][2].rank
+    ? (players[idxPlayers].currentScore = 30.5)
     : // Otherwise, the score is the point value of the highest card
-    allHands[playerNum][0].points >= allHands[playerNum][1].points &&
-      allHands[playerNum][0].points >= allHands[playerNum][2].points
-    ? (players[idx].currentScore = allHands[playerNum][0].points)
-    : allHands[playerNum][0].points >= allHands[playerNum][1].points &&
-      allHands[playerNum][0].points <= allHands[playerNum][2].points
-    ? (players[idx].currentScore = allHands[playerNum][2].points)
-    : allHands[playerNum][0].points <= allHands[playerNum][1].points &&
-      allHands[playerNum][1].points >= allHands[playerNum][2].points
-    ? (players[idx].currentScore = allHands[playerNum][1].points)
-    : (players[idx].currentScore = allHands[playerNum][2].points);
+    allHands[idxAllHands][0].points >= allHands[idxAllHands][1].points &&
+      allHands[idxAllHands][0].points >= allHands[idxAllHands][2].points
+    ? (players[idxPlayers].currentScore = allHands[idxAllHands][0].points)
+    : allHands[idxAllHands][0].points >= allHands[idxAllHands][1].points &&
+      allHands[idxAllHands][0].points <= allHands[idxAllHands][2].points
+    ? (players[idxPlayers].currentScore = allHands[idxAllHands][2].points)
+    : allHands[idxAllHands][0].points <= allHands[idxAllHands][1].points &&
+      allHands[idxAllHands][1].points >= allHands[idxAllHands][2].points
+    ? (players[idxPlayers].currentScore = allHands[idxAllHands][1].points)
+    : (players[idxPlayers].currentScore = allHands[idxPlayers][2].points);
   console.log(
-    `Player ${players[idx].player} score: ${players[idx].currentScore}`
+    `Player ${players[idxPlayers].player} score: ${
+      players[idxPlayers].currentScore
+    }`
   );
 
   // If the player's score is 31 or 33, the round ends immediately
-  players[idx].currentScore === 31
+  players[idxPlayers].currentScore === 31
     ? endRound(playerNum, "Schnautz", 31)
-    : players[idx].currentScore === 33
+    : players[idxPlayers].currentScore === 33
     ? endRound(playerNum, "Feuer", 33)
     : changeActivePlayer();
 };
@@ -224,6 +265,7 @@ const newDeck = () => {
         points:
           i === 4 || i === 5 || i === 6 ? 10 : i === 7 ? 11 : Number(ranks[i]),
         cardPosition: "",
+        cardPlayer: null,
         selected: false
       });
     }
@@ -272,25 +314,44 @@ const assignCardsToPlayers = () => {
   // Note: mutates the objects that newDeck() created inside an array
   // Select subset of shuffledDeck based on number of players
   dealtDeck = shuffledDeck.filter((cardObj, idx) => idx < numCards);
-  // Assign card objects to players and extra hand
+  // Check for the dealer in players array and bind that index to a variable
+  let idxDealer = players.filter((val, idx) => {
+    val.position === "dealer";
+    return idx;
+  });
+
+  // Set cardObj properties .cardPosition and .cardPlayer
+  // Set cardObj.cardPlayer value based on idxDealer value
+  //    idxDealer === 0, then "dealer" is player 1, "left..." is 2, etc
+  //    idxDealer === 1, then "dealer" is player 2, "left..." is 3, etc
+  //    idxDealer === 2, then "dealer" is player 3, "left..." is 4, etc
+  //    idxDealer === 3, then "dealer" is player 4, "left..." is 1, etc
+  //    "extraHand" not in the players array--we set cardObj.cardPlayer = 0
+  // Assign card objects to players' hands and extra hand
   switch (numCards) {
     case 15:
       dealtDeck.forEach((cardObj, idx) => {
         if (idx === 0 || idx === 5 || idx === 10) {
           cardObj.cardPosition = "leftOfDealerHand";
+          cardObj.cardPlayer = idxDealer === 3 ? 1 : idxDealer + 2;
           leftOfDealerHand.push(cardObj);
         } else if (idx === 1 || idx === 6 || idx === 11) {
           cardObj.cardPosition = "acrossFromDealerHand";
+          cardObj.cardPlayer =
+            idxDealer === 3 ? 2 : idxDealer === 2 ? 1 : idxDealer + 3;
           acrossFromDealerHand.push(cardObj);
         } else if (idx === 2 || idx === 7 || idx === 12) {
           cardObj.cardPosition = "rightOfDealerHand";
+          cardObj.cardPlayer = idxDealer === 0 ? 4 : idxDealer;
           rightOfDealerHand.push(cardObj);
         } else if (idx === 3 || idx === 8 || idx === 13) {
           cardObj.cardPosition = "dealerHand";
+          cardObj.cardPlayer = idxDealer + 1;
           dealerHand.push(cardObj);
         } else {
           cardObj.cardPosition = "extraHand";
           extraHand.push(cardObj);
+          cardObj.cardPlayer = 0;
         }
       });
       allHands.push(
@@ -305,15 +366,19 @@ const assignCardsToPlayers = () => {
       dealtDeck.forEach((cardObj, idx) => {
         if (idx === 0 || idx === 4 || idx === 8) {
           cardObj.cardPosition = "leftOfDealerHand";
+          cardObj.cardPlayer = idxDealer === 2 ? 1 : idxDealer + 2;
           leftOfDealerHand.push(cardObj);
         } else if (idx === 1 || idx === 5 || idx === 9) {
           cardObj.cardPosition = "acrossFromDealerHand";
+          cardObj.cardPlayer = idxDealer === 2 ? 2 : idxDealer === 1 ? 1 : 3;
           acrossFromDealerHand.push(cardObj);
         } else if (idx === 2 || idx === 6 || idx === 10) {
           cardObj.cardPosition = "dealerHand";
+          cardObj.cardPlayer = idxDealer + 1;
           dealerHand.push(cardObj);
         } else {
           cardObj.cardPosition = "extraHand";
+          cardObj.cardPlayer = 0;
           extraHand.push(cardObj);
         }
       });
@@ -328,12 +393,15 @@ const assignCardsToPlayers = () => {
       dealtDeck.forEach((cardObj, idx) => {
         if (idx === 0 || idx === 3 || idx === 6) {
           cardObj.cardPosition = "leftOfDealerHand";
+          cardObj.cardPlayer = idxDealer === 1 ? 1 : 2;
           leftOfDealerHand.push(cardObj);
         } else if (idx === 1 || idx === 4 || idx === 7) {
           cardObj.cardPosition = "dealerHand";
+          cardObj.cardPlayer = idxDealer + 1;
           dealerHand.push(cardObj);
         } else {
           cardObj.cardPosition = "extraHand";
+          cardObj.cardPlayer = 0;
           extraHand.push(cardObj);
         }
       });
@@ -395,61 +463,61 @@ eventsCards = () => {
 
 // Change the active player
 changeActivePlayer = () => {
-  let idx = activeNum - 1; // Convert player number to zero-based index
+  let idx = activePlayerNum - 1; // Convert player number to zero-based index
   // Remove event listener for the current player's three cards
   activeCards.forEach(val =>
     val.removeEventListener("click", selectDeselectCard)
   );
-  // Update players array of player objects
+  // Update players array of player objects -- player one is players[0], etc
   // Update player areas in DOM
   // Add event listeners to the next player's three cards
-  activeNum === 1
-    ? // leftOfDealer is always after dealer
-      ((activeNum = 2),
+  activePlayerNum === 1
+    ? // player two (players[1]) always follows player one (players[0])
+      ((activePlayerNum = 2),
       (players[0].activePlayer = false),
       (players[1].activePlayer = true),
       playerOneArea.classList.remove("active-area"),
       playerTwoArea.classList.add("active-area"),
       (activeCards = playerTwoCard),
       eventsCards())
-    : activeNum === 2 && numCards === 9
-    ? // when there are two players, dealer is after leftOfDealer
-      ((activeNum = 1),
+    : activePlayerNum === 2 && numCards === 9
+    ? // 2 players: player one (players[0]) follows player two (players[1])
+      ((activePlayerNum = 1),
       (players[1].activePlayer = false),
       (players[0].activePlayer = true),
       playerTwoArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"),
       (activeCards = playerOneCard),
       eventsCards())
-    : activeNum === 2
-    ? // when there are three or four players, accrossFromDealer is next
-      ((activeNum = 3),
+    : activePlayerNum === 2
+    ? // 3/4 players: player three (players[2]) follows player two (players[1])
+      ((activePlayerNum = 3),
       (players[1].activePlayer = false),
       (players[2].activePlayer = true),
       playerTwoArea.classList.remove("active-area"),
       playerThreeArea.classList.add("active-area"),
       (activeCards = playerThreeCard),
       eventsCards())
-    : activeNum === 3 && numCards === 12
-    ? // when there three players, dealer is next
-      ((activeNum = 1),
+    : activePlayerNum === 3 && numCards === 12
+    ? // 3 players: player one (players[0]) follows player three (players[2])
+      ((activePlayerNum = 1),
       (players[2].activePlayer = false),
       (players[0].activePlayer = true),
       playerThreeArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"),
       (activeCards = playerOneCard),
       eventsCards())
-    : activeNum === 3
-    ? // when there are four players, rightOfDealer is next
-      ((activeNum = 4),
+    : activePlayerNum === 3
+    ? // 4 players: player four (players[3]) follows player three (players[2])
+      ((activePlayerNum = 4),
       (players[2].activePlayer = false),
       (players[3].activePlayer = true),
       playerThreeArea.classList.remove("active-area"),
       playerFourArea.classList.add("active-area"),
       (activeCards = playerFourCard),
       eventsCards())
-    : // dealer is always after rightOfDealer
-      ((activeNum = 1),
+    : // player one (players[0]) always follows player four (players[3])
+      ((activePlayerNum = 1),
       (players[3].activePlayer = false),
       (players[0].activePlayer = true),
       playerFourArea.classList.remove("active-area"),
@@ -464,9 +532,11 @@ changeActivePlayer = () => {
   if (players[idx].buyLastTurn) {
     players[idx].buyLastTurn = false;
   }
-  // Check if the next player used "hold" on last turn
-  idx = activeNum - 1;
+  // Update idx with new value of activePlayerNum
+  idx = activePlayerNum - 1;
+  // Check whether to endRound() if the next player used "hold" on last turn
   if (players[idx].holdLastTurn) {
+    // Set all .holdLastTurn properties to false - prevents repeating endRound
     players.forEach(val => (val.holdLastTurn = false));
     endRound();
   }
@@ -475,7 +545,8 @@ changeActivePlayer = () => {
 // Deal card objects
 const deal = () => {
   if (activeGame && activeRound === false) {
-    clearTable();
+    // CONSIDER FIX BELOW
+    clearTable(); // Do we need clearTable() here?
     activeRound = true;
     dealButton.textContent = "Score";
     shuffle(newDeck());
@@ -597,7 +668,7 @@ const exchangeCards = () => {
         alert("Error: Unable to exchange one card");
       }
       styleBlackCards();
-      updateScore(activeNum);
+      updateScore(activePlayerNum);
     } else if (
       cardsToExtraHand.length === 3 &&
       cardsFromExtraHand.length === 3
@@ -647,7 +718,7 @@ const exchangeCards = () => {
         alert("Error: Unable to exchange three cards.");
       }
       styleBlackCards();
-      updateScore(activeNum);
+      updateScore(activePlayerNum);
     } else {
       alert("Error: Unable to exchange cards.");
     }
@@ -660,10 +731,10 @@ exchangeButton.addEventListener("click", exchangeCards);
 
 // Current player skips turn but cannot skip two turns in a row
 const buy = () => {
-  let idx = activeNum - 1;
+  let idx = activePlayerNum - 1;
   // check if player used "buy" on last turn
   if (players[idx].buyLastTurn === true) {
-    alert(`Player ${activeNum} cannot buy this turn.`);
+    alert(`Player ${activePlayerNum} cannot buy this turn.`);
   } else {
     changeActivePlayer();
     players[idx].buyLastTurn = true;
@@ -673,7 +744,7 @@ buyButton.addEventListener("click", buy);
 
 // Current player skips turn and signals this round is ending
 const hold = () => {
-  let idx = activeNum - 1;
+  let idx = activePlayerNum - 1;
   players[idx].holdLastTurn = true;
   changeActivePlayer();
   // Other players have one more turn (but not current player)
