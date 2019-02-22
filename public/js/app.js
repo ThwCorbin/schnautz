@@ -15,11 +15,10 @@ let dealtDeck;
 const exchangeButton = document.querySelector(".exchangeButton");
 const buyButton = document.querySelector(".buyButton");
 const holdButton = document.querySelector(".holdButton");
+const playerOneArea = document.querySelector(".playerOneArea");
 const playerTwoArea = document.querySelector(".playerTwoArea");
 const playerThreeArea = document.querySelector(".playerThreeArea");
 const playerFourArea = document.querySelector(".playerFourArea");
-const playerOneArea = document.querySelector(".playerOneArea");
-// const extraArea = document.querySelector(".extraArea");
 const extraHand = [];
 const dealerHand = [];
 const leftOfDealerHand = [];
@@ -33,7 +32,11 @@ const playerOneCard = document.querySelectorAll(".playerOneCard");
 const playerTwoCard = document.querySelectorAll(".playerTwoCard");
 const playerThreeCard = document.querySelectorAll(".playerThreeCard");
 const playerFourCard = document.querySelectorAll(".playerFourCard");
-let activeCards;
+let activeCards = playerOneCard; // default playerOneCard
+const playerText1 = document.querySelector(".dealerP1");
+const playerText2 = document.querySelector(".dealerP2");
+const playerText3 = document.querySelector(".dealerP3");
+const playerText4 = document.querySelector(".dealerP4");
 const cardsToExtraHand = [];
 const cardsFromExtraHand = [];
 // Game/round active and reset variables
@@ -108,6 +111,8 @@ const generatePlayers = () => {
       currentScore: null
     });
   }
+  // Set initial dealer text
+  playerText1.textContent = " Dealer ";
   // console.log(players);
 };
 
@@ -135,15 +140,27 @@ const changeDealer = () => {
     players[2].position = players[1].position;
     players[1].position = players[0].position;
     players[0].position = player4position;
+    let holdText = playerText4.textContent;
+    playerText4.textContent = playerText3.textContent;
+    playerText3.textContent = playerText2.textContent;
+    playerText2.textContent = playerText1.textContent;
+    playerText1.textContent = holdText;
   } else if (numPlayers === 3) {
     let player3position = players[2].position;
     players[2].position = players[1].position;
     players[1].position = players[0].position;
     players[0].position = player3position;
+    let holdText = playerText3.textContent;
+    playerText3.textContent = playerText2.textContent;
+    playerText2.textContent = playerText1.textContent;
+    playerText1.textContent = holdText;
   } else if (numPlayers === 2) {
     let player2position = players[1].position;
     players[1].position = players[0].position;
     players[0].position = player2position;
+    let holdText = playerText2.textContent;
+    playerText2.textContent = playerText1.textContent;
+    playerText1.textContent = holdText;
   }
   // Find the new "dealer" and set the property .activePlayer: true
   // ...set non-dealers' property .activePlayer: false
@@ -408,9 +425,6 @@ const assignCardsToPlayers = () => {
       allHands.push(extraHand, dealerHand, leftOfDealerHand);
       break;
   }
-  for (let i = 1; i < allHands.length; i++) {
-    updateScore(i);
-  }
 };
 
 // Manage cards that current player will be exchange with extra hand
@@ -594,7 +608,9 @@ const exchangeCards = () => {
   if (activeGame && activeRound) {
     // Note: All arrays below reference the same deck card objects
     if (cardsToExtraHand.length === 1 && cardsFromExtraHand.length === 1) {
+      // Bind the current player's position ("leftOfDealerHand", etc) to a variable
       let swapToCardPosition = cardsToExtraHand[0].cardPosition;
+      // Check in the extraHand for the index of the selected card - bind to a variable
       let idxFromExtraHand = extraHand.indexOf(cardsFromExtraHand[0]);
       let idxFromExtraNode;
       let idxToExtraHand;
@@ -605,7 +621,7 @@ const exchangeCards = () => {
       cardsToExtraHand[0].cardPosition = "extraHand";
       cardsFromExtraHand[0].selected = false;
       cardsToExtraHand[0].selected = false;
-      // Remove and replace one card object from extraHand
+      // Replace one card object from extraHand with cardsToExtraHand[0]
       extraHand.splice(idxFromExtraHand, 1, cardsToExtraHand[0]);
       // Retrieve index from NodeList and modify textContent && classlist
       extraCard.forEach((val, idx) => {
@@ -673,7 +689,19 @@ const exchangeCards = () => {
       cardsToExtraHand.length === 3 &&
       cardsFromExtraHand.length === 3
     ) {
-      // swapping three cards for extraHand
+      // Bind the Nodelist of the current player's cards to a variable
+      let playerNumberCard =
+        activePlayerNum === 1
+          ? playerOneCard // document.querySelectorAll(".playerOneCard")
+          : activePlayerNum === 2
+          ? playerTwoCard
+          : activePlayerNum === 3
+          ? playerThreeCard
+          : playerFourCard;
+      // Bind the current player's position ("leftOfDealerHand", etc) to a variable
+      let swapToCardPosition = cardsToExtraHand[0].cardPosition;
+
+      // Swap three cards to the extraHand
       extraHand.splice(0, 3, ...cardsToExtraHand);
       for (let i = 0; i <= 2; i++) {
         extraCard[i].textContent = extraHand[i].card;
@@ -681,36 +709,37 @@ const exchangeCards = () => {
         extraHand[i].cardPosition = "extraHand";
         extraHand[i].selected = false;
       }
-      // swapping three cards for the current player
-      if (activeNum === 2) {
+
+      // Swap three cards to the current player's hand
+      if (swapToCardPosition === "leftOfDealerHand") {
         leftOfDealerHand.splice(0, 3, ...cardsFromExtraHand);
         for (let i = 0; i <= 2; i++) {
-          playerTwoCard[i].textContent = leftOfDealerHand[i].card;
-          playerTwoCard[i].classList.remove("is-active");
+          playerNumberCard[i].textContent = leftOfDealerHand[i].card;
+          playerNumberCard[i].classList.remove("is-active");
           leftOfDealerHand[i].cardPosition = "leftOfDealerHand";
           leftOfDealerHand[i].selected = false;
         }
-      } else if (activeNum === 3) {
+      } else if (swapToCardPosition === "acrossFromDealerHand") {
         acrossFromDealerHand.splice(0, 3, ...cardsFromExtraHand);
         for (let i = 0; i <= 2; i++) {
-          playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
-          playerThreeCard[i].classList.remove("is-active");
+          playerNumberCard[i].textContent = acrossFromDealerHand[i].card;
+          playerNumberCard[i].classList.remove("is-active");
           acrossFromDealerHand[i].cardPosition = "acrossFromDealerHand";
           acrossFromDealerHand[i].selected = false;
         }
-      } else if (activeNum === 4) {
+      } else if (swapToCardPosition === "rightOfDealerHand") {
         rightOfDealerHand.splice(0, 3, ...cardsFromExtraHand);
         for (let i = 0; i <= 2; i++) {
-          playerFourCard[i].classList.remove("is-active");
-          playerFourCard[i].textContent = rightOfDealerHand[i].card;
+          playerNumberCard[i].classList.remove("is-active");
+          playerNumberCard[i].textContent = rightOfDealerHand[i].card;
           rightOfDealerHand[i].cardPosition = "rightOfDealerHand";
           rightOfDealerHand[i].selected = false;
         }
-      } else if (activeNum === 1) {
+      } else if (swapToCardPosition === "dealerHand") {
         dealerHand.splice(0, 3, ...cardsFromExtraHand);
         for (let i = 0; i <= 2; i++) {
-          playerOneCard[i].classList.remove("is-active");
-          playerOneCard[i].textContent = dealerHand[i].card;
+          playerNumberCard[i].classList.remove("is-active");
+          playerNumberCard[i].textContent = dealerHand[i].card;
           dealerHand[i].cardPosition = "dealerHand";
           dealerHand[i].selected = false;
         }

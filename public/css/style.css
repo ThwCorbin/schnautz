@@ -261,6 +261,11 @@ body {
   align-items: flex-end;
 }
 
+.dealer {
+  color: var(--pink);
+  font-size: 1.5rem;
+}
+
 .cardsArea {
   grid-column-start: 2;
   grid-column-end: 4;
