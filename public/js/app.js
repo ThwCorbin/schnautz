@@ -5,9 +5,9 @@ const playersButton = document.querySelector(".playersButton");
 const dealButton = document.querySelector(".dealButton");
 const num1to4 = document.querySelector(".num1to4");
 const players = [];
-let activePlayerNum = 1;
+let activePlayerNum = 1; // default 1
 let numPlayers;
-let numCards = 12;
+let numCards = 12; // default 12
 let eventsCards;
 let shuffledDeck;
 let dealtDeck;
@@ -48,32 +48,32 @@ let changeActivePlayer;
 
 const clearTable = () => {
   activeRound = false;
-  // activePlayerNum = 1; // set this somewhere else
-  // activeCards = playerOneCard; // set this somewhere else
+  extraHand.length = 0;
+  dealerHand.length = 0;
   leftOfDealerHand.length = 0;
   acrossFromDealerHand.length = 0;
   rightOfDealerHand.length = 0;
-  dealerHand.length = 0;
-  extraHand.length = 0;
   allHands.length = 0;
-  aCard.forEach(val => {
-    val.classList.remove("is-active");
-    val.textContent = "";
-  });
-  eventsCards();
-  // activeCards.forEach(val =>
-  //   val.removeEventListener("click", selectDeselectCard)
-  // );
   cardsToExtraHand.length = 0;
   cardsFromExtraHand.length = 0;
+  aCard.forEach(card => {
+    card.classList.remove("is-active");
+    card.textContent = "";
+  });
+  // players.forEach(player => (player.activePlayer = false));
 };
 
 const resetGame = () => {
   clearTable();
+  eventsCards();
   activeGame = false;
+  players.length = 0;
+  activePlayerNum = 1;
+  activeCards = playerOneCard;
   dealButton.textContent = "Players?";
   beginEndGameButton.textContent = "Start";
-  players.length = 0;
+  num1to4.textContent = 3;
+  numCards = 12;
 };
 
 // ///// GAME MANAGEMENT FUNCTIONS ///////////////////////////////
@@ -164,30 +164,51 @@ const changeDealer = () => {
   }
   // Find the new "dealer" and set the property .activePlayer: true
   // ...set non-dealers' property .activePlayer: false
-  players.forEach(val => {
-    val.position === "dealer"
-      ? (val.activePlayer = true)
-      : (val.activePlayer = false);
-    val.buyLastTurn = false;
-    val.holdLastTurn = false;
+  players.forEach(player => {
+    player.position === "dealer"
+      ? (player.activePlayer = true)
+      : (player.activePlayer = false);
+    player.buyLastTurn = false;
+    player.holdLastTurn = false;
   });
 };
 
 // End the round
 const endRound = (playerNum, msgSchnautzFeuer, num31Or33) => {
   let message = ``;
-  players.forEach(val => {
-    message += `Player ${val.player} score: ${val.currentScore} 
-`;
-  });
-  // A player with 31 (Schnautz) or 33 (Feuer) points wins the round immediately
-  num31Or33
-    ? alert(
-        `${msgSchnautzFeuer}!!!
+  let messageScores = ``;
+  let messageTokens = ``;
+  let lowScore = 33;
 
-        Player ${playerNum} has ${num31Or33}!`
-      )
-    : alert(message);
+  // Check which player has the lowest score and build scores message
+  players.forEach(player => {
+    lowScore = player.currentScore <= lowScore ? player.currentScore : lowScore;
+    messageScores += `Player ${player.player} score: ${player.currentScore}
+    `;
+  });
+
+  players.forEach(player => {
+    if (player.currentScore === lowScore)
+      messageTokens += `Player ${player.player} loses a token
+      `;
+  });
+  // If 31 (Schnautz) or 33 (Feuer) points, update message
+  if (num31Or33)
+    message = `${msgSchnautzFeuer}!!!
+  `;
+  // Build the message
+  message += ` 
+    ${messageScores}
+    ${messageTokens}
+    `;
+  alert(message);
+
+  // Reset properties in players array of objects
+  players.forEach(player => {
+    player.currentScore = null;
+    player.buyLastTurn = false;
+    player.holdLastTurn = false;
+  });
   clearTable();
   changeDealer();
   playersButton.textContent = "Deal";
@@ -317,12 +338,12 @@ const shuffle = deck => {
 
 // Style black cards
 const styleBlackCards = () => {
-  aCard.forEach(val =>
-    val.textContent.includes("♤")
-      ? val.classList.add("aCardBlack")
-      : val.textContent.includes("♧")
-      ? val.classList.add("aCardBlack")
-      : val.classList.remove("aCardBlack")
+  aCard.forEach(card =>
+    card.textContent.includes("♤")
+      ? card.classList.add("aCardBlack")
+      : card.textContent.includes("♧")
+      ? card.classList.add("aCardBlack")
+      : card.classList.remove("aCardBlack")
   );
 };
 
@@ -332,8 +353,8 @@ const assignCardsToPlayers = () => {
   // Select subset of shuffledDeck based on number of players
   dealtDeck = shuffledDeck.filter((cardObj, idx) => idx < numCards);
   // Check for the dealer in players array and bind that index to a variable
-  let idxDealer = players.filter((val, idx) => {
-    val.position === "dealer";
+  let idxDealer = players.filter((player, idx) => {
+    player.position === "dealer";
     return idx;
   });
 
@@ -470,17 +491,19 @@ const selectDeselectCard = e => {
   // console.log(cardsFromExtraHand);
 };
 // Add event listeners to playerOneCard, etc., & extraCard NodeLists
-extraCard.forEach(val => val.addEventListener("click", selectDeselectCard));
+extraCard.forEach(card => card.addEventListener("click", selectDeselectCard));
 eventsCards = () => {
-  activeCards.forEach(val => val.addEventListener("click", selectDeselectCard));
+  activeCards.forEach(card =>
+    card.addEventListener("click", selectDeselectCard)
+  );
 };
 
 // Change the active player
 changeActivePlayer = () => {
   let idx = activePlayerNum - 1; // Convert player number to zero-based index
   // Remove event listener for the current player's three cards
-  activeCards.forEach(val =>
-    val.removeEventListener("click", selectDeselectCard)
+  activeCards.forEach(card =>
+    card.removeEventListener("click", selectDeselectCard)
   );
   // Update players array of player objects -- player one is players[0], etc
   // Update player areas in DOM
@@ -551,7 +574,7 @@ changeActivePlayer = () => {
   // Check whether to endRound() if the next player used "hold" on last turn
   if (players[idx].holdLastTurn) {
     // Set all .holdLastTurn properties to false - prevents repeating endRound
-    players.forEach(val => (val.holdLastTurn = false));
+    players.forEach(player => (player.holdLastTurn = false));
     endRound();
   }
 };
@@ -559,8 +582,7 @@ changeActivePlayer = () => {
 // Deal card objects
 const deal = () => {
   if (activeGame && activeRound === false) {
-    // CONSIDER FIX BELOW
-    clearTable(); // Do we need clearTable() here?
+    // clearTable(); // Do we need clearTable() here?
     activeRound = true;
     dealButton.textContent = "Score";
     shuffle(newDeck());
@@ -588,14 +610,8 @@ const deal = () => {
         playerTwoCard[i].textContent = leftOfDealerHand[i].card;
       }
     }
-    playerTwoArea.classList.add("active-area");
     styleBlackCards();
     changeActivePlayer();
-    // console.log(dealtDeck);
-    // console.log(extraHand);
-  } else if (activeRound && dealButton.textContent === "Score") {
-    // Temp code to call and test checkScore()
-    // checkScore();
   }
 };
 dealButton.addEventListener("click", deal);
@@ -624,8 +640,8 @@ const exchangeCards = () => {
       // Replace one card object from extraHand with cardsToExtraHand[0]
       extraHand.splice(idxFromExtraHand, 1, cardsToExtraHand[0]);
       // Retrieve index from NodeList and modify textContent && classlist
-      extraCard.forEach((val, idx) => {
-        if (val.textContent === cardsFromExtraHand[0].card) {
+      extraCard.forEach((card, idx) => {
+        if (card.textContent === cardsFromExtraHand[0].card) {
           idxFromExtraNode = idx;
         }
       });
@@ -637,8 +653,8 @@ const exchangeCards = () => {
         // Remove and replace one card object from leftOfDealerHand
         leftOfDealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
         // Retrieve index from NodeList and modify textContent && classlist
-        playerTwoCard.forEach((val, idx) => {
-          if (val.textContent === cardsToExtraHand[0].card) {
+        playerTwoCard.forEach((card, idx) => {
+          if (card.textContent === cardsToExtraHand[0].card) {
             idxToPlayNode = idx;
           }
         });
@@ -649,8 +665,8 @@ const exchangeCards = () => {
         // Remove and replace one card object from acrossFromDealerHand
         acrossFromDealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
         // Retrieve index from NodeList and modify textContent && classlist
-        playerThreeCard.forEach((val, idx) => {
-          if (val.textContent === cardsToExtraHand[0].card) {
+        playerThreeCard.forEach((card, idx) => {
+          if (card.textContent === cardsToExtraHand[0].card) {
             idxToPlayNode = idx;
           }
         });
@@ -661,8 +677,8 @@ const exchangeCards = () => {
         // Remove and replace one card object from acrossFromDealerHand
         rightOfDealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
         // Retrieve index from NodeList and modify textContent && classlist
-        playerFourCard.forEach((val, idx) => {
-          if (val.textContent === cardsToExtraHand[0].card) {
+        playerFourCard.forEach((card, idx) => {
+          if (card.textContent === cardsToExtraHand[0].card) {
             idxToPlayNode = idx;
           }
         });
@@ -673,8 +689,8 @@ const exchangeCards = () => {
         // Remove and replace one card object from acrossFromDealerHand
         dealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
         // Retrieve index from NodeList and modify textContent && classlist
-        playerOneCard.forEach((val, idx) => {
-          if (val.textContent === cardsToExtraHand[0].card) {
+        playerOneCard.forEach((card, idx) => {
+          if (card.textContent === cardsToExtraHand[0].card) {
             idxToPlayNode = idx;
           }
         });
@@ -765,8 +781,8 @@ const buy = () => {
   if (players[idx].buyLastTurn === true) {
     alert(`Player ${activePlayerNum} cannot buy this turn.`);
   } else {
-    changeActivePlayer();
     players[idx].buyLastTurn = true;
+    updateScore(activePlayerNum);
   }
 };
 buyButton.addEventListener("click", buy);
@@ -775,7 +791,7 @@ buyButton.addEventListener("click", buy);
 const hold = () => {
   let idx = activePlayerNum - 1;
   players[idx].holdLastTurn = true;
-  changeActivePlayer();
+  updateScore(activePlayerNum);
   // Other players have one more turn (but not current player)
 };
 holdButton.addEventListener("click", hold);
