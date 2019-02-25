@@ -6,7 +6,7 @@
   "scripts": {
     "start": "babel-node server/server.js",
     "sarunodeman": "nodemon --exec babel-node server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "eslint": "./node_modules/.bin/eslint"
   },
   "repository": {
@@ -34,15 +34,20 @@
   },
   "homepage": "https://github.com/ThwCorbin/SchnautzCardGame#readme",
   "devDependencies": {
+    "@babel/core": "^7.3.3",
+    "@babel/preset-env": "^7.3.1",
     "babel-cli": "^6.26.0",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.1.0",
     "babel-preset-env": "^1.7.0",
-    "eslint": "^5.13.0",
+    "eslint": "^5.14.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-prettier": "^3.0.1",
+    "jest": "^24.1.0",
     "prettier": "^1.16.4"
   },
   "dependencies": {
