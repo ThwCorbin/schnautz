@@ -4,8 +4,9 @@
   "description": "It's German. It has something to do with trousers. - Alex",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node server/server.js",
-    "sarunodeman": "nodemon --exec babel-node server/server.js",
+    "start": "nodemon --exec babel-node server/server.js",
+    "build": "babel server --out-dir dist",
+    "serve": "node dist/server.js",
     "test": "jest",
     "eslint": "./node_modules/.bin/eslint"
   },
@@ -34,13 +35,12 @@
   },
   "homepage": "https://github.com/ThwCorbin/SchnautzCardGame#readme",
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.3",
+    "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
-    "babel-cli": "^6.26.0",
-    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.1.0",
-    "babel-preset-env": "^1.7.0",
     "eslint": "^5.14.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-prettier": "^4.0.0",
@@ -48,6 +48,7 @@
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-prettier": "^3.0.1",
     "jest": "^24.1.0",
+    "nodemon": "^1.18.10",
     "prettier": "^1.16.4"
   },
   "dependencies": {
