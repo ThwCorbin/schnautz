@@ -174,7 +174,7 @@ const changeDealer = () => {
 };
 
 // End the round
-const endRound = (playerNum, msgSchnautzFeuer, num31Or33) => {
+const endRound = (msgSchnautzFeuer, num31Or33) => {
   let message = ``;
   let messageScores = ``;
   let messageTokens = ``;
@@ -188,9 +188,11 @@ const endRound = (playerNum, msgSchnautzFeuer, num31Or33) => {
   });
 
   players.forEach(player => {
-    if (player.currentScore === lowScore)
+    if (player.currentScore === lowScore) {
+      player.tokens -= 1;
       messageTokens += `Player ${player.player} loses a token
       `;
+    }
   });
   // If 31 (Schnautz) or 33 (Feuer) points, update message
   if (num31Or33)
@@ -277,13 +279,6 @@ const updateScore = playerNum => {
       players[idxPlayers].currentScore
     }`
   );
-
-  // If the player's score is 31 or 33, the round ends immediately
-  players[idxPlayers].currentScore === 31
-    ? endRound(playerNum, "Schnautz", 31)
-    : players[idxPlayers].currentScore === 33
-    ? endRound(playerNum, "Feuer", 33)
-    : changeActivePlayer();
 };
 
 // ///// CARD AND DECK FUNCTIONS ////////////////////////////////
@@ -501,6 +496,7 @@ eventsCards = () => {
 // Change the active player
 changeActivePlayer = () => {
   let idx = activePlayerNum - 1; // Convert player number to zero-based index
+
   // Remove event listener for the current player's three cards
   activeCards.forEach(card =>
     card.removeEventListener("click", selectDeselectCard)
@@ -565,10 +561,12 @@ changeActivePlayer = () => {
   // Clear arrays for next player
   cardsToExtraHand.length = 0;
   cardsFromExtraHand.length = 0;
-  // Check if current player used "buy" on last turn
+
+  // Check if current player used "buy" on last turn, if so reset to false
   if (players[idx].buyLastTurn) {
     players[idx].buyLastTurn = false;
   }
+
   // Update idx with new value of activePlayerNum
   idx = activePlayerNum - 1;
   // Check whether to endRound() if the next player used "hold" on last turn
@@ -579,10 +577,37 @@ changeActivePlayer = () => {
   }
 };
 
+const check31Or33 = (playerNum = null) => {
+  let idxPlayers = playerNum - 1; // Convert player number to zero-based index
+  let playerHas31 = [];
+  // If a player's score is 31 or 33, the round ends immediately
+  // Check if any players have been dealt 33 or 31
+  if (playerNum === null) {
+    players.forEach(player => {
+      if (player.currentScore === 33) {
+        endRound("Feuer", 33);
+      } else if (player.currentScore === 31) {
+        playerHas31.push(player.player);
+        console.log(`Player ${player.player} has 31!`);
+      }
+    });
+    // If any player has 31, end the round, if not change the active player
+    playerHas31.length > 0 ? endRound("Schnautz", 31) : changeActivePlayer();
+
+    // if (playerNum !== null) check if a player has 33 or 31
+  } else if (players[idxPlayers].currentScore === 33) {
+    endRound("Feuer", 33);
+  } else if (players[idxPlayers].currentScore === 31) {
+    endRound("Schnautz", 31);
+    // if (playerNum !== null) and no player has 33 or 31
+  } else {
+    changeActivePlayer();
+  }
+};
+
 // Deal card objects
 const deal = () => {
   if (activeGame && activeRound === false) {
-    // clearTable(); // Do we need clearTable() here?
     activeRound = true;
     dealButton.textContent = "Score";
     shuffle(newDeck());
@@ -611,7 +636,9 @@ const deal = () => {
       }
     }
     styleBlackCards();
-    changeActivePlayer();
+    // update scores to avoid currentScore: null on an early Schnautz/Feuer
+    players.forEach(player => updateScore(player.player));
+    check31Or33();
   }
 };
 dealButton.addEventListener("click", deal);
@@ -701,6 +728,7 @@ const exchangeCards = () => {
       }
       styleBlackCards();
       updateScore(activePlayerNum);
+      check31Or33(activePlayerNum);
     } else if (
       cardsToExtraHand.length === 3 &&
       cardsFromExtraHand.length === 3
@@ -764,6 +792,7 @@ const exchangeCards = () => {
       }
       styleBlackCards();
       updateScore(activePlayerNum);
+      check31Or33(activePlayerNum);
     } else {
       alert("Error: Unable to exchange cards.");
     }
@@ -781,8 +810,9 @@ const buy = () => {
   if (players[idx].buyLastTurn === true) {
     alert(`Player ${activePlayerNum} cannot buy this turn.`);
   } else {
-    players[idx].buyLastTurn = true;
     updateScore(activePlayerNum);
+    check31Or33(activePlayerNum);
+    players[idx].buyLastTurn = true;
   }
 };
 buyButton.addEventListener("click", buy);
@@ -792,6 +822,7 @@ const hold = () => {
   let idx = activePlayerNum - 1;
   players[idx].holdLastTurn = true;
   updateScore(activePlayerNum);
+  check31Or33(activePlayerNum);
   // Other players have one more turn (but not current player)
 };
 holdButton.addEventListener("click", hold);
