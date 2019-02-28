@@ -164,9 +164,10 @@ const changeDealer = () => {
   }
   // Find the new "dealer" and set the property .activePlayer: true
   // ...set non-dealers' property .activePlayer: false
+  // Set activePlayerNum to the "dealer"'s player number
   players.forEach(player => {
     player.position === "dealer"
-      ? (player.activePlayer = true)
+      ? ((player.activePlayer = true), (activePlayerNum = player.player))
       : (player.activePlayer = false);
     player.buyLastTurn = false;
     player.holdLastTurn = false;
@@ -487,8 +488,6 @@ const selectDeselectCard = e => {
           manageCardsToExchange(false, false, cardObj));
     }
   });
-  // console.log(cardsToExtraHand);
-  // console.log(cardsFromExtraHand);
 };
 // Add event listeners to playerOneCard, etc., & extraCard NodeLists
 extraCard.forEach(card => card.addEventListener("click", selectDeselectCard));
@@ -698,9 +697,20 @@ const exchangeCards = () => {
   // Note: mutates the objects that newDeck() created inside an array
   if (activeGame && activeRound) {
     // Note: All arrays below reference the same deck card objects
+
+    // Bind the current player's position ("leftOfDealerHand", etc) to a variable
+    let swapToCardPosition = cardsToExtraHand[0].cardPosition;
+    // Bind the Nodelist of the current player's cards to a variable
+    let playerNumberCard =
+      activePlayerNum === 1
+        ? playerOneCard // document.querySelectorAll(".playerOneCard")
+        : activePlayerNum === 2
+        ? playerTwoCard
+        : activePlayerNum === 3
+        ? playerThreeCard
+        : playerFourCard;
+
     if (cardsToExtraHand.length === 1 && cardsFromExtraHand.length === 1) {
-      // Bind the current player's position ("leftOfDealerHand", etc) to a variable
-      let swapToCardPosition = cardsToExtraHand[0].cardPosition;
       // Check in the extraHand for the index of the selected card - bind to a variable
       let idxFromExtraHand = extraHand.indexOf(cardsFromExtraHand[0]);
       let idxFromExtraNode;
@@ -710,10 +720,30 @@ const exchangeCards = () => {
       // Switch .cardPosition property values e.g. "leftOfDealerHand" for "extraHand"
       cardsFromExtraHand[0].cardPosition = swapToCardPosition;
       cardsToExtraHand[0].cardPosition = "extraHand";
+      // Switch .cardPlayerNum property values (extra is always 0)
+      cardsFromExtraHand[0].cardPlayerNum = activePlayerNum;
+      cardsToExtraHand[0].cardPlayerNum = 0;
       cardsFromExtraHand[0].selected = false;
       cardsToExtraHand[0].selected = false;
+
       // Replace one card object from extraHand with cardsToExtraHand[0]
       extraHand.splice(idxFromExtraHand, 1, cardsToExtraHand[0]);
+
+      // Remove and replace one card object from the player's hand
+      if (swapToCardPosition === "leftOfDealerHand") {
+        idxToExtraHand = leftOfDealerHand.indexOf(cardsToExtraHand[0]);
+        leftOfDealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
+      } else if (swapToCardPosition === "acrossFromDealerHand") {
+        idxToExtraHand = acrossFromDealerHand.indexOf(cardsToExtraHand[0]);
+        acrossFromDealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
+      } else if (swapToCardPosition === "rightOfDealerHand") {
+        idxToExtraHand = rightOfDealerHand.indexOf(cardsToExtraHand[0]);
+        rightOfDealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
+      } else {
+        idxToExtraHand = dealerHand.indexOf(cardsToExtraHand[0]);
+        dealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
+      }
+
       // Retrieve index from NodeList and modify textContent && classlist
       extraCard.forEach((card, idx) => {
         if (card.textContent === cardsFromExtraHand[0].card) {
@@ -723,57 +753,14 @@ const exchangeCards = () => {
       extraCard[idxFromExtraNode].textContent = cardsToExtraHand[0].card;
       extraCard[idxFromExtraNode].classList.remove("is-active");
 
-      if (swapToCardPosition === "leftOfDealerHand") {
-        idxToExtraHand = leftOfDealerHand.indexOf(cardsToExtraHand[0]);
-        // Remove and replace one card object from leftOfDealerHand
-        leftOfDealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
-        // Retrieve index from NodeList and modify textContent && classlist
-        playerTwoCard.forEach((card, idx) => {
-          if (card.textContent === cardsToExtraHand[0].card) {
-            idxToPlayNode = idx;
-          }
-        });
-        playerTwoCard[idxToPlayNode].textContent = cardsFromExtraHand[0].card;
-        playerTwoCard[idxToPlayNode].classList.remove("is-active");
-      } else if (swapToCardPosition === "acrossFromDealerHand") {
-        idxToExtraHand = acrossFromDealerHand.indexOf(cardsToExtraHand[0]);
-        // Remove and replace one card object from acrossFromDealerHand
-        acrossFromDealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
-        // Retrieve index from NodeList and modify textContent && classlist
-        playerThreeCard.forEach((card, idx) => {
-          if (card.textContent === cardsToExtraHand[0].card) {
-            idxToPlayNode = idx;
-          }
-        });
-        playerThreeCard[idxToPlayNode].textContent = cardsFromExtraHand[0].card;
-        playerThreeCard[idxToPlayNode].classList.remove("is-active");
-      } else if (swapToCardPosition === "rightOfDealerHand") {
-        idxToExtraHand = rightOfDealerHand.indexOf(cardsToExtraHand[0]);
-        // Remove and replace one card object from acrossFromDealerHand
-        rightOfDealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
-        // Retrieve index from NodeList and modify textContent && classlist
-        playerFourCard.forEach((card, idx) => {
-          if (card.textContent === cardsToExtraHand[0].card) {
-            idxToPlayNode = idx;
-          }
-        });
-        playerFourCard[idxToPlayNode].textContent = cardsFromExtraHand[0].card;
-        playerFourCard[idxToPlayNode].classList.remove("is-active");
-      } else if (swapToCardPosition === "dealerHand") {
-        idxToExtraHand = dealerHand.indexOf(cardsToExtraHand[0]);
-        // Remove and replace one card object from acrossFromDealerHand
-        dealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
-        // Retrieve index from NodeList and modify textContent && classlist
-        playerOneCard.forEach((card, idx) => {
-          if (card.textContent === cardsToExtraHand[0].card) {
-            idxToPlayNode = idx;
-          }
-        });
-        playerOneCard[idxToPlayNode].textContent = cardsFromExtraHand[0].card;
-        playerOneCard[idxToPlayNode].classList.remove("is-active");
-      } else {
-        alert("Error: Unable to exchange one card");
-      }
+      // Retrieve index from NodeList and modify textContent && classlist
+      playerNumberCard.forEach((card, idx) => {
+        if (card.textContent === cardsToExtraHand[0].card) {
+          idxToPlayNode = idx;
+        }
+      });
+      playerNumberCard[idxToPlayNode].textContent = cardsFromExtraHand[0].card;
+      playerNumberCard[idxToPlayNode].classList.remove("is-active");
       styleBlackCards();
       updateScore(activePlayerNum);
       check31Or33(activePlayerNum);
@@ -781,18 +768,6 @@ const exchangeCards = () => {
       cardsToExtraHand.length === 3 &&
       cardsFromExtraHand.length === 3
     ) {
-      // Bind the Nodelist of the current player's cards to a variable
-      let playerNumberCard =
-        activePlayerNum === 1
-          ? playerOneCard // document.querySelectorAll(".playerOneCard")
-          : activePlayerNum === 2
-          ? playerTwoCard
-          : activePlayerNum === 3
-          ? playerThreeCard
-          : playerFourCard;
-      // Bind the current player's position ("leftOfDealerHand", etc) to a variable
-      let swapToCardPosition = cardsToExtraHand[0].cardPosition;
-
       // Swap three cards to the extraHand
       extraHand.splice(0, 3, ...cardsToExtraHand);
       for (let i = 0; i <= 2; i++) {
@@ -845,7 +820,7 @@ const exchangeCards = () => {
       alert("Error: Unable to exchange cards.");
     }
   } else {
-    alert("Error: Unable to exchange cards.");
+    alert("Error: Game or round is not active.");
   }
   // console.log(extraHand);
 };
@@ -858,9 +833,10 @@ const buy = () => {
   if (players[idx].buyLastTurn === true) {
     alert(`Player ${activePlayerNum} cannot buy this turn.`);
   } else {
+    players[idx].buyLastTurn = true;
+    aCard.forEach(card => card.classList.remove("is-active"));
     updateScore(activePlayerNum);
     check31Or33(activePlayerNum);
-    players[idx].buyLastTurn = true;
   }
 };
 buyButton.addEventListener("click", buy);
@@ -869,6 +845,7 @@ buyButton.addEventListener("click", buy);
 const hold = () => {
   let idx = activePlayerNum - 1;
   players[idx].holdLastTurn = true;
+  aCard.forEach(card => card.classList.remove("is-active"));
   updateScore(activePlayerNum);
   check31Or33(activePlayerNum);
   // Other players have one more turn (but not current player)
@@ -881,71 +858,3 @@ holdButton.addEventListener("click", hold);
 // White diamond suit 	♢ 	U+2662 	&#9826 -- Black diamond suit 	♦ 	U+2666 	&diams
 // White heart suit 	♡ 	U+2661 	&#9825 -- Black heart suit 	♥ 	U+2665 	&hearts
 // White spade suit 	♤ 	U+2664 	&#9828 -- Black spade suit 	♠ 	U+2660 	&spade
-
-// if (numCards === 15) {
-//   for (let i = 0; i <= 2; i++) {
-//     extraCard[i].textContent = extraHand[i].card;
-//     playerOneCard[i].textContent = dealerHand[i].card;
-//     playerTwoCard[i].textContent = leftOfDealerHand[i].card;
-//     playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
-//     playerFourCard[i].textContent = rightOfDealerHand[i].card;
-//   }
-// } else if (numCards === 12) {
-//   for (let i = 0; i <= 2; i++) {
-//     extraCard[i].textContent = extraHand[i].card;
-//     playerOneCard[i].textContent = dealerHand[i].card;
-//     playerTwoCard[i].textContent = leftOfDealerHand[i].card;
-//     playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
-//   }
-// } else {
-//   for (let i = 0; i <= 2; i++) {
-//     extraCard[i].textContent = extraHand[i].card;
-//     playerOneCard[i].textContent = dealerHand[i].card;
-//     playerTwoCard[i].textContent = leftOfDealerHand[i].card;
-//   }
-// }
-
-//     // Check which player number is the dealer
-//     if (numCards === 15) {
-//       //allHands [extraHand, dealerHand, leftOfDealerHand, acrossFromDealerHand, rightOfDealerHand]
-//       players.forEach((player) => {
-//         player.position ===
-//       });
-
-//       let allHandsIdx;
-//       players.forEach((player) => {
-//         player.position === "dealer"
-//         ? allHandsIdx = 1
-//         : player.position === "leftOfDealer"
-//         ? allHandsIdx = 2
-//         : player.position === "acrossFromDealer"
-//         ? allHandsIdx = 3
-//         : allHandsIdx = 4;
-//       });
-
-//       players.forEach((player) => {
-
-//     player.player === 1
-//     ? playerOneCard[0].textContent = allHands[allHandsIdx][i].card
-//     : player.player === 2
-//     ? playerTwoCard[i].textContent = allHands[1][i].card
-//     : player.position === "acrossFromDealer"
-//     ? acrossPlayerNum = player.player
-//     : rightPlayerNum = player.player;
-//   });
-// }
-
-//     players.forEach((player) => {
-//       player.position === "dealer"
-//       ? dealerPlayerNum = player.player
-//       : player.position === "leftOfDealer"
-//       ? leftPlayerNum = player.player
-//       : player.position === "acrossFromDealer"
-//       ? acrossPlayerNum = player.player
-//       : rightPlayerNum = player.player;
-//     });
-
-//     console.log(dealerPlayerNum);
-//     console.log(leftPlayerNum);
-//     console.log(acrossPlayerNum);
-//     console.log(rightPlayerNum);
