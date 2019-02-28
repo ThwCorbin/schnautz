@@ -296,9 +296,9 @@ const newDeck = () => {
         rank: ranks[i],
         suit: suits[j],
         points:
-          i === 4 || i === 5 || i === 6 ? 10 : i === 7 ? 11 : Number(ranks[i]),
+          i === 7 ? 11 : i === 4 || i === 5 || i === 6 ? 10 : Number(ranks[i]),
         cardPosition: "",
-        cardPlayer: null,
+        cardPlayerNum: null,
         selected: false
       });
     }
@@ -347,44 +347,47 @@ const assignCardsToPlayers = () => {
   // Note: mutates the objects that newDeck() created inside an array
   // Select subset of shuffledDeck based on number of players
   dealtDeck = shuffledDeck.filter((cardObj, idx) => idx < numCards);
-  // Check for the dealer in players array and bind that index to a variable
-  let idxDealer = players.filter((player, idx) => {
-    player.position === "dealer";
-    return idx;
-  });
 
-  // Set cardObj properties .cardPosition and .cardPlayer
-  // Set cardObj.cardPlayer value based on idxDealer value
-  //    idxDealer === 0, then "dealer" is player 1, "left..." is 2, etc
-  //    idxDealer === 1, then "dealer" is player 2, "left..." is 3, etc
-  //    idxDealer === 2, then "dealer" is player 3, "left..." is 4, etc
-  //    idxDealer === 3, then "dealer" is player 4, "left..." is 1, etc
-  //    "extraHand" not in the players array--we set cardObj.cardPlayer = 0
+  // Set cardObj properties .cardPosition and .cardPlayerNum
+  // --.cardPosition value based on order of dealtDeck card objects && numCards
+  //    --With 15 cards, "leftOfDealer" is dealt the 1st, 5th, and 10th cards
+  // --.cardPlayerNum value based on dealerPlayerNum value && numCards
+  //    --"extraHand" is not a player hand, we set cardObj.cardPlayerNum = 0
   // Assign card objects to players' hands and extra hand
+  let dealerPlayerNum;
+  players.forEach(player => {
+    if (player.position === "dealer") dealerPlayerNum = player.player;
+  });
   switch (numCards) {
     case 15:
       dealtDeck.forEach((cardObj, idx) => {
         if (idx === 0 || idx === 5 || idx === 10) {
           cardObj.cardPosition = "leftOfDealerHand";
-          cardObj.cardPlayer = idxDealer === 3 ? 1 : idxDealer + 2;
+          cardObj.cardPlayerNum =
+            dealerPlayerNum === 4 ? 1 : dealerPlayerNum + 1;
           leftOfDealerHand.push(cardObj);
         } else if (idx === 1 || idx === 6 || idx === 11) {
           cardObj.cardPosition = "acrossFromDealerHand";
-          cardObj.cardPlayer =
-            idxDealer === 3 ? 2 : idxDealer === 2 ? 1 : idxDealer + 3;
+          cardObj.cardPlayerNum =
+            dealerPlayerNum === 4
+              ? 2
+              : dealerPlayerNum === 3
+              ? 1
+              : dealerPlayerNum + 2;
           acrossFromDealerHand.push(cardObj);
         } else if (idx === 2 || idx === 7 || idx === 12) {
           cardObj.cardPosition = "rightOfDealerHand";
-          cardObj.cardPlayer = idxDealer === 0 ? 4 : idxDealer;
+          cardObj.cardPlayerNum =
+            dealerPlayerNum === 1 ? 4 : dealerPlayerNum - 1;
           rightOfDealerHand.push(cardObj);
         } else if (idx === 3 || idx === 8 || idx === 13) {
           cardObj.cardPosition = "dealerHand";
-          cardObj.cardPlayer = idxDealer + 1;
+          cardObj.cardPlayerNum = dealerPlayerNum;
           dealerHand.push(cardObj);
         } else {
           cardObj.cardPosition = "extraHand";
           extraHand.push(cardObj);
-          cardObj.cardPlayer = 0;
+          cardObj.cardPlayerNum = 0;
         }
       });
       allHands.push(
@@ -399,19 +402,21 @@ const assignCardsToPlayers = () => {
       dealtDeck.forEach((cardObj, idx) => {
         if (idx === 0 || idx === 4 || idx === 8) {
           cardObj.cardPosition = "leftOfDealerHand";
-          cardObj.cardPlayer = idxDealer === 2 ? 1 : idxDealer + 2;
+          cardObj.cardPlayerNum =
+            dealerPlayerNum === 3 ? 1 : dealerPlayerNum + 1;
           leftOfDealerHand.push(cardObj);
         } else if (idx === 1 || idx === 5 || idx === 9) {
           cardObj.cardPosition = "acrossFromDealerHand";
-          cardObj.cardPlayer = idxDealer === 2 ? 2 : idxDealer === 1 ? 1 : 3;
+          cardObj.cardPlayerNum =
+            dealerPlayerNum === 3 ? 2 : dealerPlayerNum === 2 ? 1 : 3;
           acrossFromDealerHand.push(cardObj);
         } else if (idx === 2 || idx === 6 || idx === 10) {
           cardObj.cardPosition = "dealerHand";
-          cardObj.cardPlayer = idxDealer + 1;
+          cardObj.cardPlayerNum = dealerPlayerNum;
           dealerHand.push(cardObj);
         } else {
           cardObj.cardPosition = "extraHand";
-          cardObj.cardPlayer = 0;
+          cardObj.cardPlayerNum = 0;
           extraHand.push(cardObj);
         }
       });
@@ -426,15 +431,15 @@ const assignCardsToPlayers = () => {
       dealtDeck.forEach((cardObj, idx) => {
         if (idx === 0 || idx === 3 || idx === 6) {
           cardObj.cardPosition = "leftOfDealerHand";
-          cardObj.cardPlayer = idxDealer === 1 ? 1 : 2;
+          cardObj.cardPlayerNum = dealerPlayerNum === 1 ? 2 : 1;
           leftOfDealerHand.push(cardObj);
         } else if (idx === 1 || idx === 4 || idx === 7) {
           cardObj.cardPosition = "dealerHand";
-          cardObj.cardPlayer = idxDealer + 1;
+          cardObj.cardPlayerNum = dealerPlayerNum;
           dealerHand.push(cardObj);
         } else {
           cardObj.cardPosition = "extraHand";
-          cardObj.cardPlayer = 0;
+          cardObj.cardPlayerNum = 0;
           extraHand.push(cardObj);
         }
       });
@@ -594,7 +599,7 @@ const check31Or33 = (playerNum = null) => {
     // If any player has 31, end the round, if not change the active player
     playerHas31.length > 0 ? endRound("Schnautz", 31) : changeActivePlayer();
 
-    // if (playerNum !== null) check if a player has 33 or 31
+    // else if (playerNum !== null) check if a player has 33 or 31
   } else if (players[idxPlayers].currentScore === 33) {
     endRound("Feuer", 33);
   } else if (players[idxPlayers].currentScore === 31) {
@@ -610,34 +615,77 @@ const deal = () => {
   if (activeGame && activeRound === false) {
     activeRound = true;
     dealButton.textContent = "Score";
+    // Generate a deck of cards, shuffle, and assign cards to players' hands
     shuffle(newDeck());
     assignCardsToPlayers();
     // "Deal" cards to screen
     if (numCards === 15) {
       for (let i = 0; i <= 2; i++) {
         extraCard[i].textContent = extraHand[i].card;
-        playerOneCard[i].textContent = dealerHand[i].card;
-        playerTwoCard[i].textContent = leftOfDealerHand[i].card;
-        playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
-        playerFourCard[i].textContent = rightOfDealerHand[i].card;
+        players[0].position === "dealer"
+          ? (playerOneCard[i].textContent = dealerHand[i].card)
+          : players[0].position === "leftOfDealer"
+          ? (playerOneCard[i].textContent = leftOfDealerHand[i].card)
+          : players[0].position === "acrossFromDealer"
+          ? (playerOneCard[i].textContent = acrossFromDealerHand[i].card)
+          : (playerOneCard[i].textContent = rightOfDealerHand[i].card);
+        players[1].position === "dealer"
+          ? (playerTwoCard[i].textContent = dealerHand[i].card)
+          : players[1].position === "leftOfDealer"
+          ? (playerTwoCard[i].textContent = leftOfDealerHand[i].card)
+          : players[1].position === "acrossFromDealer"
+          ? (playerTwoCard[i].textContent = acrossFromDealerHand[i].card)
+          : (playerTwoCard[i].textContent = rightOfDealerHand[i].card);
+        players[2].position === "dealer"
+          ? (playerThreeCard[i].textContent = dealerHand[i].card)
+          : players[2].position === "leftOfDealer"
+          ? (playerThreeCard[i].textContent = leftOfDealerHand[i].card)
+          : players[2].position === "acrossFromDealer"
+          ? (playerThreeCard[i].textContent = acrossFromDealerHand[i].card)
+          : (playerThreeCard[i].textContent = rightOfDealerHand[i].card);
+        players[3].position === "dealer"
+          ? (playerFourCard[i].textContent = dealerHand[i].card)
+          : players[3].position === "leftOfDealer"
+          ? (playerFourCard[i].textContent = leftOfDealerHand[i].card)
+          : players[3].position === "acrossFromDealer"
+          ? (playerFourCard[i].textContent = acrossFromDealerHand[i].card)
+          : (playerFourCard[i].textContent = rightOfDealerHand[i].card);
       }
     } else if (numCards === 12) {
       for (let i = 0; i <= 2; i++) {
         extraCard[i].textContent = extraHand[i].card;
-        playerOneCard[i].textContent = dealerHand[i].card;
-        playerTwoCard[i].textContent = leftOfDealerHand[i].card;
-        playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
+        players[0].position === "dealer"
+          ? (playerOneCard[i].textContent = dealerHand[i].card)
+          : players[0].position === "leftOfDealer"
+          ? (playerOneCard[i].textContent = leftOfDealerHand[i].card)
+          : (playerOneCard[i].textContent = acrossFromDealerHand[i].card);
+        players[1].position === "dealer"
+          ? (playerTwoCard[i].textContent = dealerHand[i].card)
+          : players[1].position === "leftOfDealer"
+          ? (playerTwoCard[i].textContent = leftOfDealerHand[i].card)
+          : (playerTwoCard[i].textContent = acrossFromDealerHand[i].card);
+        players[2].position === "dealer"
+          ? (playerThreeCard[i].textContent = dealerHand[i].card)
+          : players[2].position === "leftOfDealer"
+          ? (playerThreeCard[i].textContent = leftOfDealerHand[i].card)
+          : (playerThreeCard[i].textContent = acrossFromDealerHand[i].card);
       }
     } else {
       for (let i = 0; i <= 2; i++) {
         extraCard[i].textContent = extraHand[i].card;
-        playerOneCard[i].textContent = dealerHand[i].card;
-        playerTwoCard[i].textContent = leftOfDealerHand[i].card;
+        players[0].position === "dealer"
+          ? (playerOneCard[i].textContent = dealerHand[i].card)
+          : (playerOneCard[i].textContent = leftOfDealerHand[i].card);
+        players[1].position === "dealer"
+          ? (playerTwoCard[i].textContent = dealerHand[i].card)
+          : (playerTwoCard[i].textContent = leftOfDealerHand[i].card);
       }
     }
+    // Spades and clubs should be black (default is red)
     styleBlackCards();
-    // update scores to avoid currentScore: null on an early Schnautz/Feuer
+    // Update scores to avoid currentScore: null on an early Schnautz/Feuer
     players.forEach(player => updateScore(player.player));
+    // Check if the dealer dealt a Schnautz/Feuer to any player
     check31Or33();
   }
 };
@@ -833,3 +881,71 @@ holdButton.addEventListener("click", hold);
 // White diamond suit 	♢ 	U+2662 	&#9826 -- Black diamond suit 	♦ 	U+2666 	&diams
 // White heart suit 	♡ 	U+2661 	&#9825 -- Black heart suit 	♥ 	U+2665 	&hearts
 // White spade suit 	♤ 	U+2664 	&#9828 -- Black spade suit 	♠ 	U+2660 	&spade
+
+// if (numCards === 15) {
+//   for (let i = 0; i <= 2; i++) {
+//     extraCard[i].textContent = extraHand[i].card;
+//     playerOneCard[i].textContent = dealerHand[i].card;
+//     playerTwoCard[i].textContent = leftOfDealerHand[i].card;
+//     playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
+//     playerFourCard[i].textContent = rightOfDealerHand[i].card;
+//   }
+// } else if (numCards === 12) {
+//   for (let i = 0; i <= 2; i++) {
+//     extraCard[i].textContent = extraHand[i].card;
+//     playerOneCard[i].textContent = dealerHand[i].card;
+//     playerTwoCard[i].textContent = leftOfDealerHand[i].card;
+//     playerThreeCard[i].textContent = acrossFromDealerHand[i].card;
+//   }
+// } else {
+//   for (let i = 0; i <= 2; i++) {
+//     extraCard[i].textContent = extraHand[i].card;
+//     playerOneCard[i].textContent = dealerHand[i].card;
+//     playerTwoCard[i].textContent = leftOfDealerHand[i].card;
+//   }
+// }
+
+//     // Check which player number is the dealer
+//     if (numCards === 15) {
+//       //allHands [extraHand, dealerHand, leftOfDealerHand, acrossFromDealerHand, rightOfDealerHand]
+//       players.forEach((player) => {
+//         player.position ===
+//       });
+
+//       let allHandsIdx;
+//       players.forEach((player) => {
+//         player.position === "dealer"
+//         ? allHandsIdx = 1
+//         : player.position === "leftOfDealer"
+//         ? allHandsIdx = 2
+//         : player.position === "acrossFromDealer"
+//         ? allHandsIdx = 3
+//         : allHandsIdx = 4;
+//       });
+
+//       players.forEach((player) => {
+
+//     player.player === 1
+//     ? playerOneCard[0].textContent = allHands[allHandsIdx][i].card
+//     : player.player === 2
+//     ? playerTwoCard[i].textContent = allHands[1][i].card
+//     : player.position === "acrossFromDealer"
+//     ? acrossPlayerNum = player.player
+//     : rightPlayerNum = player.player;
+//   });
+// }
+
+//     players.forEach((player) => {
+//       player.position === "dealer"
+//       ? dealerPlayerNum = player.player
+//       : player.position === "leftOfDealer"
+//       ? leftPlayerNum = player.player
+//       : player.position === "acrossFromDealer"
+//       ? acrossPlayerNum = player.player
+//       : rightPlayerNum = player.player;
+//     });
+
+//     console.log(dealerPlayerNum);
+//     console.log(leftPlayerNum);
+//     console.log(acrossPlayerNum);
+//     console.log(rightPlayerNum);
