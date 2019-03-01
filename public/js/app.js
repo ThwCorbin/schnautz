@@ -1,12 +1,18 @@
+// import { generatePlayers } from "./generate";
+
 // ///// VARIABLES /////////////////////////////////////////////
+// export const v = { numPlayers: null };
+const v = { numPlayers: null };
+// let numPlayers;
+
 // Control and Players variables
 const beginEndGameButton = document.querySelector(".beginEndGameButton");
 const playersButton = document.querySelector(".playersButton");
 const dealButton = document.querySelector(".dealButton");
 const num1to4 = document.querySelector(".num1to4");
+// export const players = [];
 const players = [];
 let activePlayerNum = 1; // default 1
-let numPlayers;
 let numCards = 12; // default 12
 let eventsCards;
 let shuffledDeck;
@@ -25,6 +31,7 @@ const leftOfDealerHand = [];
 const acrossFromDealerHand = [];
 const rightOfDealerHand = [];
 const allHands = [];
+
 // Card variables
 const aCard = document.querySelectorAll(".aCard");
 const extraCard = document.querySelectorAll(".extraCard");
@@ -33,11 +40,14 @@ const playerTwoCard = document.querySelectorAll(".playerTwoCard");
 const playerThreeCard = document.querySelectorAll(".playerThreeCard");
 const playerFourCard = document.querySelectorAll(".playerFourCard");
 let activeCards = playerOneCard; // default playerOneCard
+// export const playerText1 = document.querySelector(".dealerP1");
 const playerText1 = document.querySelector(".dealerP1");
 const playerText2 = document.querySelector(".dealerP2");
 const playerText3 = document.querySelector(".dealerP3");
 const playerText4 = document.querySelector(".dealerP4");
+// export const cardsToExtraHand = [];
 const cardsToExtraHand = [];
+// export const cardsFromExtraHand = [];
 const cardsFromExtraHand = [];
 // Game/round active and reset variables
 let activeGame = false;
@@ -60,7 +70,6 @@ const clearTable = () => {
     card.classList.remove("is-active");
     card.textContent = "";
   });
-  // players.forEach(player => (player.activePlayer = false));
 };
 
 const resetGame = () => {
@@ -93,7 +102,7 @@ playersButton.addEventListener("click", changePlayersNum);
 // Generate players
 const generatePlayers = () => {
   clearTable();
-  for (let i = 1; i <= numPlayers; i++) {
+  for (let i = 1; i <= v.numPlayers; i++) {
     players.push({
       player: i,
       position:
@@ -120,7 +129,7 @@ const generatePlayers = () => {
 const beginEndGame = () => {
   if (!activeGame) {
     activeGame = true;
-    numPlayers = Number(num1to4.textContent);
+    v.numPlayers = Number(num1to4.textContent);
     generatePlayers();
     playersButton.textContent = "Deal";
     beginEndGameButton.textContent = "End Game";
@@ -134,7 +143,7 @@ beginEndGameButton.addEventListener("click", beginEndGame);
 
 const changeDealer = () => {
   // Check numPlayers and use players[index] to update position properties
-  if (numPlayers === 4) {
+  if (v.numPlayers === 4) {
     let player4position = players[3].position;
     players[3].position = players[2].position;
     players[2].position = players[1].position;
@@ -145,7 +154,7 @@ const changeDealer = () => {
     playerText3.textContent = playerText2.textContent;
     playerText2.textContent = playerText1.textContent;
     playerText1.textContent = holdText;
-  } else if (numPlayers === 3) {
+  } else if (v.numPlayers === 3) {
     let player3position = players[2].position;
     players[2].position = players[1].position;
     players[1].position = players[0].position;
@@ -154,7 +163,7 @@ const changeDealer = () => {
     playerText3.textContent = playerText2.textContent;
     playerText2.textContent = playerText1.textContent;
     playerText1.textContent = holdText;
-  } else if (numPlayers === 2) {
+  } else if (v.numPlayers === 2) {
     let player2position = players[1].position;
     players[1].position = players[0].position;
     players[0].position = player2position;
@@ -172,6 +181,11 @@ const changeDealer = () => {
     player.buyLastTurn = false;
     player.holdLastTurn = false;
   });
+  // Remove active-area from each classlist
+  playerOneArea.classList.remove("active-area");
+  playerTwoArea.classList.remove("active-area");
+  playerThreeArea.classList.remove("active-area");
+  playerFourArea.classList.remove("active-area");
 };
 
 // End the round
