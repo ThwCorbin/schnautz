@@ -1,17 +1,17 @@
-// import { generatePlayers } from "./generate";
+import generatePlayers from "./generate.js";
 
 // ///// VARIABLES /////////////////////////////////////////////
-// export const v = { numPlayers: null };
-const v = { numPlayers: null };
-// let numPlayers;
+export const v = { numPlayers: null };
+export const players = [];
+export const playerText1 = document.querySelector(".dealerP1");
 
 // Control and Players variables
 const beginEndGameButton = document.querySelector(".beginEndGameButton");
 const playersButton = document.querySelector(".playersButton");
 const dealButton = document.querySelector(".dealButton");
 const num1to4 = document.querySelector(".num1to4");
-// export const players = [];
-const players = [];
+// const players = [];
+// let numPlayers;
 let activePlayerNum = 1; // default 1
 let numCards = 12; // default 12
 let eventsCards;
@@ -40,8 +40,7 @@ const playerTwoCard = document.querySelectorAll(".playerTwoCard");
 const playerThreeCard = document.querySelectorAll(".playerThreeCard");
 const playerFourCard = document.querySelectorAll(".playerFourCard");
 let activeCards = playerOneCard; // default playerOneCard
-// export const playerText1 = document.querySelector(".dealerP1");
-const playerText1 = document.querySelector(".dealerP1");
+// const playerText1 = document.querySelector(".dealerP1");
 const playerText2 = document.querySelector(".dealerP2");
 const playerText3 = document.querySelector(".dealerP3");
 const playerText4 = document.querySelector(".dealerP4");
@@ -56,7 +55,7 @@ let changeActivePlayer;
 
 // ///// RESET GAME/ROUND FUNCTIONS ////////////////////////////
 
-const clearTable = () => {
+export const clearTable = () => {
   activeRound = false;
   extraHand.length = 0;
   dealerHand.length = 0;
@@ -100,30 +99,30 @@ const changePlayersNum = () => {
 playersButton.addEventListener("click", changePlayersNum);
 
 // Generate players
-const generatePlayers = () => {
-  clearTable();
-  for (let i = 1; i <= v.numPlayers; i++) {
-    players.push({
-      player: i,
-      position:
-        i === 1
-          ? "dealer"
-          : i === 2
-          ? "leftOfDealer"
-          : i === 3
-          ? "acrossFromDealer"
-          : "rightOfDealer",
-      activePlayer: i === 1, // boolean - default is dealer
-      buyLastTurn: false,
-      holdLastTurn: false,
-      tokens: 3,
-      currentScore: null
-    });
-  }
-  // Set initial dealer text
-  playerText1.textContent = " Dealer ";
-  // console.log(players);
-};
+// const generatePlayers = () => {
+//   clearTable();
+//   for (let i = 1; i <= v.numPlayers; i++) {
+//     players.push({
+//       player: i,
+//       position:
+//         i === 1
+//           ? "dealer"
+//           : i === 2
+//           ? "leftOfDealer"
+//           : i === 3
+//           ? "acrossFromDealer"
+//           : "rightOfDealer",
+//       activePlayer: i === 1, // boolean - default is dealer
+//       buyLastTurn: false,
+//       holdLastTurn: false,
+//       tokens: 3,
+//       currentScore: null
+//     });
+//   }
+//   // Set initial dealer text
+//   playerText1.textContent = " Dealer ";
+//   // console.log(players);
+// };
 
 // Begin play
 const beginEndGame = () => {
