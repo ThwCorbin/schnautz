@@ -1,4 +1,4 @@
-import generatePlayers from "./generate.js";
+import { generatePlayers } from "./generate.js";
 
 // ///// VARIABLES /////////////////////////////////////////////
 export const v = { numPlayers: null };

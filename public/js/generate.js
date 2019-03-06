@@ -1,8 +1,5 @@
 import { v, clearTable, players, playerText1 } from "./app.js";
 
-export { generatePlayers as default };
-// "export default generatePlayers" would need to be below const declaration
-
 // Generate players
 export const generatePlayers = () => {
   clearTable();
@@ -28,3 +25,5 @@ export const generatePlayers = () => {
   playerText1.textContent = " Dealer ";
   // console.log(players);
 };
+
+export { generatePlayers as default };
