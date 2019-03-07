@@ -1,10 +1,11 @@
-import generatePlayers from "./generate.js";
+import generatePlayers, { players } from "./generate.js";
 // import clearTable, { resetGame } from "./resets.js";
 import newDeck, { shuffle } from "./cardDeck.js";
+import assignCardsToPlayers, { dealtDeck } from "./cardHands.js";
 
 // ///// VARIABLES /////////////////////////////////////////////
-export const v = { numPlayers: null };
-export const players = [];
+export const v = { numPlayers: null, numCards: 12 }; // defaults
+// export const players = [];
 export const playerText1 = document.querySelector(".dealerP1");
 
 // Control and Players variables
@@ -15,10 +16,9 @@ const num1to4 = document.querySelector(".num1to4");
 // const players = [];
 // let numPlayers;
 let activePlayerNum = 1; // default 1
-let numCards = 12; // default 12
+// let numCards = 12; // default 12
 let eventsCards;
-// let shuffledDeck;
-let dealtDeck;
+// let dealtDeck;
 // Hand variables
 const exchangeButton = document.querySelector(".exchangeButton");
 const buyButton = document.querySelector(".buyButton");
@@ -27,12 +27,12 @@ const playerOneArea = document.querySelector(".playerOneArea");
 const playerTwoArea = document.querySelector(".playerTwoArea");
 const playerThreeArea = document.querySelector(".playerThreeArea");
 const playerFourArea = document.querySelector(".playerFourArea");
-const extraHand = [];
-const dealerHand = [];
-const leftOfDealerHand = [];
-const acrossFromDealerHand = [];
-const rightOfDealerHand = [];
-const allHands = [];
+export const extraHand = [];
+export const dealerHand = [];
+export const leftOfDealerHand = [];
+export const acrossFromDealerHand = [];
+export const rightOfDealerHand = [];
+export const allHands = [];
 
 // Card variables
 const aCard = document.querySelectorAll(".aCard");
@@ -59,6 +59,7 @@ let changeActivePlayer;
 
 export const clearTable = () => {
   activeRound = false;
+  dealtDeck.length = 0;
   extraHand.length = 0;
   dealerHand.length = 0;
   leftOfDealerHand.length = 0;
@@ -83,7 +84,7 @@ const resetGame = () => {
   dealButton.textContent = "Players?";
   beginEndGameButton.textContent = "Start";
   num1to4.textContent = 3;
-  numCards = 12;
+  v.numCards = 12;
 };
 
 // ///// GAME MANAGEMENT FUNCTIONS ///////////////////////////////
@@ -92,39 +93,15 @@ const resetGame = () => {
 const changePlayersNum = () => {
   if (!activeGame) {
     num1to4.textContent === "4"
-      ? ((num1to4.textContent = "3"), (numCards = 12))
+      ? ((num1to4.textContent = "3"), (v.numCards = 12))
       : num1to4.textContent === "3"
-      ? ((num1to4.textContent = "2"), (numCards = 9))
-      : ((num1to4.textContent = "4"), (numCards = 15));
+      ? ((num1to4.textContent = "2"), (v.numCards = 9))
+      : ((num1to4.textContent = "4"), (v.numCards = 15));
   }
 };
 playersButton.addEventListener("click", changePlayersNum);
 
 // Generate players
-// const generatePlayers = () => {
-//   clearTable();
-//   for (let i = 1; i <= v.numPlayers; i++) {
-//     players.push({
-//       player: i,
-//       position:
-//         i === 1
-//           ? "dealer"
-//           : i === 2
-//           ? "leftOfDealer"
-//           : i === 3
-//           ? "acrossFromDealer"
-//           : "rightOfDealer",
-//       activePlayer: i === 1, // boolean - default is dealer
-//       buyLastTurn: false,
-//       holdLastTurn: false,
-//       tokens: 3,
-//       currentScore: null
-//     });
-//   }
-//   // Set initial dealer text
-//   playerText1.textContent = " Dealer ";
-//   // console.log(players);
-// };
 
 // Begin play
 
@@ -312,112 +289,6 @@ const styleBlackCards = () => {
   );
 };
 
-// Assign cards to players' hands and extra hand
-const assignCardsToPlayers = shuffledDeck => {
-  // Note: mutates the objects that newDeck() created inside an array
-  // Select subset of shuffledDeck based on number of players
-  dealtDeck = shuffledDeck.filter((cardObj, idx) => idx < numCards);
-
-  // Set cardObj properties .cardPosition and .cardPlayerNum
-  // --.cardPosition value based on order of dealtDeck card objects && numCards
-  //    --With 15 cards, "leftOfDealer" is dealt the 1st, 5th, and 10th cards
-  // --.cardPlayerNum value based on dealerPlayerNum value && numCards
-  //    --"extraHand" is not a player hand, we set cardObj.cardPlayerNum = 0
-  // Assign card objects to players' hands and extra hand
-  let dealerPlayerNum;
-  players.forEach(player => {
-    if (player.position === "dealer") dealerPlayerNum = player.player;
-  });
-  switch (numCards) {
-    case 15:
-      dealtDeck.forEach((cardObj, idx) => {
-        if (idx === 0 || idx === 5 || idx === 10) {
-          cardObj.cardPosition = "leftOfDealerHand";
-          cardObj.cardPlayerNum =
-            dealerPlayerNum === 4 ? 1 : dealerPlayerNum + 1;
-          leftOfDealerHand.push(cardObj);
-        } else if (idx === 1 || idx === 6 || idx === 11) {
-          cardObj.cardPosition = "acrossFromDealerHand";
-          cardObj.cardPlayerNum =
-            dealerPlayerNum === 4
-              ? 2
-              : dealerPlayerNum === 3
-              ? 1
-              : dealerPlayerNum + 2;
-          acrossFromDealerHand.push(cardObj);
-        } else if (idx === 2 || idx === 7 || idx === 12) {
-          cardObj.cardPosition = "rightOfDealerHand";
-          cardObj.cardPlayerNum =
-            dealerPlayerNum === 1 ? 4 : dealerPlayerNum - 1;
-          rightOfDealerHand.push(cardObj);
-        } else if (idx === 3 || idx === 8 || idx === 13) {
-          cardObj.cardPosition = "dealerHand";
-          cardObj.cardPlayerNum = dealerPlayerNum;
-          dealerHand.push(cardObj);
-        } else {
-          cardObj.cardPosition = "extraHand";
-          extraHand.push(cardObj);
-          cardObj.cardPlayerNum = 0;
-        }
-      });
-      allHands.push(
-        extraHand,
-        dealerHand,
-        leftOfDealerHand,
-        acrossFromDealerHand,
-        rightOfDealerHand
-      );
-      break;
-    case 12:
-      dealtDeck.forEach((cardObj, idx) => {
-        if (idx === 0 || idx === 4 || idx === 8) {
-          cardObj.cardPosition = "leftOfDealerHand";
-          cardObj.cardPlayerNum =
-            dealerPlayerNum === 3 ? 1 : dealerPlayerNum + 1;
-          leftOfDealerHand.push(cardObj);
-        } else if (idx === 1 || idx === 5 || idx === 9) {
-          cardObj.cardPosition = "acrossFromDealerHand";
-          cardObj.cardPlayerNum =
-            dealerPlayerNum === 3 ? 2 : dealerPlayerNum === 2 ? 1 : 3;
-          acrossFromDealerHand.push(cardObj);
-        } else if (idx === 2 || idx === 6 || idx === 10) {
-          cardObj.cardPosition = "dealerHand";
-          cardObj.cardPlayerNum = dealerPlayerNum;
-          dealerHand.push(cardObj);
-        } else {
-          cardObj.cardPosition = "extraHand";
-          cardObj.cardPlayerNum = 0;
-          extraHand.push(cardObj);
-        }
-      });
-      allHands.push(
-        extraHand,
-        dealerHand,
-        leftOfDealerHand,
-        acrossFromDealerHand
-      );
-      break;
-    default:
-      dealtDeck.forEach((cardObj, idx) => {
-        if (idx === 0 || idx === 3 || idx === 6) {
-          cardObj.cardPosition = "leftOfDealerHand";
-          cardObj.cardPlayerNum = dealerPlayerNum === 1 ? 2 : 1;
-          leftOfDealerHand.push(cardObj);
-        } else if (idx === 1 || idx === 4 || idx === 7) {
-          cardObj.cardPosition = "dealerHand";
-          cardObj.cardPlayerNum = dealerPlayerNum;
-          dealerHand.push(cardObj);
-        } else {
-          cardObj.cardPosition = "extraHand";
-          cardObj.cardPlayerNum = 0;
-          extraHand.push(cardObj);
-        }
-      });
-      allHands.push(extraHand, dealerHand, leftOfDealerHand);
-      break;
-  }
-};
-
 // Manage cards that current player will be exchange with extra hand
 const manageCardsToExchange = (fromExtra, isSelected, cardObj) => {
   fromExtra && isSelected
@@ -486,7 +357,7 @@ changeActivePlayer = () => {
       playerTwoArea.classList.add("active-area"),
       (activeCards = playerTwoCard),
       eventsCards())
-    : activePlayerNum === 2 && numCards === 9
+    : activePlayerNum === 2 && v.numCards === 9
     ? // 2 players: player one (players[0]) follows player two (players[1])
       ((activePlayerNum = 1),
       (players[1].activePlayer = false),
@@ -504,7 +375,7 @@ changeActivePlayer = () => {
       playerThreeArea.classList.add("active-area"),
       (activeCards = playerThreeCard),
       eventsCards())
-    : activePlayerNum === 3 && numCards === 12
+    : activePlayerNum === 3 && v.numCards === 12
     ? // 3 players: player one (players[0]) follows player three (players[2])
       ((activePlayerNum = 1),
       (players[2].activePlayer = false),
@@ -586,7 +457,7 @@ const deal = () => {
     // Generate a deck of cards, shuffle, and assign cards to players' hands
     assignCardsToPlayers(shuffle(newDeck()));
     // "Deal" cards to screen
-    if (numCards === 15) {
+    if (v.numCards === 15) {
       for (let i = 0; i <= 2; i++) {
         extraCard[i].textContent = extraHand[i].card;
         players[0].position === "dealer"
@@ -618,7 +489,7 @@ const deal = () => {
           ? (playerFourCard[i].textContent = acrossFromDealerHand[i].card)
           : (playerFourCard[i].textContent = rightOfDealerHand[i].card);
       }
-    } else if (numCards === 12) {
+    } else if (v.numCards === 12) {
       for (let i = 0; i <= 2; i++) {
         extraCard[i].textContent = extraHand[i].card;
         players[0].position === "dealer"

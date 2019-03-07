@@ -1,4 +1,6 @@
-import { v, clearTable, players, playerText1 } from "./app.js";
+import { v, clearTable, playerText1 } from "./app.js";
+
+const players = [];
 
 // Test code
 const sum = (a, b) => a + b;
@@ -29,4 +31,4 @@ const generatePlayers = () => {
   // console.log(players);
 };
 
-export { generatePlayers as default, sum };
+export { generatePlayers as default, players, sum };
