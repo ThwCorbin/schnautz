@@ -1,7 +1,10 @@
 import { v, clearTable, players, playerText1 } from "./app.js";
 
+// Test code
+const sum = (a, b) => a + b;
+
 // Generate players
-export const generatePlayers = () => {
+const generatePlayers = () => {
   clearTable();
   for (let i = 1; i <= v.numPlayers; i++) {
     players.push({
@@ -26,4 +29,4 @@ export const generatePlayers = () => {
   // console.log(players);
 };
 
-export { generatePlayers as default };
+export { generatePlayers as default, sum };

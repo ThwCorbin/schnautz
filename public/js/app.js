@@ -1,4 +1,6 @@
-import { generatePlayers } from "./generate.js";
+import generatePlayers from "./generate.js";
+// import clearTable, { resetGame } from "./resets.js";
+import newDeck, { shuffle } from "./cardDeck.js";
 
 // ///// VARIABLES /////////////////////////////////////////////
 export const v = { numPlayers: null };
@@ -15,7 +17,7 @@ const num1to4 = document.querySelector(".num1to4");
 let activePlayerNum = 1; // default 1
 let numCards = 12; // default 12
 let eventsCards;
-let shuffledDeck;
+// let shuffledDeck;
 let dealtDeck;
 // Hand variables
 const exchangeButton = document.querySelector(".exchangeButton");
@@ -53,7 +55,7 @@ let activeGame = false;
 let activeRound = false;
 let changeActivePlayer;
 
-// ///// RESET GAME/ROUND FUNCTIONS ////////////////////////////
+// // ///// RESET GAME/ROUND FUNCTIONS ////////////////////////////
 
 export const clearTable = () => {
   activeRound = false;
@@ -125,6 +127,7 @@ playersButton.addEventListener("click", changePlayersNum);
 // };
 
 // Begin play
+
 const beginEndGame = () => {
   if (!activeGame) {
     activeGame = true;
@@ -213,7 +216,7 @@ const endRound = (msgSchnautzFeuer, num31Or33) => {
     message = `${msgSchnautzFeuer}!!!
   `;
   // Build the message
-  message += ` 
+  message += `
     ${messageScores}
     ${messageTokens}
     `;
@@ -296,54 +299,7 @@ const updateScore = playerNum => {
 };
 
 // ///// CARD AND DECK FUNCTIONS ////////////////////////////////
-
-// Generate new deck (an array of card objects) to pass to shuffle function
-const newDeck = () => {
-  const suits = ["♧", "♢", "♡", "♤"];
-  const ranks = ["7", "8", "9", "10", "J", "Q", "K", "A"];
-  const deck = [];
-  // Build fresh deck as an array of objects.
-  for (let i = 0; i < ranks.length; i++) {
-    for (let j = 0; j < suits.length; j++) {
-      deck.push({
-        card: ranks[i] + suits[j],
-        rank: ranks[i],
-        suit: suits[j],
-        points:
-          i === 7 ? 11 : i === 4 || i === 5 || i === 6 ? 10 : Number(ranks[i]),
-        cardPosition: "",
-        cardPlayerNum: null,
-        selected: false
-      });
-    }
-  }
-  return deck;
-};
-
-// Generate shuffled deck from newDeck()'s array of card objects to pass to deal function
-// Fisher–Yates Shuffle
-const shuffle = deck => {
-  let numUnshuffledCards = deck.length;
-  // 32 card deck 7 through ace
-  let randomUnshuffledCard;
-  let lastUnshuffledCard;
-  // Select and move a random unshuffled card to the shuffled portion of the array
-  // Move the card the random card replaced to the unshuffled portion of the array
-  while (numUnshuffledCards) {
-    // While unshuffled cards remain,
-    randomUnshuffledCard = Math.floor(Math.random() * numUnshuffledCards--);
-    // Pick a random card from the unshuffled portion of the deck,
-    // and decrement the number of unshuffled cards by 1 so we can...
-    lastUnshuffledCard = deck[numUnshuffledCards];
-    // Assign the last card in the unshuffled portion of the array to a variable
-    deck[numUnshuffledCards] = deck[randomUnshuffledCard];
-    // Move the random card to the last unshuffled card's position
-    deck[randomUnshuffledCard] = lastUnshuffledCard;
-    // Move the last unshuffled card to the random card's previous position
-  }
-  shuffledDeck = deck;
-  return shuffledDeck;
-};
+// Moved deck functions to cardDeck.js
 
 // Style black cards
 const styleBlackCards = () => {
@@ -357,7 +313,7 @@ const styleBlackCards = () => {
 };
 
 // Assign cards to players' hands and extra hand
-const assignCardsToPlayers = () => {
+const assignCardsToPlayers = shuffledDeck => {
   // Note: mutates the objects that newDeck() created inside an array
   // Select subset of shuffledDeck based on number of players
   dealtDeck = shuffledDeck.filter((cardObj, idx) => idx < numCards);
@@ -628,8 +584,7 @@ const deal = () => {
     activeRound = true;
     dealButton.textContent = "Score";
     // Generate a deck of cards, shuffle, and assign cards to players' hands
-    shuffle(newDeck());
-    assignCardsToPlayers();
+    assignCardsToPlayers(shuffle(newDeck()));
     // "Deal" cards to screen
     if (numCards === 15) {
       for (let i = 0; i <= 2; i++) {
