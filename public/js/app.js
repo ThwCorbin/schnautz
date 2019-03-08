@@ -1,13 +1,26 @@
 import generatePlayers, { players } from "./generate.js";
-// import clearTable, { resetGame } from "./resets.js";
+import clearTable, { resetGame } from "./resets.js";
 import newDeck, { shuffle } from "./cardDeck.js";
 import assignCardsToPlayers, { dealtDeck } from "./cardHands.js";
+import changeActivePlayer from "./changeActivePlayer.js";
+import changeDealer from "./changeDealer.js";
 import buy, { hold } from "./buyHold.js";
 
 // ///// VARIABLES /////////////////////////////////////////////
-export const v = { numPlayers: null, numCards: 12, activePlayerNum: 1 }; // defaults
+export const playerOneCard = document.querySelectorAll(".playerOneCard");
+export const playerTwoCard = document.querySelectorAll(".playerTwoCard");
+export const playerThreeCard = document.querySelectorAll(".playerThreeCard");
+export const playerFourCard = document.querySelectorAll(".playerFourCard");
+
+export const v = {
+  numPlayers: null,
+  numCards: 12,
+  activeCards: playerOneCard,
+  activePlayerNum: 1,
+  activeGame: false,
+  activeRound: false
+}; // defaults
 // export const players = [];
-export const playerText1 = document.querySelector(".dealerP1");
 
 // Control and Players variables
 const beginEndGameButton = document.querySelector(".beginEndGameButton");
@@ -18,16 +31,16 @@ const num1to4 = document.querySelector(".num1to4");
 // let numPlayers;
 // let activePlayerNum = 1; // default 1
 // let numCards = 12; // default 12
-let eventsCards;
+// let eventsCards;
 // let dealtDeck;
 // Hand variables
 const exchangeButton = document.querySelector(".exchangeButton");
 const buyButton = document.querySelector(".buyButton");
 const holdButton = document.querySelector(".holdButton");
-const playerOneArea = document.querySelector(".playerOneArea");
-const playerTwoArea = document.querySelector(".playerTwoArea");
-const playerThreeArea = document.querySelector(".playerThreeArea");
-const playerFourArea = document.querySelector(".playerFourArea");
+export const playerOneArea = document.querySelector(".playerOneArea");
+export const playerTwoArea = document.querySelector(".playerTwoArea");
+export const playerThreeArea = document.querySelector(".playerThreeArea");
+export const playerFourArea = document.querySelector(".playerFourArea");
 export const extraHand = [];
 export const dealerHand = [];
 export const leftOfDealerHand = [];
@@ -38,55 +51,52 @@ export const allHands = [];
 // Card variables
 export const aCard = document.querySelectorAll(".aCard");
 const extraCard = document.querySelectorAll(".extraCard");
-const playerOneCard = document.querySelectorAll(".playerOneCard");
-const playerTwoCard = document.querySelectorAll(".playerTwoCard");
-const playerThreeCard = document.querySelectorAll(".playerThreeCard");
-const playerFourCard = document.querySelectorAll(".playerFourCard");
-let activeCards = playerOneCard; // default playerOneCard
-// const playerText1 = document.querySelector(".dealerP1");
-const playerText2 = document.querySelector(".dealerP2");
-const playerText3 = document.querySelector(".dealerP3");
-const playerText4 = document.querySelector(".dealerP4");
+
+// let activeCards = playerOneCard; // default playerOneCard
+export const playerText1 = document.querySelector(".dealerP1");
+export const playerText2 = document.querySelector(".dealerP2");
+export const playerText3 = document.querySelector(".dealerP3");
+export const playerText4 = document.querySelector(".dealerP4");
 // export const cardsToExtraHand = [];
 const cardsToExtraHand = [];
 // export const cardsFromExtraHand = [];
 const cardsFromExtraHand = [];
 // Game/round active and reset variables
-let activeGame = false;
-let activeRound = false;
-let changeActivePlayer;
+// let activeGame = false;
+// let activeRound = false;
+// let changeActivePlayer;
 
 // // ///// RESET GAME/ROUND FUNCTIONS ////////////////////////////
 
-export const clearTable = () => {
-  activeRound = false;
-  dealtDeck.length = 0;
-  extraHand.length = 0;
-  dealerHand.length = 0;
-  leftOfDealerHand.length = 0;
-  acrossFromDealerHand.length = 0;
-  rightOfDealerHand.length = 0;
-  allHands.length = 0;
-  cardsToExtraHand.length = 0;
-  cardsFromExtraHand.length = 0;
-  aCard.forEach(card => {
-    card.classList.remove("is-active");
-    card.textContent = "";
-  });
-};
+// export const clearTable = () => {
+//   activeRound = false;
+//   dealtDeck.length = 0;
+//   extraHand.length = 0;
+//   dealerHand.length = 0;
+//   leftOfDealerHand.length = 0;
+//   acrossFromDealerHand.length = 0;
+//   rightOfDealerHand.length = 0;
+//   allHands.length = 0;
+//   cardsToExtraHand.length = 0;
+//   cardsFromExtraHand.length = 0;
+//   aCard.forEach(card => {
+//     card.classList.remove("is-active");
+//     card.textContent = "";
+//   });
+// };
 
-const resetGame = () => {
-  clearTable();
-  eventsCards();
-  activeGame = false;
-  players.length = 0;
-  v.activePlayerNum = 1;
-  activeCards = playerOneCard;
-  dealButton.textContent = "Players?";
-  beginEndGameButton.textContent = "Start";
-  num1to4.textContent = 3;
-  v.numCards = 12;
-};
+// const resetGame = () => {
+//   clearTable();
+//   eventsCards();
+//   activeGame = false;
+//   players.length = 0;
+//   v.activePlayerNum = 1;
+//   v.activeCards = playerOneCard;
+//   dealButton.textContent = "Players?";
+//   beginEndGameButton.textContent = "Start";
+//   num1to4.textContent = 3;
+//   v.numCards = 12;
+// };
 
 // ///// GAME MANAGEMENT FUNCTIONS ///////////////////////////////
 
@@ -120,53 +130,6 @@ const beginEndGame = () => {
   }
 };
 beginEndGameButton.addEventListener("click", beginEndGame);
-
-const changeDealer = () => {
-  // Check numPlayers and use players[index] to update position properties
-  if (v.numPlayers === 4) {
-    let player4position = players[3].position;
-    players[3].position = players[2].position;
-    players[2].position = players[1].position;
-    players[1].position = players[0].position;
-    players[0].position = player4position;
-    let holdText = playerText4.textContent;
-    playerText4.textContent = playerText3.textContent;
-    playerText3.textContent = playerText2.textContent;
-    playerText2.textContent = playerText1.textContent;
-    playerText1.textContent = holdText;
-  } else if (v.numPlayers === 3) {
-    let player3position = players[2].position;
-    players[2].position = players[1].position;
-    players[1].position = players[0].position;
-    players[0].position = player3position;
-    let holdText = playerText3.textContent;
-    playerText3.textContent = playerText2.textContent;
-    playerText2.textContent = playerText1.textContent;
-    playerText1.textContent = holdText;
-  } else if (v.numPlayers === 2) {
-    let player2position = players[1].position;
-    players[1].position = players[0].position;
-    players[0].position = player2position;
-    let holdText = playerText2.textContent;
-    playerText2.textContent = playerText1.textContent;
-    playerText1.textContent = holdText;
-  }
-  // Find the new "dealer" and set the property .activePlayer: true
-  // ...set non-dealers' property .activePlayer: false
-  // Set activePlayerNum to the "dealer"'s player number
-  players.forEach(player => {
-    player.position === "dealer"
-      ? ((player.activePlayer = true), (v.activePlayerNum = player.player))
-      : (player.activePlayer = false);
-    player.buyLastTurn = false;
-    player.holdLastTurn = false;
-  });
-  // Remove active-area from each classlist
-  playerOneArea.classList.remove("active-area");
-  playerTwoArea.classList.remove("active-area");
-  playerThreeArea.classList.remove("active-area");
-  playerFourArea.classList.remove("active-area");
-};
 
 // End the round
 const endRound = (msgSchnautzFeuer, num31Or33) => {
@@ -302,7 +265,7 @@ const manageCardsToExchange = (fromExtra, isSelected, cardObj) => {
 };
 
 // Select and deselect cards in active player's and extra hands
-const selectDeselectCard = e => {
+export const selectDeselectCard = e => {
   // Note: mutates the objects that newDeck() created inside an array
   dealtDeck.forEach(cardObj => {
     // Toggles boolean "selected" property in card objects
@@ -332,94 +295,10 @@ const selectDeselectCard = e => {
 };
 // Add event listeners to playerOneCard, etc., & extraCard NodeLists
 extraCard.forEach(card => card.addEventListener("click", selectDeselectCard));
-eventsCards = () => {
-  activeCards.forEach(card =>
+export const eventsCards = () => {
+  v.activeCards.forEach(card =>
     card.addEventListener("click", selectDeselectCard)
   );
-};
-
-// Change the active player
-changeActivePlayer = () => {
-  let idx = v.activePlayerNum - 1; // Convert player number to zero-based index
-
-  // Remove event listener for the current player's three cards
-  activeCards.forEach(card =>
-    card.removeEventListener("click", selectDeselectCard)
-  );
-  // Update players array of player objects -- player one is players[0], etc
-  // Update player areas in DOM
-  // Add event listeners to the next player's three cards
-  v.activePlayerNum === 1
-    ? // player two (players[1]) always follows player one (players[0])
-      ((v.activePlayerNum = 2),
-      (players[0].activePlayer = false),
-      (players[1].activePlayer = true),
-      playerOneArea.classList.remove("active-area"),
-      playerTwoArea.classList.add("active-area"),
-      (activeCards = playerTwoCard),
-      eventsCards())
-    : v.activePlayerNum === 2 && v.numCards === 9
-    ? // 2 players: player one (players[0]) follows player two (players[1])
-      ((v.activePlayerNum = 1),
-      (players[1].activePlayer = false),
-      (players[0].activePlayer = true),
-      playerTwoArea.classList.remove("active-area"),
-      playerOneArea.classList.add("active-area"),
-      (activeCards = playerOneCard),
-      eventsCards())
-    : v.activePlayerNum === 2
-    ? // 3/4 players: player three (players[2]) follows player two (players[1])
-      ((v.activePlayerNum = 3),
-      (players[1].activePlayer = false),
-      (players[2].activePlayer = true),
-      playerTwoArea.classList.remove("active-area"),
-      playerThreeArea.classList.add("active-area"),
-      (activeCards = playerThreeCard),
-      eventsCards())
-    : v.activePlayerNum === 3 && v.numCards === 12
-    ? // 3 players: player one (players[0]) follows player three (players[2])
-      ((v.activePlayerNum = 1),
-      (players[2].activePlayer = false),
-      (players[0].activePlayer = true),
-      playerThreeArea.classList.remove("active-area"),
-      playerOneArea.classList.add("active-area"),
-      (activeCards = playerOneCard),
-      eventsCards())
-    : v.activePlayerNum === 3
-    ? // 4 players: player four (players[3]) follows player three (players[2])
-      ((v.activePlayerNum = 4),
-      (players[2].activePlayer = false),
-      (players[3].activePlayer = true),
-      playerThreeArea.classList.remove("active-area"),
-      playerFourArea.classList.add("active-area"),
-      (activeCards = playerFourCard),
-      eventsCards())
-    : // player one (players[0]) always follows player four (players[3])
-      ((v.activePlayerNum = 1),
-      (players[3].activePlayer = false),
-      (players[0].activePlayer = true),
-      playerFourArea.classList.remove("active-area"),
-      playerOneArea.classList.add("active-area"),
-      (activeCards = playerOneCard),
-      eventsCards());
-
-  // Clear arrays for next player
-  cardsToExtraHand.length = 0;
-  cardsFromExtraHand.length = 0;
-
-  // Check if current player used "buy" on last turn, if so reset to false
-  if (players[idx].buyLastTurn) {
-    players[idx].buyLastTurn = false;
-  }
-
-  // Update idx with new value of activePlayerNum
-  idx = v.activePlayerNum - 1;
-  // Check whether to endRound() if the next player used "hold" on last turn
-  if (players[idx].holdLastTurn) {
-    // Set all .holdLastTurn properties to false - prevents repeating endRound
-    players.forEach(player => (player.holdLastTurn = false));
-    endRound();
-  }
 };
 
 export const check31Or33 = (playerNum = null) => {
@@ -666,30 +545,8 @@ const exchangeCards = () => {
 };
 exchangeButton.addEventListener("click", exchangeCards);
 
-// // Current player skips turn but cannot skip two turns in a row
-// const buy = () => {
-//   let idx = activePlayerNum - 1;
-//   // check if player used "buy" on last turn
-//   if (players[idx].buyLastTurn === true) {
-//     alert(`Player ${activePlayerNum} cannot buy this turn.`);
-//   } else {
-//     players[idx].buyLastTurn = true;
-//     aCard.forEach(card => card.classList.remove("is-active"));
-//     updateScore(activePlayerNum);
-//     check31Or33(activePlayerNum);
-//   }
-// };
 buyButton.addEventListener("click", buy);
 
-// // Current player skips turn and signals this round is ending
-// const hold = () => {
-//   let idx = activePlayerNum - 1;
-//   players[idx].holdLastTurn = true;
-//   aCard.forEach(card => card.classList.remove("is-active"));
-//   updateScore(activePlayerNum);
-//   check31Or33(activePlayerNum);
-//   // Other players have one more turn (but not current player)
-// };
 holdButton.addEventListener("click", hold);
 
 // ///// KEEPERS ///////////////////////////////////////////////
