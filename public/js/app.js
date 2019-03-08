@@ -1,10 +1,10 @@
-import generatePlayers, { players } from "./generate.js";
-import clearTable, { resetGame } from "./resets.js";
+import { players } from "./generate.js";
+import beginEndGame from "./beginGame.js";
 import newDeck, { shuffle } from "./cardDeck.js";
 import assignCardsToPlayers, { dealtDeck } from "./cardHands.js";
-import changeActivePlayer from "./changeActivePlayer.js";
-import changeDealer from "./changeDealer.js";
 import buy, { hold } from "./buyHold.js";
+import changeActivePlayer from "./changeActivePlayer.js";
+import endRound from "./endRound.js";
 
 // ///// VARIABLES /////////////////////////////////////////////
 export const playerOneCard = document.querySelectorAll(".playerOneCard");
@@ -23,10 +23,10 @@ export const v = {
 // export const players = [];
 
 // Control and Players variables
-const beginEndGameButton = document.querySelector(".beginEndGameButton");
-const playersButton = document.querySelector(".playersButton");
-const dealButton = document.querySelector(".dealButton");
-const num1to4 = document.querySelector(".num1to4");
+export const playersButton = document.querySelector(".playersButton");
+export const num1to4 = document.querySelector(".num1to4");
+export const beginEndGameButton = document.querySelector(".beginEndGameButton");
+export const dealButton = document.querySelector(".dealButton");
 // const players = [];
 // let numPlayers;
 // let activePlayerNum = 1; // default 1
@@ -58,51 +58,19 @@ export const playerText2 = document.querySelector(".dealerP2");
 export const playerText3 = document.querySelector(".dealerP3");
 export const playerText4 = document.querySelector(".dealerP4");
 // export const cardsToExtraHand = [];
-const cardsToExtraHand = [];
+export const cardsToExtraHand = [];
 // export const cardsFromExtraHand = [];
-const cardsFromExtraHand = [];
+export const cardsFromExtraHand = [];
 // Game/round active and reset variables
 // let activeGame = false;
 // let activeRound = false;
 // let changeActivePlayer;
 
-// // ///// RESET GAME/ROUND FUNCTIONS ////////////////////////////
-
-// export const clearTable = () => {
-//   activeRound = false;
-//   dealtDeck.length = 0;
-//   extraHand.length = 0;
-//   dealerHand.length = 0;
-//   leftOfDealerHand.length = 0;
-//   acrossFromDealerHand.length = 0;
-//   rightOfDealerHand.length = 0;
-//   allHands.length = 0;
-//   cardsToExtraHand.length = 0;
-//   cardsFromExtraHand.length = 0;
-//   aCard.forEach(card => {
-//     card.classList.remove("is-active");
-//     card.textContent = "";
-//   });
-// };
-
-// const resetGame = () => {
-//   clearTable();
-//   eventsCards();
-//   activeGame = false;
-//   players.length = 0;
-//   v.activePlayerNum = 1;
-//   v.activeCards = playerOneCard;
-//   dealButton.textContent = "Players?";
-//   beginEndGameButton.textContent = "Start";
-//   num1to4.textContent = 3;
-//   v.numCards = 12;
-// };
-
 // ///// GAME MANAGEMENT FUNCTIONS ///////////////////////////////
 
 // Change number of players and number of cards to deal
 const changePlayersNum = () => {
-  if (!activeGame) {
+  if (!v.activeGame) {
     num1to4.textContent === "4"
       ? ((num1to4.textContent = "3"), (v.numCards = 12))
       : num1to4.textContent === "3"
@@ -112,68 +80,7 @@ const changePlayersNum = () => {
 };
 playersButton.addEventListener("click", changePlayersNum);
 
-// Generate players
-
-// Begin play
-
-const beginEndGame = () => {
-  if (!activeGame) {
-    activeGame = true;
-    v.numPlayers = Number(num1to4.textContent);
-    generatePlayers();
-    playersButton.textContent = "Deal";
-    beginEndGameButton.textContent = "End Game";
-  } else if (activeGame && beginEndGameButton.textContent === "End Game") {
-    beginEndGameButton.textContent = "Sure?";
-  } else {
-    resetGame();
-  }
-};
 beginEndGameButton.addEventListener("click", beginEndGame);
-
-// End the round
-const endRound = (msgSchnautzFeuer, num31Or33) => {
-  let message = ``;
-  let messageScores = ``;
-  let messageTokens = ``;
-  let lowScore = 33;
-
-  // Check which player has the lowest score and build scores message
-  players.forEach(player => {
-    lowScore = player.currentScore <= lowScore ? player.currentScore : lowScore;
-    messageScores += `Player ${player.player} score: ${player.currentScore}
-    `;
-  });
-
-  players.forEach(player => {
-    if (player.currentScore === lowScore) {
-      player.tokens -= 1;
-      messageTokens += `Player ${player.player} loses a token
-      `;
-    }
-  });
-  // If 31 (Schnautz) or 33 (Feuer) points, update message
-  if (num31Or33)
-    message = `${msgSchnautzFeuer}!!!
-  `;
-  // Build the message
-  message += `
-    ${messageScores}
-    ${messageTokens}
-    `;
-  alert(message);
-
-  // Reset properties in players array of objects
-  players.forEach(player => {
-    player.currentScore = null;
-    player.buyLastTurn = false;
-    player.holdLastTurn = false;
-  });
-  clearTable();
-  changeDealer();
-  playersButton.textContent = "Deal";
-  beginEndGameButton.textContent = "End Game";
-};
 
 // Update player scores and check for 31 (Schnautz) or 33 (Feuer)
 export const updateScore = playerNum => {
@@ -331,8 +238,8 @@ export const check31Or33 = (playerNum = null) => {
 
 // Deal card objects
 const deal = () => {
-  if (activeGame && activeRound === false) {
-    activeRound = true;
+  if (v.activeGame && v.activeRound === false) {
+    v.activeRound = true;
     dealButton.textContent = "Score";
     // Generate a deck of cards, shuffle, and assign cards to players' hands
     assignCardsToPlayers(shuffle(newDeck()));
@@ -414,7 +321,7 @@ dealButton.addEventListener("click", deal);
 // Exchange 1 or 3 cards from a player's hand with the extra hand
 const exchangeCards = () => {
   // Note: mutates the objects that newDeck() created inside an array
-  if (activeGame && activeRound) {
+  if (v.activeGame && v.activeRound) {
     // Note: All arrays below reference the same deck card objects
 
     // Bind the current player's position ("leftOfDealerHand", etc) to a variable
@@ -548,10 +455,3 @@ exchangeButton.addEventListener("click", exchangeCards);
 buyButton.addEventListener("click", buy);
 
 holdButton.addEventListener("click", hold);
-
-// ///// KEEPERS ///////////////////////////////////////////////
-// Alternatives for suits
-// White club suit 	♧ 	U+2667 	&#9831 -- Black club suit 	♣ 	U+2663 	&clubs
-// White diamond suit 	♢ 	U+2662 	&#9826 -- Black diamond suit 	♦ 	U+2666 	&diams
-// White heart suit 	♡ 	U+2661 	&#9825 -- Black heart suit 	♥ 	U+2665 	&hearts
-// White spade suit 	♤ 	U+2664 	&#9828 -- Black spade suit 	♠ 	U+2660 	&spade

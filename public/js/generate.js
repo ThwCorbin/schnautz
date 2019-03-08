@@ -1,4 +1,5 @@
-import { v, clearTable, playerText1 } from "./app.js";
+import { v, playerText1 } from "./app.js";
+import clearTable from "./resets.js";
 
 const players = [];
 

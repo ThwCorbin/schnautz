@@ -1,6 +1,10 @@
 // Change the active player
 import {
   v,
+  eventsCards,
+  selectDeselectCard,
+  cardsFromExtraHand,
+  cardsToExtraHand,
   playerOneCard,
   playerTwoCard,
   playerThreeCard,
@@ -8,11 +12,10 @@ import {
   playerOneArea,
   playerTwoArea,
   playerThreeArea,
-  playerFourArea,
-  selectDeselectCard,
-  eventsCards
+  playerFourArea
 } from "./app.js";
 import { players } from "./generate.js";
+import endRound from "./endRound.js";
 
 const changeActivePlayer = () => {
   let idx = v.activePlayerNum - 1; // Convert player number to zero-based index
