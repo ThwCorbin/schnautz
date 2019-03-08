@@ -1,7 +1,7 @@
 // ///// RESET GAME/ROUND FUNCTIONS ////////////////////////////
 import {
   v,
-  eventsCards,
+  changeEventListener,
   playerOneCard,
   extraHand,
   dealerHand,
@@ -38,7 +38,7 @@ export const clearTable = () => {
 
 const resetGame = () => {
   clearTable();
-  eventsCards();
+  changeEventListener();
   v.activeGame = false;
   players.length = 0;
   v.activePlayerNum = 1;

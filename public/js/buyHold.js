@@ -1,10 +1,11 @@
-import { v, aCard, updateScore, check31Or33 } from "./app.js";
+import { v, aCard } from "./app.js";
 import { players } from "./generate.js";
+import updateScore, { check31Or33 } from "./updateScore.js";
 
 // Current player skips turn but cannot skip two turns in a row
 const buy = () => {
   let idx = v.activePlayerNum - 1;
-  // check if player used "buy" on last turn
+  // check if player used a "buy" on last turn
   if (players[idx].buyLastTurn === true) {
     alert(`Player ${v.activePlayerNum} cannot buy this turn.`);
   } else {

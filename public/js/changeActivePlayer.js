@@ -1,8 +1,7 @@
 // Change the active player
 import {
   v,
-  eventsCards,
-  selectDeselectCard,
+  changeEventListener,
   cardsFromExtraHand,
   cardsToExtraHand,
   playerOneCard,
@@ -15,6 +14,7 @@ import {
   playerFourArea
 } from "./app.js";
 import { players } from "./generate.js";
+import selectDeselectCard from "./manageCards.js";
 import endRound from "./endRound.js";
 
 const changeActivePlayer = () => {
@@ -35,7 +35,7 @@ const changeActivePlayer = () => {
       playerOneArea.classList.remove("active-area"),
       playerTwoArea.classList.add("active-area"),
       (v.activeCards = playerTwoCard),
-      eventsCards())
+      changeEventListener())
     : v.activePlayerNum === 2 && v.numCards === 9
     ? // 2 players: player one (players[0]) follows player two (players[1])
       ((v.activePlayerNum = 1),
@@ -44,7 +44,7 @@ const changeActivePlayer = () => {
       playerTwoArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"),
       (v.activeCards = playerOneCard),
-      eventsCards())
+      changeEventListener())
     : v.activePlayerNum === 2
     ? // 3/4 players: player three (players[2]) follows player two (players[1])
       ((v.activePlayerNum = 3),
@@ -53,7 +53,7 @@ const changeActivePlayer = () => {
       playerTwoArea.classList.remove("active-area"),
       playerThreeArea.classList.add("active-area"),
       (v.activeCards = playerThreeCard),
-      eventsCards())
+      changeEventListener())
     : v.activePlayerNum === 3 && v.numCards === 12
     ? // 3 players: player one (players[0]) follows player three (players[2])
       ((v.activePlayerNum = 1),
@@ -62,7 +62,7 @@ const changeActivePlayer = () => {
       playerThreeArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"),
       (v.activeCards = playerOneCard),
-      eventsCards())
+      changeEventListener())
     : v.activePlayerNum === 3
     ? // 4 players: player four (players[3]) follows player three (players[2])
       ((v.activePlayerNum = 4),
@@ -71,7 +71,7 @@ const changeActivePlayer = () => {
       playerThreeArea.classList.remove("active-area"),
       playerFourArea.classList.add("active-area"),
       (v.activeCards = playerFourCard),
-      eventsCards())
+      changeEventListener())
     : // player one (players[0]) always follows player four (players[3])
       ((v.activePlayerNum = 1),
       (players[3].activePlayer = false),
@@ -79,16 +79,11 @@ const changeActivePlayer = () => {
       playerFourArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"),
       (v.activeCards = playerOneCard),
-      eventsCards());
+      changeEventListener());
 
   // Clear arrays for next player
   cardsToExtraHand.length = 0;
   cardsFromExtraHand.length = 0;
-
-  // Check if current player used "buy" on last turn, if so reset to false
-  if (players[idx].buyLastTurn) {
-    players[idx].buyLastTurn = false;
-  }
 
   // Update idx with new value of activePlayerNum
   idx = v.activePlayerNum - 1;
