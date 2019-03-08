@@ -2,9 +2,10 @@ import generatePlayers, { players } from "./generate.js";
 // import clearTable, { resetGame } from "./resets.js";
 import newDeck, { shuffle } from "./cardDeck.js";
 import assignCardsToPlayers, { dealtDeck } from "./cardHands.js";
+import buy, { hold } from "./buyHold.js";
 
 // ///// VARIABLES /////////////////////////////////////////////
-export const v = { numPlayers: null, numCards: 12 }; // defaults
+export const v = { numPlayers: null, numCards: 12, activePlayerNum: 1 }; // defaults
 // export const players = [];
 export const playerText1 = document.querySelector(".dealerP1");
 
@@ -15,7 +16,7 @@ const dealButton = document.querySelector(".dealButton");
 const num1to4 = document.querySelector(".num1to4");
 // const players = [];
 // let numPlayers;
-let activePlayerNum = 1; // default 1
+// let activePlayerNum = 1; // default 1
 // let numCards = 12; // default 12
 let eventsCards;
 // let dealtDeck;
@@ -35,7 +36,7 @@ export const rightOfDealerHand = [];
 export const allHands = [];
 
 // Card variables
-const aCard = document.querySelectorAll(".aCard");
+export const aCard = document.querySelectorAll(".aCard");
 const extraCard = document.querySelectorAll(".extraCard");
 const playerOneCard = document.querySelectorAll(".playerOneCard");
 const playerTwoCard = document.querySelectorAll(".playerTwoCard");
@@ -79,7 +80,7 @@ const resetGame = () => {
   eventsCards();
   activeGame = false;
   players.length = 0;
-  activePlayerNum = 1;
+  v.activePlayerNum = 1;
   activeCards = playerOneCard;
   dealButton.textContent = "Players?";
   beginEndGameButton.textContent = "Start";
@@ -155,7 +156,7 @@ const changeDealer = () => {
   // Set activePlayerNum to the "dealer"'s player number
   players.forEach(player => {
     player.position === "dealer"
-      ? ((player.activePlayer = true), (activePlayerNum = player.player))
+      ? ((player.activePlayer = true), (v.activePlayerNum = player.player))
       : (player.activePlayer = false);
     player.buyLastTurn = false;
     player.holdLastTurn = false;
@@ -212,7 +213,7 @@ const endRound = (msgSchnautzFeuer, num31Or33) => {
 };
 
 // Update player scores and check for 31 (Schnautz) or 33 (Feuer)
-const updateScore = playerNum => {
+export const updateScore = playerNum => {
   let idxPlayers = playerNum - 1; // Convert player number to zero-based index
   let idxAllHands; // Set using players[idxPlayers].position property
   // Note: allHands[0] is extraHand, allHands[1] is dealerHand, etc
@@ -339,7 +340,7 @@ eventsCards = () => {
 
 // Change the active player
 changeActivePlayer = () => {
-  let idx = activePlayerNum - 1; // Convert player number to zero-based index
+  let idx = v.activePlayerNum - 1; // Convert player number to zero-based index
 
   // Remove event listener for the current player's three cards
   activeCards.forEach(card =>
@@ -348,45 +349,45 @@ changeActivePlayer = () => {
   // Update players array of player objects -- player one is players[0], etc
   // Update player areas in DOM
   // Add event listeners to the next player's three cards
-  activePlayerNum === 1
+  v.activePlayerNum === 1
     ? // player two (players[1]) always follows player one (players[0])
-      ((activePlayerNum = 2),
+      ((v.activePlayerNum = 2),
       (players[0].activePlayer = false),
       (players[1].activePlayer = true),
       playerOneArea.classList.remove("active-area"),
       playerTwoArea.classList.add("active-area"),
       (activeCards = playerTwoCard),
       eventsCards())
-    : activePlayerNum === 2 && v.numCards === 9
+    : v.activePlayerNum === 2 && v.numCards === 9
     ? // 2 players: player one (players[0]) follows player two (players[1])
-      ((activePlayerNum = 1),
+      ((v.activePlayerNum = 1),
       (players[1].activePlayer = false),
       (players[0].activePlayer = true),
       playerTwoArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"),
       (activeCards = playerOneCard),
       eventsCards())
-    : activePlayerNum === 2
+    : v.activePlayerNum === 2
     ? // 3/4 players: player three (players[2]) follows player two (players[1])
-      ((activePlayerNum = 3),
+      ((v.activePlayerNum = 3),
       (players[1].activePlayer = false),
       (players[2].activePlayer = true),
       playerTwoArea.classList.remove("active-area"),
       playerThreeArea.classList.add("active-area"),
       (activeCards = playerThreeCard),
       eventsCards())
-    : activePlayerNum === 3 && v.numCards === 12
+    : v.activePlayerNum === 3 && v.numCards === 12
     ? // 3 players: player one (players[0]) follows player three (players[2])
-      ((activePlayerNum = 1),
+      ((v.activePlayerNum = 1),
       (players[2].activePlayer = false),
       (players[0].activePlayer = true),
       playerThreeArea.classList.remove("active-area"),
       playerOneArea.classList.add("active-area"),
       (activeCards = playerOneCard),
       eventsCards())
-    : activePlayerNum === 3
+    : v.activePlayerNum === 3
     ? // 4 players: player four (players[3]) follows player three (players[2])
-      ((activePlayerNum = 4),
+      ((v.activePlayerNum = 4),
       (players[2].activePlayer = false),
       (players[3].activePlayer = true),
       playerThreeArea.classList.remove("active-area"),
@@ -394,7 +395,7 @@ changeActivePlayer = () => {
       (activeCards = playerFourCard),
       eventsCards())
     : // player one (players[0]) always follows player four (players[3])
-      ((activePlayerNum = 1),
+      ((v.activePlayerNum = 1),
       (players[3].activePlayer = false),
       (players[0].activePlayer = true),
       playerFourArea.classList.remove("active-area"),
@@ -412,7 +413,7 @@ changeActivePlayer = () => {
   }
 
   // Update idx with new value of activePlayerNum
-  idx = activePlayerNum - 1;
+  idx = v.activePlayerNum - 1;
   // Check whether to endRound() if the next player used "hold" on last turn
   if (players[idx].holdLastTurn) {
     // Set all .holdLastTurn properties to false - prevents repeating endRound
@@ -421,7 +422,7 @@ changeActivePlayer = () => {
   }
 };
 
-const check31Or33 = (playerNum = null) => {
+export const check31Or33 = (playerNum = null) => {
   let idxPlayers = playerNum - 1; // Convert player number to zero-based index
   let playerHas31 = [];
   // If a player's score is 31 or 33, the round ends immediately
@@ -541,11 +542,11 @@ const exchangeCards = () => {
     let swapToCardPosition = cardsToExtraHand[0].cardPosition;
     // Bind the Nodelist of the current player's cards to a variable
     let playerNumberCard =
-      activePlayerNum === 1
+      v.activePlayerNum === 1
         ? playerOneCard // document.querySelectorAll(".playerOneCard")
-        : activePlayerNum === 2
+        : v.activePlayerNum === 2
         ? playerTwoCard
-        : activePlayerNum === 3
+        : v.activePlayerNum === 3
         ? playerThreeCard
         : playerFourCard;
 
@@ -560,7 +561,7 @@ const exchangeCards = () => {
       cardsFromExtraHand[0].cardPosition = swapToCardPosition;
       cardsToExtraHand[0].cardPosition = "extraHand";
       // Switch .cardPlayerNum property values (extra is always 0)
-      cardsFromExtraHand[0].cardPlayerNum = activePlayerNum;
+      cardsFromExtraHand[0].cardPlayerNum = v.activePlayerNum;
       cardsToExtraHand[0].cardPlayerNum = 0;
       cardsFromExtraHand[0].selected = false;
       cardsToExtraHand[0].selected = false;
@@ -601,8 +602,8 @@ const exchangeCards = () => {
       playerNumberCard[idxToPlayNode].textContent = cardsFromExtraHand[0].card;
       playerNumberCard[idxToPlayNode].classList.remove("is-active");
       styleBlackCards();
-      updateScore(activePlayerNum);
-      check31Or33(activePlayerNum);
+      updateScore(v.activePlayerNum);
+      check31Or33(v.activePlayerNum);
     } else if (
       cardsToExtraHand.length === 3 &&
       cardsFromExtraHand.length === 3
@@ -653,8 +654,8 @@ const exchangeCards = () => {
         alert("Error: Unable to exchange three cards.");
       }
       styleBlackCards();
-      updateScore(activePlayerNum);
-      check31Or33(activePlayerNum);
+      updateScore(v.activePlayerNum);
+      check31Or33(v.activePlayerNum);
     } else {
       alert("Error: Unable to exchange cards.");
     }
@@ -665,30 +666,30 @@ const exchangeCards = () => {
 };
 exchangeButton.addEventListener("click", exchangeCards);
 
-// Current player skips turn but cannot skip two turns in a row
-const buy = () => {
-  let idx = activePlayerNum - 1;
-  // check if player used "buy" on last turn
-  if (players[idx].buyLastTurn === true) {
-    alert(`Player ${activePlayerNum} cannot buy this turn.`);
-  } else {
-    players[idx].buyLastTurn = true;
-    aCard.forEach(card => card.classList.remove("is-active"));
-    updateScore(activePlayerNum);
-    check31Or33(activePlayerNum);
-  }
-};
+// // Current player skips turn but cannot skip two turns in a row
+// const buy = () => {
+//   let idx = activePlayerNum - 1;
+//   // check if player used "buy" on last turn
+//   if (players[idx].buyLastTurn === true) {
+//     alert(`Player ${activePlayerNum} cannot buy this turn.`);
+//   } else {
+//     players[idx].buyLastTurn = true;
+//     aCard.forEach(card => card.classList.remove("is-active"));
+//     updateScore(activePlayerNum);
+//     check31Or33(activePlayerNum);
+//   }
+// };
 buyButton.addEventListener("click", buy);
 
-// Current player skips turn and signals this round is ending
-const hold = () => {
-  let idx = activePlayerNum - 1;
-  players[idx].holdLastTurn = true;
-  aCard.forEach(card => card.classList.remove("is-active"));
-  updateScore(activePlayerNum);
-  check31Or33(activePlayerNum);
-  // Other players have one more turn (but not current player)
-};
+// // Current player skips turn and signals this round is ending
+// const hold = () => {
+//   let idx = activePlayerNum - 1;
+//   players[idx].holdLastTurn = true;
+//   aCard.forEach(card => card.classList.remove("is-active"));
+//   updateScore(activePlayerNum);
+//   check31Or33(activePlayerNum);
+//   // Other players have one more turn (but not current player)
+// };
 holdButton.addEventListener("click", hold);
 
 // ///// KEEPERS ///////////////////////////////////////////////
