@@ -1,5 +1,5 @@
 import { v, playerText1 } from "./app.js";
-import manageTokens from "./style.js";
+import manageTokens from "./manageTokens.js";
 import clearTable from "./resets.js";
 
 const players = [];

@@ -1,4 +1,4 @@
-import { aCard, p1Tokens, p2Tokens, p3Tokens, p4Tokens } from "./app.js";
+import { p1Tokens, p2Tokens, p3Tokens, p4Tokens } from "./app.js";
 import { players } from "./generate.js";
 
 // Style cards and tokens variables
@@ -16,15 +16,4 @@ const manageTokens = () => {
   });
 };
 
-// Style black cards
-const styleBlackCards = () => {
-  aCard.forEach(card =>
-    card.textContent.includes("♤")
-      ? card.classList.add("aCardBlack")
-      : card.textContent.includes("♧")
-      ? card.classList.add("aCardBlack")
-      : card.classList.remove("aCardBlack")
-  );
-};
-
-export { manageTokens as default, styleBlackCards };
+export default manageTokens;

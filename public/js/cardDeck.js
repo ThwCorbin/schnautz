@@ -1,4 +1,5 @@
 // ///// CARDDECK FUNCTIONS ////////////////////////////////
+import { aCard } from "./app.js";
 
 // Generate new deck (an array of card objects) to pass to shuffle function
 const newDeck = () => {
@@ -48,7 +49,18 @@ const shuffle = deck => {
   return deck;
 };
 
-export { newDeck as default, shuffle };
+// Style black cards
+const styleBlackCards = () => {
+  aCard.forEach(card =>
+    card.textContent.includes("♤")
+      ? card.classList.add("aCardBlack")
+      : card.textContent.includes("♧")
+      ? card.classList.add("aCardBlack")
+      : card.classList.remove("aCardBlack")
+  );
+};
+
+export { newDeck as default, shuffle, styleBlackCards };
 
 // Alternatives for suits
 // White club suit 	♧ 	U+2667 	&#9831 -- Black club suit 	♣ 	U+2663 	&clubs

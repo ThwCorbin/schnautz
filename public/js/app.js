@@ -1,8 +1,8 @@
+import changeNumPlayers from "./changeNumPlayers.js";
 import { players } from "./generate.js";
 import beginEndGame from "./beginGame.js";
-import newDeck, { shuffle } from "./cardDeck.js";
+import newDeck, { shuffle, styleBlackCards } from "./cardDeck.js";
 import assignCardsToPlayers, { dealtDeck } from "./cardHands.js";
-import { styleBlackCards } from "./style.js";
 import buy, { hold } from "./buyHold.js";
 import changeActivePlayer from "./changeActivePlayer.js";
 import endRound from "./endRound.js";
@@ -64,16 +64,8 @@ export const cardsToExtraHand = [];
 // ///// GAME MANAGEMENT FUNCTIONS ///////////////////////////////
 
 // Change number of players and number of cards to deal
-const changePlayersNum = () => {
-  if (!v.activeGame) {
-    num1to4.textContent === "4"
-      ? ((num1to4.textContent = "3"), (v.numCards = 12))
-      : num1to4.textContent === "3"
-      ? ((num1to4.textContent = "2"), (v.numCards = 9))
-      : ((num1to4.textContent = "4"), (v.numCards = 15));
-  }
-};
-playersButton.addEventListener("click", changePlayersNum);
+
+playersButton.addEventListener("click", changeNumPlayers);
 
 beginEndGameButton.addEventListener("click", beginEndGame);
 

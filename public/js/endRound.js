@@ -1,6 +1,6 @@
 import changeDealer from "./changeDealer.js";
 import { players } from "./generate.js";
-import manageTokens from "./style.js";
+import manageTokens from "./manageTokens.js";
 import clearTable from "./resets.js";
 import { beginEndGameButton, playersButton } from "./app.js";
 
