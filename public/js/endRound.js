@@ -1,5 +1,6 @@
 import changeDealer from "./changeDealer.js";
 import { players } from "./generate.js";
+import manageTokens from "./style.js";
 import clearTable from "./resets.js";
 import { beginEndGameButton, playersButton } from "./app.js";
 
@@ -34,6 +35,9 @@ const endRound = (msgSchnautzFeuer, num31Or33) => {
     ${messageTokens}
     `;
   alert(message);
+
+  // Remove one token from lowest scoring player/players
+  manageTokens();
 
   // Reset properties in players array of objects
   players.forEach(player => {

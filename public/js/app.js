@@ -2,16 +2,46 @@ import { players } from "./generate.js";
 import beginEndGame from "./beginGame.js";
 import newDeck, { shuffle } from "./cardDeck.js";
 import assignCardsToPlayers, { dealtDeck } from "./cardHands.js";
+import { styleBlackCards } from "./style.js";
 import buy, { hold } from "./buyHold.js";
 import changeActivePlayer from "./changeActivePlayer.js";
 import endRound from "./endRound.js";
 
 // ///// VARIABLES /////////////////////////////////////////////
+
+// DOM card and card area variables
+export const aCard = document.querySelectorAll(".aCard"); // all cards
+const extraCard = document.querySelectorAll(".extraCard"); // extra hand cards
 export const playerOneCard = document.querySelectorAll(".playerOneCard");
 export const playerTwoCard = document.querySelectorAll(".playerTwoCard");
 export const playerThreeCard = document.querySelectorAll(".playerThreeCard");
 export const playerFourCard = document.querySelectorAll(".playerFourCard");
+export const playerOneArea = document.querySelector(".playerOneArea");
+export const playerTwoArea = document.querySelector(".playerTwoArea");
+export const playerThreeArea = document.querySelector(".playerThreeArea");
+export const playerFourArea = document.querySelector(".playerFourArea");
 
+// DOM text and token variables
+// DOM token variables
+export const p1Tokens = document.querySelector(".p1Tokens");
+export const p2Tokens = document.querySelector(".p2Tokens");
+export const p3Tokens = document.querySelector(".p3Tokens");
+export const p4Tokens = document.querySelector(".p4Tokens");
+export const playerText1 = document.querySelector(".dealerP1");
+export const playerText2 = document.querySelector(".dealerP2");
+export const playerText3 = document.querySelector(".dealerP3");
+export const playerText4 = document.querySelector(".dealerP4");
+
+// DOM control variables
+export const playersButton = document.querySelector(".playersButton");
+export const num1to4 = document.querySelector(".num1to4");
+export const beginEndGameButton = document.querySelector(".beginEndGameButton");
+export const dealButton = document.querySelector(".dealButton");
+const exchangeButton = document.querySelector(".exchangeButton");
+const buyButton = document.querySelector(".buyButton");
+const holdButton = document.querySelector(".holdButton");
+
+// Default variables object
 export const v = {
   numPlayers: null,
   numCards: 12,
@@ -19,52 +49,17 @@ export const v = {
   activePlayerNum: 1,
   activeGame: false,
   activeRound: false
-}; // defaults
-// export const players = [];
+};
 
-// Control and Players variables
-export const playersButton = document.querySelector(".playersButton");
-export const num1to4 = document.querySelector(".num1to4");
-export const beginEndGameButton = document.querySelector(".beginEndGameButton");
-export const dealButton = document.querySelector(".dealButton");
-// const players = [];
-// let numPlayers;
-// let activePlayerNum = 1; // default 1
-// let numCards = 12; // default 12
-// let eventsCards;
-// let dealtDeck;
 // Hand variables
-const exchangeButton = document.querySelector(".exchangeButton");
-const buyButton = document.querySelector(".buyButton");
-const holdButton = document.querySelector(".holdButton");
-export const playerOneArea = document.querySelector(".playerOneArea");
-export const playerTwoArea = document.querySelector(".playerTwoArea");
-export const playerThreeArea = document.querySelector(".playerThreeArea");
-export const playerFourArea = document.querySelector(".playerFourArea");
 export const extraHand = [];
 export const dealerHand = [];
 export const leftOfDealerHand = [];
 export const acrossFromDealerHand = [];
 export const rightOfDealerHand = [];
 export const allHands = [];
-
-// Card variables
-export const aCard = document.querySelectorAll(".aCard");
-const extraCard = document.querySelectorAll(".extraCard");
-
-// let activeCards = playerOneCard; // default playerOneCard
-export const playerText1 = document.querySelector(".dealerP1");
-export const playerText2 = document.querySelector(".dealerP2");
-export const playerText3 = document.querySelector(".dealerP3");
-export const playerText4 = document.querySelector(".dealerP4");
-// export const cardsToExtraHand = [];
-export const cardsToExtraHand = [];
-// export const cardsFromExtraHand = [];
 export const cardsFromExtraHand = [];
-// Game/round active and reset variables
-// let activeGame = false;
-// let activeRound = false;
-// let changeActivePlayer;
+export const cardsToExtraHand = [];
 
 // ///// GAME MANAGEMENT FUNCTIONS ///////////////////////////////
 
@@ -148,17 +143,6 @@ export const updateScore = playerNum => {
 
 // ///// CARD AND DECK FUNCTIONS ////////////////////////////////
 // Moved deck functions to cardDeck.js
-
-// Style black cards
-const styleBlackCards = () => {
-  aCard.forEach(card =>
-    card.textContent.includes("♤")
-      ? card.classList.add("aCardBlack")
-      : card.textContent.includes("♧")
-      ? card.classList.add("aCardBlack")
-      : card.classList.remove("aCardBlack")
-  );
-};
 
 // Manage cards that current player will be exchange with extra hand
 const manageCardsToExchange = (fromExtra, isSelected, cardObj) => {

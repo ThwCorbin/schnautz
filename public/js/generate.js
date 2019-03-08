@@ -1,4 +1,5 @@
 import { v, playerText1 } from "./app.js";
+import manageTokens from "./style.js";
 import clearTable from "./resets.js";
 
 const players = [];
@@ -27,6 +28,8 @@ const generatePlayers = () => {
       currentScore: null
     });
   }
+  // Set initial tokens text
+  manageTokens();
   // Set initial dealer text
   playerText1.textContent = " Dealer ";
   // console.log(players);
