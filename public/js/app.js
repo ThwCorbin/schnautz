@@ -59,16 +59,6 @@ const exchangeButton = document.querySelector(".exchangeButton");
 const buyButton = document.querySelector(".buyButton");
 const holdButton = document.querySelector(".holdButton");
 
-// Changes number of players and number of cards to deal
-playersButton.addEventListener("click", changeNumPlayers);
-
-// Begins a game: generates players
-// ...Ends a game
-beginEndGameButton.addEventListener("click", beginEndGame);
-
-// Deals: creates new card deck, shuffles, "deals" to hand arrays and DOM
-dealButton.addEventListener("click", deal);
-
 // Selects/deselects extra hand's and current player's cards on screen
 // ...by adding an event listener to the extraCard NodeList...
 extraCard.forEach(card => card.addEventListener("click", selectDeselectCard));
@@ -79,11 +69,22 @@ export const changeEventListener = () => {
   );
 };
 
-// Exchanges the current player's 1 or 3 cards with the extra hand card/cards
-exchangeButton.addEventListener("click", exchangeCards);
+// Wrapped event listeners in function to avoid "Test suite failed to run"
+// TypeError: Cannot read property 'addEventListener' of null
+const addListeners = () => {
+  // Changes number of players and number of cards to deal
+  playersButton.addEventListener("click", changeNumPlayers);
+  // Begins a game: generates players
+  // ...Ends a game
+  beginEndGameButton.addEventListener("click", beginEndGame);
+  // Deals: creates new card deck, shuffles, "deals" to hand arrays and DOM
+  dealButton.addEventListener("click", deal);
+  // Exchanges the current player's 1 or 3 cards with the extra hand card/cards
+  exchangeButton.addEventListener("click", exchangeCards);
+  // Buy: current player passes on turn
+  buyButton.addEventListener("click", buy);
+  // Hold: current player passes on turn and "call"s for the end of the round
+  holdButton.addEventListener("click", hold);
+};
 
-// Buy: current player passes on turn
-buyButton.addEventListener("click", buy);
-
-// Hold: current player passes on turn and "call"s for the end of the round
-holdButton.addEventListener("click", hold);
+window.addEventListener("DOMContentLoaded", addListeners);

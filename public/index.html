@@ -19,22 +19,12 @@
       </ul>
     </nav> -->
     <main class="mainGrid">
-      <section class="controlsCardPlay controls">
-        <button class="exchangeButton  control-btn">Exchange</button>
-        <button class="buyButton  control-btn">Buy</button>
-        <button class="holdButton control-btn">Hold</button>
-      </section>
-      <section class="controlsDealing controls">
-        <button class="playersButton dealButton control-btn">Players?</button>
-        <h5 class="playersNum"><span class="num1to4 playerData">3</span></h5>
-        <button class="beginEndGameButton control-btn">Begin</button>
-      </section>
-      <section class="playerNamesOneTwo playerNames">
-        <h5>Player One - <span class="tokens p1Tokens"></span>   <span class="dealer dealerP1"></span></h5>
-        <!-- Sun 	☉ 	U+2609 	&#9737 -->
-        <h5><span class="dealer dealerP2"></span>   <span class="tokens p2Tokens"></span> - Player Two</h5>
-      </section>
       <section class="cardsArea">
+        <section class="playerNamesOneTwo playerNames">
+          <h5>Player One - <span class="tokens p1Tokens"></span>   <span class="dealer dealerP1"></span></h5>
+          <!-- Sun 	☉ 	U+2609 	&#9737 -->
+          <h5><span class="dealer dealerP2"></span>   <span class="tokens p2Tokens"></span> - Player Two</h5>
+        </section>
         <ul class="playerOneArea playerArea">
           <li class="aCard playerOneCard"></li>
           <li class="aCard playerOneCard"></li>
@@ -45,11 +35,21 @@
           <li class="aCard playerTwoCard"></li>
           <li class="aCard playerTwoCard"></li>
         </ul>
+        <section class="controlsDealing controls">
+          <button class="playersButton dealButton control-btn">Players?</button>
+          <h5 class="playersNum"><span class="num1to4 playerData">3</span></h5>
+          <button class="beginEndGameButton control-btn">Begin</button>
+        </section>
         <ul class="extraArea playerArea">
           <li class="aCard extraCard"></li>
           <li class="aCard extraCard"></li>
           <li class="aCard extraCard"></li>
         </ul>
+        <section class="controlsCardPlay controls">
+          <button class="exchangeButton  control-btn">Exchange</button>
+          <button class="buyButton  control-btn">Buy</button>
+          <button class="holdButton control-btn">Hold</button>
+        </section>
         <ul class="playerFourArea playerArea">
           <li class="aCard playerFourCard"></li>
           <li class="aCard playerFourCard"></li>
@@ -60,10 +60,10 @@
           <li class="aCard playerThreeCard"></li>
           <li class="aCard playerThreeCard"></li>
         </ul>
-      </section>
-      <section class="playerNamesThreeFour playerNames">
-        <h5>Player Four - <span class="tokens p4Tokens"></span>   <span class="dealer dealerP4"></span></h5>
-        <h5><span class="dealer dealerP3"></span>   <span class="tokens p3Tokens"></span> - Player Three</h5>
+        <section class="playerNamesThreeFour playerNames">
+          <h5>Player Four - <span class="tokens p4Tokens"></span>   <span class="dealer dealerP4"></span></h5>
+          <h5><span class="dealer dealerP3"></span>   <span class="tokens p3Tokens"></span> - Player Three</h5>
+        </section>
       </section>
     </main>
 

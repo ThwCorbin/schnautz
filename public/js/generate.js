@@ -4,9 +4,6 @@ import clearTable from "./resets.js";
 
 const players = [];
 
-// Test code
-const sum = (a, b) => a + b;
-
 // Generate players
 const generatePlayers = () => {
   clearTable();
@@ -35,4 +32,4 @@ const generatePlayers = () => {
   // console.log(players);
 };
 
-export { generatePlayers as default, players, sum };
+export { generatePlayers as default, players };

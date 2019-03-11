@@ -212,28 +212,89 @@ body {
 }
 
 /* Main section  ****************************************************** */
-.mainGrid {
+/* .mainGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   width: 640px;
-  row-gap: 0.25rem;
   border: 0.2rem solid var(--blueGreen);
+  row-gap: 0.25rem;
+} */
+
+.cardsArea {
+  /* grid-column-start: 1;
+  grid-column-end: 5; */
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  row-gap: 0.5rem;
+  border: 0.2rem solid var(--pink);
+  padding: 0.5rem;
+}
+
+.playerNames {
+  grid-column-start: 2;
+  grid-column-end: 5;
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+}
+
+.playerNamesOneTwo {
+  align-items: flex-end;
+}
+
+.tokens {
+  color: var(--green);
+}
+
+.dealer {
+  color: var(--pink);
+  font-size: 1.5rem;
+}
+
+.playerArea {
+  display: flex;
+  border: 0.3rem solid var(--blue);
+  padding: 0.5rem;
+}
+
+.playerOneArea,
+.playerFourArea {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  justify-content: flex-start;
+}
+
+.playerTwoArea,
+.playerThreeArea {
+  grid-column-start: 4;
+  grid-column-end: 5;
+  justify-content: flex-end;
+}
+
+.extraArea {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  justify-self: center;
+  border-color: var(--violet);
 }
 
 .controls {
   display: flex;
   flex-direction: column;
   border: 0.2rem solid var(--grey);
-}
-
-.controlsCardPlay {
-  grid-column-start: 2;
-  grid-column-end: 3;
+  width: 50%;
 }
 
 .controlsDealing {
-  grid-column-start: 3;
-  grid-column-end: 4;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  justify-self: end;
+}
+
+.controlsCardPlay {
+  grid-column-start: 4;
+  grid-column-end: 5;
+  justify-self: start;
 }
 
 .control-btn {
@@ -248,57 +309,6 @@ body {
   font-size: 1rem;
   color: var(--blue);
   text-align: center;
-}
-
-.playerNames {
-  grid-column-start: 2;
-  grid-column-end: 4;
-  display: flex;
-  justify-content: space-between;
-  font-size: 1rem;
-}
-
-.tokens {
-  color: var(--green);
-}
-
-.playerNamesOneTwo {
-  align-items: flex-end;
-}
-
-.dealer {
-  color: var(--pink);
-  font-size: 1.5rem;
-}
-
-.cardsArea {
-  grid-column-start: 2;
-  grid-column-end: 4;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  row-gap: 0.5rem;
-  border: 0.2rem solid var(--pink);
-  padding: 0.5rem;
-}
-
-.playerArea {
-  display: flex;
-  border: 0.3rem solid var(--blue);
-  padding: 0.5rem;
-}
-
-.playerTwoArea,
-.playerThreeArea {
-  grid-column-start: 3;
-  grid-column-end: 4;
-  justify-content: flex-end;
-}
-
-.extraArea {
-  grid-column-start: 1;
-  grid-column-end: 5;
-  justify-self: center;
-  border-color: var(--violet);
 }
 
 .active-area {
