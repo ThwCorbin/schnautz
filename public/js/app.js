@@ -1,5 +1,6 @@
-import changeNumPlayers from "./changeNumPlayers.js";
-import beginEndGame from "./beginGame.js";
+// import changeNumPlayers from "./changeNumPlayers.js";
+import addPlayers, { removePlayers } from "./addPlayers.js";
+import cutForDeal from "./cutForDeal.js";
 import deal from "./deal.js";
 import selectDeselectCard from "./manageCards.js";
 import exchangeCards from "./exchangeCards.js";
@@ -8,7 +9,7 @@ import buy, { hold } from "./buyHold.js";
 // ///// VARIABLES /////////////////////////////////////////////
 
 // DOM text and token variables
-export const num1to4 = document.querySelector(".num1to4"); // Denotes number of players
+export const num1to4Msg = document.querySelector(".num1to4Msg"); // Denotes number of players
 export const p1Tokens = document.querySelector(".p1Tokens"); // Denotes tokens remaining
 export const p2Tokens = document.querySelector(".p2Tokens");
 export const p3Tokens = document.querySelector(".p3Tokens");
@@ -32,8 +33,9 @@ export const playerFourArea = document.querySelector(".playerFourArea");
 
 // Default variables object
 export const v = {
+  numCards: null, // 3 cards per player and 3 extra cards
   numPlayers: null,
-  numCards: 12,
+  playerNames: [],
   activeCards: playerOneCard,
   activePlayerNum: 1,
   activeGame: false,
@@ -53,8 +55,10 @@ export const cardsToExtraHand = []; // Card(s) selected to exchange
 // ///// EVENT LISTENERS ///////////////////////////////////////
 
 export const playersButton = document.querySelector(".playersButton");
-export const beginEndGameButton = document.querySelector(".beginEndGameButton");
+export const cutForDealButton = document.querySelector(".cutForDealButton");
 export const dealButton = document.querySelector(".dealButton");
+export const addButton = document.querySelector(".addButton");
+export const removeButton = document.querySelector(".removeButton");
 const exchangeButton = document.querySelector(".exchangeButton");
 const buyButton = document.querySelector(".buyButton");
 const holdButton = document.querySelector(".holdButton");
@@ -72,11 +76,15 @@ export const changeEventListener = () => {
 // Wrapped event listeners in function to avoid "Test suite failed to run"
 // TypeError: Cannot read property 'addEventListener' of null
 const addListeners = () => {
+  // Add or remove players
+  addButton.addEventListener("click", addPlayers);
+  removeButton.addEventListener("click", removePlayers);
   // Changes number of players and number of cards to deal
-  playersButton.addEventListener("click", changeNumPlayers);
+  // playersButton.addEventListener("click", changeNumPlayers);
+
   // Begins a game: generates players
   // ...Ends a game
-  beginEndGameButton.addEventListener("click", beginEndGame);
+  cutForDealButton.addEventListener("click", cutForDeal);
   // Deals: creates new card deck, shuffles, "deals" to hand arrays and DOM
   dealButton.addEventListener("click", deal);
   // Exchanges the current player's 1 or 3 cards with the extra hand card/cards

@@ -2,7 +2,7 @@ import changeDealer from "./changeDealer.js";
 import { players } from "./generate.js";
 import manageTokens from "./manageTokens.js";
 import clearTable from "./resets.js";
-import { beginEndGameButton, playersButton } from "./app.js";
+import { cutForDealButton, playersButton } from "./app.js";
 
 // End the round
 const endRound = (msgSchnautzFeuer, num31Or33) => {
@@ -48,7 +48,7 @@ const endRound = (msgSchnautzFeuer, num31Or33) => {
   clearTable();
   changeDealer();
   playersButton.textContent = "Deal";
-  beginEndGameButton.textContent = "End Game";
+  cutForDealButton.textContent = "End Game";
 };
 
 export default endRound;

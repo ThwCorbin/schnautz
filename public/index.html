@@ -30,15 +30,32 @@
           <li class="aCard playerOneCard"></li>
           <li class="aCard playerOneCard"></li>
         </ul>
+        <section class="messageArea">
+          <h5>Welcome to Schnautz!</h5>
+          <h5 class="playersNum">Players: <span class="num1to4Msg playerData">3</span></h5>
+          <form onsubmit="">
+              <input type="text" class="addName" name="name" placeholder="Add players" submit="text" minlength="2" maxlength="12">
+              <button class="playersButton dealButton control-btn">Players?</button>
+              <button class="playersButton addButton control-btn">Add Players</button>
+              <button class="playersButton removeButton control-btn">Remove Players</button>
+          </form>
+          <form onsubmit="submitSearch()" id="submitForm">
+              <input id="formInput" type="text" name="name" placeholder="The world is your lobster" required>
+              <button id="submitMe" type="submit">
+                  <i id="iconBtn" class="fa fa-play-circle-o fa-2x"></i>
+                </button>
+          </form>
+
+
+        </section>
         <ul class="playerTwoArea playerArea">
           <li class="aCard playerTwoCard"></li>
           <li class="aCard playerTwoCard"></li>
           <li class="aCard playerTwoCard"></li>
         </ul>
         <section class="controlsDealing controls">
-          <button class="playersButton dealButton control-btn">Players?</button>
-          <h5 class="playersNum"><span class="num1to4 playerData">3</span></h5>
-          <button class="beginEndGameButton control-btn">Begin</button>
+          <!-- <button class="playersButton dealButton control-btn">Players?</button>
+          <h5 class="playersNum"><span class="num1to4 playerData">3</span></h5> -->
         </section>
         <ul class="extraArea playerArea">
           <li class="aCard extraCard"></li>
@@ -46,6 +63,7 @@
           <li class="aCard extraCard"></li>
         </ul>
         <section class="controlsCardPlay controls">
+          <button class="cutForDealButton control-btn">Cut for Dealer</button>
           <button class="exchangeButton  control-btn">Exchange</button>
           <button class="buyButton  control-btn">Buy</button>
           <button class="holdButton control-btn">Hold</button>

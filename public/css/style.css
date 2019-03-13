@@ -94,7 +94,7 @@ video {
 
 /* Typography  ************************************************************ */
 html {
-  font-size: 62.5%;
+  /* font-size: 62.5%; */
   font-family: "Ubuntu", sans-serif;
 }
 
@@ -103,12 +103,13 @@ body {
   line-height: 1.4;
 }
 
+/* 
 * {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-  /* Encourages thoughtful changes to font styles */
-}
+  Encourages thoughtful changes to font styles
+} */
 
 a,
 a:visited {
@@ -257,6 +258,15 @@ body {
   padding: 0.5rem;
 }
 
+.messageArea {
+  display: flex;
+  /* flex-direction: column; */
+  grid-column-start: 3;
+  grid-column-end: 4;
+  justify-content: center;
+  width: 100%;
+}
+
 .playerOneArea,
 .playerFourArea {
   grid-column-start: 2;
@@ -278,20 +288,22 @@ body {
   border-color: var(--violet);
 }
 
-.controls {
+/* .controls {
   display: flex;
   flex-direction: column;
   border: 0.2rem solid var(--grey);
   width: 50%;
-}
+} */
 
-.controlsDealing {
+/* .controlsDealing {
   grid-column-start: 2;
   grid-column-end: 3;
   justify-self: end;
-}
+} */
 
 .controlsCardPlay {
+  display: flex;
+  flex-direction: column;
   grid-column-start: 4;
   grid-column-end: 5;
   justify-self: start;

@@ -11,8 +11,8 @@ import {
   allHands,
   cardsFromExtraHand,
   cardsToExtraHand,
-  num1to4,
-  beginEndGameButton,
+  num1to4Msg,
+  cutForDealButton,
   dealButton,
   aCard
 } from "./app.js";
@@ -40,13 +40,15 @@ const resetGame = () => {
   clearTable();
   changeEventListener();
   v.activeGame = false;
-  players.length = 0;
-  v.activePlayerNum = 1;
+  v.numCards = null;
+  v.numPlayers = null;
+  v.playerNames = [];
   v.activeCards = playerOneCard;
+  v.activePlayerNum = 1;
   dealButton.textContent = "Players?";
-  beginEndGameButton.textContent = "Start";
-  num1to4.textContent = 3;
-  v.numCards = 12;
+  cutForDealButton.textContent = "Cut for Dealer";
+  num1to4Msg.textContent = "Add players";
+  players.length = 0;
 };
 
 export { clearTable as default, resetGame };

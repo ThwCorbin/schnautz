@@ -1,6 +1,6 @@
 import { v, playerText1 } from "./app.js";
 import manageTokens from "./manageTokens.js";
-import clearTable from "./resets.js";
+import { clearTable } from "./resets.js";
 
 const players = [];
 
@@ -10,6 +10,7 @@ const generatePlayers = () => {
   for (let i = 1; i <= v.numPlayers; i++) {
     players.push({
       player: i,
+      name: v.playerNames[i],
       position:
         i === 1
           ? "dealer"
