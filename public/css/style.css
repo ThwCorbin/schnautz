@@ -259,12 +259,28 @@ body {
 }
 
 .messageArea {
-  display: flex;
-  /* flex-direction: column; */
   grid-column-start: 3;
   grid-column-end: 4;
-  justify-content: center;
-  width: 100%;
+  /* justify-content: center; */
+  /* width: 100%; */
+}
+
+.controls {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  display: flex;
+  /* width: 100%; */
+}
+
+.controlsPlayers {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+}
+
+.controlsCards {
+  display: flex;
+  flex-direction: column;
 }
 
 .playerOneArea,

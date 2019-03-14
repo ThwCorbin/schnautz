@@ -1,8 +1,7 @@
-import changeDealer from "./changeDealer.js";
 import { players } from "./generate.js";
 import manageTokens from "./manageTokens.js";
 import clearTable from "./resets.js";
-import { cutForDealButton, playersButton } from "./app.js";
+import changeDealer from "./changeDealer.js";
 
 // End the round
 const endRound = (msgSchnautzFeuer, num31Or33) => {
@@ -47,8 +46,8 @@ const endRound = (msgSchnautzFeuer, num31Or33) => {
   });
   clearTable();
   changeDealer();
-  playersButton.textContent = "Deal";
-  cutForDealButton.textContent = "End Game";
+  // playersButton.textContent = "Deal";
+  // cutForDealButton.textContent = "End Game";
 };
 
 export default endRound;

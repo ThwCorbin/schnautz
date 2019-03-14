@@ -11,15 +11,17 @@ import {
   allHands,
   cardsFromExtraHand,
   cardsToExtraHand,
-  num1to4Msg,
+  // num1to4Msg,
   cutForDealButton,
   dealButton,
   aCard
 } from "./app.js";
 import { players } from "./generate.js";
 import { dealtDeck } from "./cardHands.js";
+import deal from "./deal.js";
+import cutForDeal from "./cutForDeal.js";
 
-export const clearTable = () => {
+const clearTable = () => {
   v.activeRound = false;
   dealtDeck.length = 0;
   extraHand.length = 0;
@@ -45,9 +47,11 @@ const resetGame = () => {
   v.playerNames = [];
   v.activeCards = playerOneCard;
   v.activePlayerNum = 1;
-  dealButton.textContent = "Players?";
-  cutForDealButton.textContent = "Cut for Dealer";
-  num1to4Msg.textContent = "Add players";
+  dealButton.textContent = "Cut for Dealer";
+  dealButton.removeEventListener("click", deal);
+  cutForDealButton.addEventListener("click", cutForDeal);
+  // cutForDealButton.textContent = "Cut for Dealer";
+  // num1to4Msg.textContent = "Add players";
   players.length = 0;
 };
 

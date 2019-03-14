@@ -1,7 +1,7 @@
 // import changeNumPlayers from "./changeNumPlayers.js";
 import addPlayers, { removePlayers } from "./addPlayers.js";
 import cutForDeal from "./cutForDeal.js";
-import deal from "./deal.js";
+// import deal from "./deal.js";
 import selectDeselectCard from "./manageCards.js";
 import exchangeCards from "./exchangeCards.js";
 import buy, { hold } from "./buyHold.js";
@@ -9,7 +9,8 @@ import buy, { hold } from "./buyHold.js";
 // ///// VARIABLES /////////////////////////////////////////////
 
 // DOM text and token variables
-export const num1to4Msg = document.querySelector(".num1to4Msg"); // Denotes number of players
+export const textPlayerName = document.querySelector(".textPlayerName");
+// export const num1to4Msg = document.querySelector(".num1to4Msg"); // Denotes number of players
 export const p1Tokens = document.querySelector(".p1Tokens"); // Denotes tokens remaining
 export const p2Tokens = document.querySelector(".p2Tokens");
 export const p3Tokens = document.querySelector(".p3Tokens");
@@ -54,7 +55,7 @@ export const cardsToExtraHand = []; // Card(s) selected to exchange
 
 // ///// EVENT LISTENERS ///////////////////////////////////////
 
-export const playersButton = document.querySelector(".playersButton");
+// export const playersButton = document.querySelector(".playersButton");
 export const cutForDealButton = document.querySelector(".cutForDealButton");
 export const dealButton = document.querySelector(".dealButton");
 export const addButton = document.querySelector(".addButton");
@@ -77,8 +78,10 @@ export const changeEventListener = () => {
 // TypeError: Cannot read property 'addEventListener' of null
 const addListeners = () => {
   // Add or remove players
+  textPlayerName.addEventListener("submit", addPlayers);
   addButton.addEventListener("click", addPlayers);
   removeButton.addEventListener("click", removePlayers);
+
   // Changes number of players and number of cards to deal
   // playersButton.addEventListener("click", changeNumPlayers);
 
@@ -86,7 +89,8 @@ const addListeners = () => {
   // ...Ends a game
   cutForDealButton.addEventListener("click", cutForDeal);
   // Deals: creates new card deck, shuffles, "deals" to hand arrays and DOM
-  dealButton.addEventListener("click", deal);
+  // dealButton.addEventListener("click", deal);
+
   // Exchanges the current player's 1 or 3 cards with the extra hand card/cards
   exchangeButton.addEventListener("click", exchangeCards);
   // Buy: current player passes on turn

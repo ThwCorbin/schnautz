@@ -1,92 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- <script defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script> -->
-    <link rel="stylesheet" href="css/style.css" />
-    <title>Schnautz Game</title>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script> -->
-  </head>
 
-  <body>
-    <h1 class="title">Schnautz</h1>
-    <!-- <nav>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- <script defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script> -->
+  <link rel="stylesheet" href="css/style.css" />
+  <title>Schnautz Game</title>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script> -->
+</head>
+
+<body>
+  <h1 class="title">Schnautz</h1>
+  <!-- <nav>
       <ul>
         <li><a href="’#’">More Apps</a></li>
         <li><a href="’#’"></a>Rules</li>
         <li><a href="’#’">About</a></li>
       </ul>
     </nav> -->
-    <main class="mainGrid">
-      <section class="cardsArea">
-        <section class="playerNamesOneTwo playerNames">
-          <h5>Player One - <span class="tokens p1Tokens"></span>   <span class="dealer dealerP1"></span></h5>
-          <!-- Sun 	☉ 	U+2609 	&#9737 -->
-          <h5><span class="dealer dealerP2"></span>   <span class="tokens p2Tokens"></span> - Player Two</h5>
-        </section>
-        <ul class="playerOneArea playerArea">
-          <li class="aCard playerOneCard"></li>
-          <li class="aCard playerOneCard"></li>
-          <li class="aCard playerOneCard"></li>
-        </ul>
-        <section class="messageArea">
-          <h5>Welcome to Schnautz!</h5>
-          <h5 class="playersNum">Players: <span class="num1to4Msg playerData">3</span></h5>
-          <form onsubmit="">
-              <input type="text" class="addName" name="name" placeholder="Add players" submit="text" minlength="2" maxlength="12">
-              <button class="playersButton dealButton control-btn">Players?</button>
-              <button class="playersButton addButton control-btn">Add Players</button>
-              <button class="playersButton removeButton control-btn">Remove Players</button>
-          </form>
-          <form onsubmit="submitSearch()" id="submitForm">
-              <input id="formInput" type="text" name="name" placeholder="The world is your lobster" required>
-              <button id="submitMe" type="submit">
+  <main class="mainGrid">
+    <section class="cardsArea">
+      <section class="messageArea">
+        <h5>Welcome to Schnautz!</h5>
+      </section>
+      <section class="playerNamesOneTwo playerNames">
+        <h5>Player One - <span class="tokens p1Tokens"></span> <span class="dealer dealerP1"></span></h5>
+        <!-- Sun 	☉ 	U+2609 	&#9737 -->
+        <h5><span class="dealer dealerP2"></span> <span class="tokens p2Tokens"></span> - Player Two</h5>
+      </section>
+      <ul class="playerOneArea playerArea">
+        <li class="aCard playerOneCard"></li>
+        <li class="aCard playerOneCard"></li>
+        <li class="aCard playerOneCard"></li>
+      </ul>
+      <section class="controls">
+        <form onsubmit="addPlayers()" class="controlsPlayers">
+          <!-- <h5 class="playersNum">Players: <span class="num1to4Msg playerData">Add Players</span></h5> -->
+          <input type="text" class="textPlayerName" name="name" placeholder="Add players" submit="text" maxlength="12" autocomplete="off">
+          <!-- <button class="playersButton dealButton control-btn">Players?</button> -->
+          <button class="addButton control-btn">Add Players</button>
+          <button class="removeButton control-btn">Remove Players</button>
+        </form>
+        <!-- <form onsubmit="submitSearch()" id="submitForm">
+                <input id="formInput" type="text" name="name" placeholder="The world is your lobster" required>
+                <button id="submitMe" type="submit">
                   <i id="iconBtn" class="fa fa-play-circle-o fa-2x"></i>
                 </button>
-          </form>
-
-
-        </section>
-        <ul class="playerTwoArea playerArea">
-          <li class="aCard playerTwoCard"></li>
-          <li class="aCard playerTwoCard"></li>
-          <li class="aCard playerTwoCard"></li>
-        </ul>
-        <section class="controlsDealing controls">
-          <!-- <button class="playersButton dealButton control-btn">Players?</button>
-          <h5 class="playersNum"><span class="num1to4 playerData">3</span></h5> -->
-        </section>
-        <ul class="extraArea playerArea">
-          <li class="aCard extraCard"></li>
-          <li class="aCard extraCard"></li>
-          <li class="aCard extraCard"></li>
-        </ul>
-        <section class="controlsCardPlay controls">
-          <button class="cutForDealButton control-btn">Cut for Dealer</button>
+            </form> -->
+        <section class="controlsCards">
+          <!-- <button class="cutForDealButton control-btn">Cut for Dealer</button> -->
+          <button class="dealButton cutForDealButton control-btn">Cut for Dealer</button>
           <button class="exchangeButton  control-btn">Exchange</button>
           <button class="buyButton  control-btn">Buy</button>
           <button class="holdButton control-btn">Hold</button>
         </section>
-        <ul class="playerFourArea playerArea">
-          <li class="aCard playerFourCard"></li>
-          <li class="aCard playerFourCard"></li>
-          <li class="aCard playerFourCard"></li>
-        </ul>
-        <ul class="playerThreeArea playerArea">
-          <li class="aCard playerThreeCard"></li>
-          <li class="aCard playerThreeCard"></li>
-          <li class="aCard playerThreeCard"></li>
-        </ul>
-        <section class="playerNamesThreeFour playerNames">
-          <h5>Player Four - <span class="tokens p4Tokens"></span>   <span class="dealer dealerP4"></span></h5>
-          <h5><span class="dealer dealerP3"></span>   <span class="tokens p3Tokens"></span> - Player Three</h5>
-        </section>
       </section>
-    </main>
+      <ul class="playerTwoArea playerArea">
+        <li class="aCard playerTwoCard"></li>
+        <li class="aCard playerTwoCard"></li>
+        <li class="aCard playerTwoCard"></li>
+      </ul>
+      <ul class="extraArea playerArea">
+        <li class="aCard extraCard"></li>
+        <li class="aCard extraCard"></li>
+        <li class="aCard extraCard"></li>
+      </ul>
+      <ul class="playerFourArea playerArea">
+        <li class="aCard playerFourCard"></li>
+        <li class="aCard playerFourCard"></li>
+        <li class="aCard playerFourCard"></li>
+      </ul>
+      <ul class="playerThreeArea playerArea">
+        <li class="aCard playerThreeCard"></li>
+        <li class="aCard playerThreeCard"></li>
+        <li class="aCard playerThreeCard"></li>
+      </ul>
+      <section class="playerNamesThreeFour playerNames">
+        <h5>Player Four - <span class="tokens p4Tokens"></span> <span class="dealer dealerP4"></span></h5>
+        <h5><span class="dealer dealerP3"></span> <span class="tokens p3Tokens"></span> - Player Three</h5>
+      </section>
+    </section>
+  </main>
 
-    <footer>An app by Tom Corbin</footer>
-  </body>
+  <footer>An app by Tom Corbin</footer>
+</body>
 
-  <script src="js/app.js" type="module"></script>
+<script src="js/app.js" type="module"></script>
+
 </html>

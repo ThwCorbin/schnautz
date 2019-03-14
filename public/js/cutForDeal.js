@@ -1,8 +1,13 @@
-import { v, playersButton, cutForDealButton } from "./app.js";
+import {
+  v, // playersButton,
+  cutForDealButton,
+  dealButton
+} from "./app.js";
 // import newDeck, { shuffle, styleBlackCards } from "./cardDeck.js";
 import generatePlayers from "./generate.js";
-import { resetGame } from "./resets.js";
+// import { resetGame } from "./resets.js";
 import { getPlayerNames } from "./addPlayers.js";
+import deal from "./deal.js";
 
 // Begin play
 
@@ -17,15 +22,19 @@ const cutForDeal = () => {
     let dealerToFront = v.playerNames.splice(randomIdx, 1);
     v.playerNames.unshift(dealerToFront);
     generatePlayers();
-    playersButton.textContent = "Deal";
-    cutForDealButton.textContent = "End Game";
+    // playersButton.textContent = "Deal";
+    cutForDealButton.textContent = "Deal";
+    // Removes cutForDealButton event listener and adds dealButton event listener
+    cutForDealButton.removeEventListener("click", cutForDeal);
+    dealButton.addEventListener("click", deal);
   } else if (!v.playerNames.length) {
     console.log("Add more players before cutting for the deal.");
-  } else if (v.activeGame && cutForDealButton.textContent === "End Game") {
-    cutForDealButton.textContent = "Sure?";
-  } else {
-    resetGame();
   }
+  // } else if (v.activeGame && cutForDealButton.textContent === "End Game") {
+  //   cutForDealButton.textContent = "Sure?";
+  // } else {
+  //   resetGame();
+  // }
 };
 
 export default cutForDeal;
