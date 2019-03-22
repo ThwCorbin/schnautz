@@ -1,4 +1,4 @@
-import { v, aCard } from "./app.js";
+import { v, messageArea, aCard } from "./app.js";
 import { players } from "./generate.js";
 import updateScore, { check31Or33 } from "./updateScore.js";
 
@@ -7,7 +7,9 @@ const buy = () => {
   let idx = v.activePlayerNum - 1;
   // check if player used a "buy" on last turn
   if (players[idx].buyLastTurn === true) {
-    alert(`Player ${v.activePlayerNum} cannot buy this turn.`);
+    messageArea.textContent = `Player ${
+      v.activePlayerNum
+    } cannot buy this turn.`;
   } else {
     players[idx].buyLastTurn = true;
     aCard.forEach(card => card.classList.remove("is-active"));

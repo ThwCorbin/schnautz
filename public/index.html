@@ -25,35 +25,46 @@
         <h5>Welcome to Schnautz!</h5>
       </section>
       <section class="playerNamesOneTwo playerNames">
-        <h5>Player One - <span class="tokens p1Tokens"></span> <span class="dealer dealerP1"></span></h5>
-        <!-- Sun 	☉ 	U+2609 	&#9737 -->
-        <h5><span class="dealer dealerP2"></span> <span class="tokens p2Tokens"></span> - Player Two</h5>
+        <section>
+          <h5 class="playerName1"></h5>
+          <h5><span class="tokens p1Tokens"></span><span class="dealer dealerP1"></span></h5>
+        </section>
+        <section>
+          <h5 class="playerName2"></h5>
+          <h5><span class="tokens p2Tokens"></span><span class="dealer dealerP2"></span>
+        </section>
       </section>
       <ul class="playerOneArea playerArea">
         <li class="aCard playerOneCard"></li>
         <li class="aCard playerOneCard"></li>
         <li class="aCard playerOneCard"></li>
       </ul>
-      <section class="controls">
-        <form onsubmit="addPlayers()" class="controlsPlayers">
-          <!-- <h5 class="playersNum">Players: <span class="num1to4Msg playerData">Add Players</span></h5> -->
-          <input type="text" class="textPlayerName" name="name" placeholder="Add players" submit="text" maxlength="12" autocomplete="off">
-          <!-- <button class="playersButton dealButton control-btn">Players?</button> -->
-          <button class="addButton control-btn">Add Players</button>
-          <button class="removeButton control-btn">Remove Players</button>
-        </form>
+      <section class="controlsArea">
+        <section class="controls controlsPlayers">
+          <!-- <form class="controls controlsPlayers"> -->
+          <form class="controlsHumans">
+            <input type="text" required class="textPlayerName" name="name" placeholder="Player name" submit="text"
+              maxlength="12" minlength="2" autocomplete="off">
+            <button class="addHumanBtn control-btn">Add</button>
+            <button class="removeHumanBtn control-btn">Remove</button>
+          </form>
+          <section class="controlsAnimals">
+            <h5>Animals</h5>
+            <button class="addAnimalBtn" type="button">+</button>
+            <button class="removeAnimalBtn" type="button">-</button>
+          </section>
+        </section>
         <!-- <form onsubmit="submitSearch()" id="submitForm">
                 <input id="formInput" type="text" name="name" placeholder="The world is your lobster" required>
                 <button id="submitMe" type="submit">
                   <i id="iconBtn" class="fa fa-play-circle-o fa-2x"></i>
                 </button>
             </form> -->
-        <section class="controlsCards">
-          <!-- <button class="cutForDealButton control-btn">Cut for Dealer</button> -->
-          <button class="dealButton cutForDealButton control-btn">Cut for Dealer</button>
-          <button class="exchangeButton  control-btn">Exchange</button>
-          <button class="buyButton  control-btn">Buy</button>
-          <button class="holdButton control-btn">Hold</button>
+        <section class="controls controlsCards">
+          <button class="dealBtn cutForDealBtn control-btn">Cut</button>
+          <button class="exchangeBtn  control-btn">Exchange</button>
+          <button class="buyBtn  control-btn">Buy</button>
+          <button class="holdBtn control-btn">Hold</button>
         </section>
       </section>
       <ul class="playerTwoArea playerArea">
@@ -66,6 +77,16 @@
         <li class="aCard extraCard"></li>
         <li class="aCard extraCard"></li>
       </ul>
+      <section class="playerNamesThreeFour playerNames">
+        <section>
+          <h5 class="playerName4"></h5>
+          <h5><span class="tokens p4Tokens"></span><span class="dealer dealerP4"></span></h5>
+        </section>
+        <section>
+          <h5 class="playerName3"></h5>
+          <h5><span class="tokens p3Tokens"></span><span class="dealer dealerP3"></span></h5>
+        </section>
+      </section>
       <ul class="playerFourArea playerArea">
         <li class="aCard playerFourCard"></li>
         <li class="aCard playerFourCard"></li>
@@ -76,10 +97,7 @@
         <li class="aCard playerThreeCard"></li>
         <li class="aCard playerThreeCard"></li>
       </ul>
-      <section class="playerNamesThreeFour playerNames">
-        <h5>Player Four - <span class="tokens p4Tokens"></span> <span class="dealer dealerP4"></span></h5>
-        <h5><span class="dealer dealerP3"></span> <span class="tokens p3Tokens"></span> - Player Three</h5>
-      </section>
+
     </section>
   </main>
 

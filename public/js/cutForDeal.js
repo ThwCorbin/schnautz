@@ -1,12 +1,17 @@
 import {
-  v, // playersButton,
-  cutForDealButton,
-  dealButton
+  v,
+  messageArea,
+  playerName1,
+  playerName2,
+  playerName3,
+  playerName4,
+  cutForDealBtn,
+  dealBtn
 } from "./app.js";
 // import newDeck, { shuffle, styleBlackCards } from "./cardDeck.js";
 import generatePlayers from "./generate.js";
 // import { resetGame } from "./resets.js";
-import { getPlayerNames } from "./addPlayers.js";
+import { getAnimal } from "./addPlayers.js";
 import deal from "./deal.js";
 
 // Begin play
@@ -14,27 +19,36 @@ import deal from "./deal.js";
 const cutForDeal = () => {
   if (!v.activeGame && v.playerNames.length) {
     v.activeGame = true;
-    getPlayerNames();
+    // Check if we need an animal (two player minimum to play)
+    getAnimal();
+
     // Temporary solution: "cut for the dealer"
     let randomIdx = Math.floor(Math.random() * v.numPlayers);
-    console.log(`${v.playerNames[randomIdx]} is the dealer`);
+    messageArea.textContent = `${v.playerNames[randomIdx]} is the dealer`;
     // Temporary solution: decide seating order starting with dealer
     let dealerToFront = v.playerNames.splice(randomIdx, 1);
     v.playerNames.unshift(dealerToFront);
+
+    // Assign player names to card table
+    if (v.playerNames.length === 4) {
+      playerName3.innerHTML = `${v.playerNames[2]}`;
+      playerName4.innerHTML = `${v.playerNames[3]}`;
+    } else if (v.playerNames.length === 3) {
+      playerName3.innerHTML = `${v.playerNames[2]}`;
+    }
+    playerName1.innerHTML = `${v.playerNames[0]}`;
+    playerName2.innerHTML = `${v.playerNames[1]}`;
+
+    // Generate the array of player objects
     generatePlayers();
-    // playersButton.textContent = "Deal";
-    cutForDealButton.textContent = "Deal";
-    // Removes cutForDealButton event listener and adds dealButton event listener
-    cutForDealButton.removeEventListener("click", cutForDeal);
-    dealButton.addEventListener("click", deal);
+
+    // Removes cutForDealBtn event listener and adds dealBtn event listener
+    cutForDealBtn.removeEventListener("click", cutForDeal);
+    dealBtn.addEventListener("click", deal);
+    cutForDealBtn.textContent = "Deal";
   } else if (!v.playerNames.length) {
-    console.log("Add more players before cutting for the deal.");
+    messageArea.textContent = `Add more players before cutting for the deal.`;
   }
-  // } else if (v.activeGame && cutForDealButton.textContent === "End Game") {
-  //   cutForDealButton.textContent = "Sure?";
-  // } else {
-  //   resetGame();
-  // }
 };
 
 export default cutForDeal;

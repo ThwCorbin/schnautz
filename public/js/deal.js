@@ -1,6 +1,6 @@
 import {
-  dealButton,
   v,
+  messageArea,
   extraHand,
   dealerHand,
   leftOfDealerHand,
@@ -21,7 +21,6 @@ import updateScore, { check31Or33 } from "./updateScore.js";
 const deal = () => {
   if (v.activeGame && v.activeRound === false) {
     v.activeRound = true;
-    dealButton.textContent = "Tips";
     // Generate a deck of cards, shuffle, and assign cards to players' hands
     assignCardsToPlayers(shuffle(newDeck()));
     // "Deal" cards to screen
@@ -94,16 +93,7 @@ const deal = () => {
     // Check if the dealer dealt a Schnautz/Feuer to any player
     check31Or33();
   } else if (v.activeGame && v.activeRound) {
-    alert(
-      `
-      - If you have 25 or more points on the deal, consider
-        holding as you probably won't have the lowest score
-      - Assemble a good hand quickly because rounds
-        often end within two or three turns
-      - If other players are nicking your suit, consider
-        collecting a suit with less demand this round
-      `
-    );
+    messageArea.textContent = `The die is cast.`;
   }
 };
 

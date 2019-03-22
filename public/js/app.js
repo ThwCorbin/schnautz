@@ -1,7 +1,9 @@
-// import changeNumPlayers from "./changeNumPlayers.js";
-import addPlayers, { removePlayers } from "./addPlayers.js";
+import addHuman, {
+  removeHuman,
+  addAnimal,
+  removeAnimal
+} from "./addPlayers.js";
 import cutForDeal from "./cutForDeal.js";
-// import deal from "./deal.js";
 import selectDeselectCard from "./manageCards.js";
 import exchangeCards from "./exchangeCards.js";
 import buy, { hold } from "./buyHold.js";
@@ -9,8 +11,12 @@ import buy, { hold } from "./buyHold.js";
 // ///// VARIABLES /////////////////////////////////////////////
 
 // DOM text and token variables
+export const messageArea = document.querySelector(".messageArea");
 export const textPlayerName = document.querySelector(".textPlayerName");
-// export const num1to4Msg = document.querySelector(".num1to4Msg"); // Denotes number of players
+export const playerName1 = document.querySelector(".playerName1"); // Denotes tokens remaining
+export const playerName2 = document.querySelector(".playerName2");
+export const playerName3 = document.querySelector(".playerName3");
+export const playerName4 = document.querySelector(".playerName4");
 export const p1Tokens = document.querySelector(".p1Tokens"); // Denotes tokens remaining
 export const p2Tokens = document.querySelector(".p2Tokens");
 export const p3Tokens = document.querySelector(".p3Tokens");
@@ -55,14 +61,15 @@ export const cardsToExtraHand = []; // Card(s) selected to exchange
 
 // ///// EVENT LISTENERS ///////////////////////////////////////
 
-// export const playersButton = document.querySelector(".playersButton");
-export const cutForDealButton = document.querySelector(".cutForDealButton");
-export const dealButton = document.querySelector(".dealButton");
-export const addButton = document.querySelector(".addButton");
-export const removeButton = document.querySelector(".removeButton");
-const exchangeButton = document.querySelector(".exchangeButton");
-const buyButton = document.querySelector(".buyButton");
-const holdButton = document.querySelector(".holdButton");
+export const addHumanBtn = document.querySelector(".addHumanBtn");
+export const removeHumanBtn = document.querySelector(".removeHumanBtn");
+export const addAnimalBtn = document.querySelector(".addAnimalBtn");
+export const removeAnimalBtn = document.querySelector(".removeAnimalBtn");
+export const cutForDealBtn = document.querySelector(".cutForDealBtn");
+export const dealBtn = document.querySelector(".dealBtn");
+const exchangeBtn = document.querySelector(".exchangeBtn");
+const buyBtn = document.querySelector(".buyBtn");
+const holdBtn = document.querySelector(".holdBtn");
 
 // Selects/deselects extra hand's and current player's cards on screen
 // ...by adding an event listener to the extraCard NodeList...
@@ -78,25 +85,23 @@ export const changeEventListener = () => {
 // TypeError: Cannot read property 'addEventListener' of null
 const addListeners = () => {
   // Add or remove players
-  textPlayerName.addEventListener("submit", addPlayers);
-  addButton.addEventListener("click", addPlayers);
-  removeButton.addEventListener("click", removePlayers);
-
-  // Changes number of players and number of cards to deal
-  // playersButton.addEventListener("click", changeNumPlayers);
+  textPlayerName.addEventListener("submit", addHuman);
+  addHumanBtn.addEventListener("click", addHuman);
+  removeHumanBtn.addEventListener("click", removeHuman);
+  addAnimalBtn.addEventListener("click", addAnimal);
+  removeAnimalBtn.addEventListener("click", removeAnimal);
 
   // Begins a game: generates players
-  // ...Ends a game
-  cutForDealButton.addEventListener("click", cutForDeal);
+  cutForDealBtn.addEventListener("click", cutForDeal);
   // Deals: creates new card deck, shuffles, "deals" to hand arrays and DOM
-  // dealButton.addEventListener("click", deal);
+  // dealBtn.addEventListener("click", deal);
 
   // Exchanges the current player's 1 or 3 cards with the extra hand card/cards
-  exchangeButton.addEventListener("click", exchangeCards);
+  exchangeBtn.addEventListener("click", exchangeCards);
   // Buy: current player passes on turn
-  buyButton.addEventListener("click", buy);
+  buyBtn.addEventListener("click", buy);
   // Hold: current player passes on turn and "call"s for the end of the round
-  holdButton.addEventListener("click", hold);
+  holdBtn.addEventListener("click", hold);
 };
 
 window.addEventListener("DOMContentLoaded", addListeners);

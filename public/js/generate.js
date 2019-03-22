@@ -30,7 +30,6 @@ const generatePlayers = () => {
   manageTokens();
   // Set initial dealer text
   playerText1.textContent = " Dealer ";
-  // console.log(players);
 };
 
 export { generatePlayers as default, players };

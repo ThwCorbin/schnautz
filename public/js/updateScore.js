@@ -1,4 +1,4 @@
-import { allHands } from "./app.js";
+import { messageArea, allHands } from "./app.js";
 import { players } from "./generate.js";
 import changeActivePlayer from "./changeActivePlayer.js";
 import endRound from "./endRound.js";
@@ -60,11 +60,9 @@ const updateScore = playerNum => {
       allHands[idxAllHands][1].points >= allHands[idxAllHands][2].points
     ? (players[idxPlayers].currentScore = allHands[idxAllHands][1].points)
     : (players[idxPlayers].currentScore = allHands[idxPlayers][2].points);
-  console.log(
-    `Player ${players[idxPlayers].player} score: ${
-      players[idxPlayers].currentScore
-    }`
-  );
+  messageArea.textContent = `Player ${players[idxPlayers].player} score: ${
+    players[idxPlayers].currentScore
+  }`;
 };
 
 const check31Or33 = (playerNum = null) => {

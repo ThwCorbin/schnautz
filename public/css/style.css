@@ -213,22 +213,21 @@ body {
 }
 
 /* Main section  ****************************************************** */
-/* .mainGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  width: 640px;
-  border: 0.2rem solid var(--blueGreen);
-  row-gap: 0.25rem;
-} */
-
 .cardsArea {
-  /* grid-column-start: 1;
-  grid-column-end: 5; */
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   row-gap: 0.5rem;
   border: 0.2rem solid var(--pink);
   padding: 0.5rem;
+}
+
+.messageArea {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  justify-content: center;
+  height: 5rem;
+  font-size: 1rem;
+  text-align: center;
 }
 
 .playerNames {
@@ -252,35 +251,56 @@ body {
   font-size: 1.5rem;
 }
 
-.playerArea {
-  display: flex;
-  border: 0.3rem solid var(--blue);
-  padding: 0.5rem;
-}
-
-.messageArea {
+.controlsArea {
   grid-column-start: 3;
   grid-column-end: 4;
-  /* justify-content: center; */
-  /* width: 100%; */
+  display: flex;
+  justify-content: space-around;
 }
 
 .controls {
-  grid-column-start: 3;
-  grid-column-end: 4;
   display: flex;
-  /* width: 100%; */
+  flex-direction: column;
+  width: 35%;
+  border: .3rem solid var(--blueGreen);
 }
 
 .controlsPlayers {
+  justify-content: flex-start;
+}
+
+.controlsHumans {
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
+}
+
+.controlsAnimals {
+  margin-top: auto;
+  font-size: 1rem;
+  color: var(--orange);
 }
 
 .controlsCards {
+  justify-content: flex-end;
+}
+
+.control-btn {
+  font-size: 1rem;
+  color: var(--pink);
+  border-radius: 5%;
+  margin: 0.1rem;
+  padding: 0;
+}
+
+.dealBtn {
+  margin-bottom: auto;
+  color: var(--violet);
+}
+
+.playerArea {
   display: flex;
-  flex-direction: column;
+  padding: 0.5rem;
+  border: 0.3rem solid var(--blue);
 }
 
 .playerOneArea,
@@ -302,41 +322,6 @@ body {
   grid-column-end: 4;
   justify-self: center;
   border-color: var(--violet);
-}
-
-/* .controls {
-  display: flex;
-  flex-direction: column;
-  border: 0.2rem solid var(--grey);
-  width: 50%;
-} */
-
-/* .controlsDealing {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  justify-self: end;
-} */
-
-.controlsCardPlay {
-  display: flex;
-  flex-direction: column;
-  grid-column-start: 4;
-  grid-column-end: 5;
-  justify-self: start;
-}
-
-.control-btn {
-  font-size: 1rem;
-  color: var(--pink);
-  border-radius: 5%;
-  margin: 0.1rem;
-  padding: 0;
-}
-
-.playersNum {
-  font-size: 1rem;
-  color: var(--blue);
-  text-align: center;
 }
 
 .active-area {

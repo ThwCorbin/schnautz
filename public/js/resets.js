@@ -12,8 +12,8 @@ import {
   cardsFromExtraHand,
   cardsToExtraHand,
   // num1to4Msg,
-  cutForDealButton,
-  dealButton,
+  cutForDealBtn,
+  dealBtn,
   aCard
 } from "./app.js";
 import { players } from "./generate.js";
@@ -47,11 +47,9 @@ const resetGame = () => {
   v.playerNames = [];
   v.activeCards = playerOneCard;
   v.activePlayerNum = 1;
-  dealButton.textContent = "Cut for Dealer";
-  dealButton.removeEventListener("click", deal);
-  cutForDealButton.addEventListener("click", cutForDeal);
-  // cutForDealButton.textContent = "Cut for Dealer";
-  // num1to4Msg.textContent = "Add players";
+  dealBtn.textContent = "Cut";
+  dealBtn.removeEventListener("click", deal);
+  cutForDealBtn.addEventListener("click", cutForDeal);
   players.length = 0;
 };
 

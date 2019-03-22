@@ -1,5 +1,6 @@
 import {
   v,
+  messageArea,
   extraHand,
   dealerHand,
   leftOfDealerHand,
@@ -141,7 +142,7 @@ const exchangeCards = () => {
           dealerHand[i].selected = false;
         }
       } else {
-        alert("Error: Unable to exchange three cards.");
+        messageArea.textContent = `Error: Unable to exchange three cards.`;
       }
       styleBlackCards();
       updateScore(v.activePlayerNum);
@@ -152,12 +153,11 @@ const exchangeCards = () => {
         players[v.activePlayerNum - 1].buyLastTurn = false;
       }
     } else {
-      alert("Error: Unable to exchange cards.");
+      messageArea.textContent = `Error: Unable to exchange cards.`;
     }
   } else {
-    alert("Error: Game or round is not active.");
+    messageArea.textContent = `Error: Game or round is not active.`;
   }
-  // console.log(extraHand);
 };
 
 export default exchangeCards;

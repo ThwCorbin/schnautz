@@ -1,10 +1,6 @@
-import {
-  v,
-  textPlayerName
-  // num1to4Msg
-} from "./app.js";
+import { v, messageArea, textPlayerName } from "./app.js";
 
-const mycroftNames = ["Freddie Cat", "Nellie Dog", "Lilly Gator"];
+const myPetNames = ["Freddie Cat", "Nellie Dog", "Gator Face"];
 
 // Update variables after adding or removing players
 const updateVariables = () => {
@@ -27,27 +23,26 @@ const updateVariables = () => {
       (textPlayerName.placeholder = "Add Players"));
 };
 
-// Add human players
-const addPlayers = e => {
+// Add a human player
+const addHuman = e => {
   e.preventDefault();
   let name = textPlayerName.value;
   if (!v.activeGame) {
     if (v.playerNames.length === 4) {
-      console.log("There are already four players");
+      messageArea.textContent = "There are already four players";
     } else if (v.playerNames.includes(name)) {
-      console.log("That name is already taken");
+      messageArea.textContent = "That name is already taken";
     } else {
       v.playerNames.push(textPlayerName.value);
-      console.log(`Welcome to the game, ${textPlayerName.value}!`);
-      console.log(v.playerNames);
+      messageArea.textContent = `Welcome to the game, ${textPlayerName.value}!`;
       updateVariables();
     }
   }
   textPlayerName.value = "";
 };
 
-// Remove human players
-const removePlayers = e => {
+// Remove a human player
+const removeHuman = e => {
   e.preventDefault();
   let name = textPlayerName.value;
   let msg = "";
@@ -66,26 +61,73 @@ const removePlayers = e => {
     v.playerNames.forEach(playerName => {
       listPlayers += `, ${playerName}`;
     });
-    console.log(`${msg}Current players include${listPlayers}.`);
+    messageArea.textContent = `${msg}Current players include${listPlayers}.`;
   }
   textPlayerName.value = "";
 };
 
-// Add computer players if we don't have enough humans
-const getPlayerNames = () => {
-  if (v.numPlayers === 1 && v.playerNames.length < 2) {
-    v.playerNames.push(mycroftNames[0]);
-  } else if (v.numPlayers === 3 && v.playerNames.length < 3) {
-    v.playerNames.length === 1
-      ? v.playerNames.push(mycroftNames[0], mycroftNames[1])
-      : v.playerNames.push(mycroftNames[0]);
-  } else if (v.numPlayers === 4 && v.playerNames.length < 4) {
-    v.playerNames.length === 1
-      ? v.playerNames.push(...mycroftNames)
-      : v.playerNames.length === 2
-      ? v.playerNames.push(mycroftNames[0], mycroftNames[1])
-      : v.playerNames.push(mycroftNames[0]);
+// Add an animal player
+const addAnimal = () => {
+  let msg = "";
+  let listPlayers = "";
+  if (!v.activeGame) {
+    if (v.playerNames.length === 4) {
+      messageArea.textContent = "There are already four players";
+      // If there is at least one human, add one animal
+    } else if (v.playerNames.length > 0) {
+      !v.playerNames.includes(myPetNames[0])
+        ? v.playerNames.push(myPetNames[0])
+        : !v.playerNames.includes(myPetNames[1])
+        ? v.playerNames.push(myPetNames[1])
+        : v.playerNames.push(myPetNames[2]);
+      // Update numbers/text and print current players to the message area
+      updateVariables();
+      v.playerNames.forEach(playerName => {
+        listPlayers += `, ${playerName}`;
+      });
+      messageArea.textContent = `${msg}Current players include${listPlayers}.`;
+    } else {
+      messageArea.textContent = "Add a human player first";
+    }
   }
 };
 
-export { addPlayers as default, removePlayers, getPlayerNames };
+// Remove an animal player
+const removeAnimal = () => {
+  let animal = "";
+  let msg = "";
+  let listPlayers = "";
+  if (!v.activeGame) {
+    v.playerNames.includes(myPetNames[2])
+      ? (animal = myPetNames[2])
+      : v.playerNames.includes(myPetNames[1])
+      ? (animal = myPetNames[1])
+      : v.playerNames.includes(myPetNames[0])
+      ? (animal = myPetNames[0])
+      : (animal = "");
+  }
+  // If an animal is one of the players, remove the animal
+  if (animal) {
+    v.playerNames.forEach((playerName, idx) => {
+      if (playerName === animal) v.playerNames.splice(idx, 1);
+    });
+    // Update numbers/text and print current players to the message area
+    updateVariables();
+    v.playerNames.forEach(playerName => {
+      listPlayers += `, ${playerName}`;
+    });
+    messageArea.textContent = `${msg}Current players include${listPlayers}.`;
+  } else {
+    messageArea.textContent = "There are no animals playing";
+  }
+};
+
+// Add an animal player if we don't have enough humans (two player minimum)
+const getAnimal = () => {
+  if (v.numPlayers === 1 && v.playerNames.length < 2) {
+    v.playerNames.push(myPetNames[0]);
+    updateVariables();
+  }
+};
+
+export { addHuman as default, removeHuman, addAnimal, removeAnimal, getAnimal };

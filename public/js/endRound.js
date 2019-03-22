@@ -2,6 +2,7 @@ import { players } from "./generate.js";
 import manageTokens from "./manageTokens.js";
 import clearTable from "./resets.js";
 import changeDealer from "./changeDealer.js";
+import { messageArea } from "./app.js";
 
 // End the round
 const endRound = (msgSchnautzFeuer, num31Or33) => {
@@ -33,7 +34,7 @@ const endRound = (msgSchnautzFeuer, num31Or33) => {
     ${messageScores}
     ${messageTokens}
     `;
-  alert(message);
+  messageArea.textContent = message;
 
   // Remove one token from lowest scoring player/players
   manageTokens();
@@ -46,8 +47,6 @@ const endRound = (msgSchnautzFeuer, num31Or33) => {
   });
   clearTable();
   changeDealer();
-  // playersButton.textContent = "Deal";
-  // cutForDealButton.textContent = "End Game";
 };
 
 export default endRound;
