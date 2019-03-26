@@ -12,9 +12,9 @@ import { players } from "./generate.js";
 
 const dealtDeck = [];
 
-// Assign cards to players' hands and extra hand
+// Assign card objects to the hand arrays from the deck that shuffle() returned
 const assignCardsToPlayers = shuffledDeck => {
-  // Note: mutates the objects that newDeck() created inside an array
+  // Note: mutates the objects that shuffle(newDeck()) created inside an array
   // Select subset of shuffledDeck based on number of players
   dealtDeck.push(...shuffledDeck.filter((cardObj, idx) => idx < v.numCards));
 
@@ -23,7 +23,7 @@ const assignCardsToPlayers = shuffledDeck => {
   //    --With 15 cards, "leftOfDealer" is dealt the 1st, 5th, and 10th cards
   // --.cardPlayerNum value based on dealerPlayerNum value && numCards
   //    --"extraHand" is not a player hand, we set cardObj.cardPlayerNum = 0
-  // Assign card objects to players' hands and extra hand
+  // Assign card objects to players' hand arrays and extra hand array
   let dealerPlayerNum;
   players.forEach(player => {
     if (player.position === "dealer") dealerPlayerNum = player.player;

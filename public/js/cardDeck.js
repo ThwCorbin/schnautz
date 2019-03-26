@@ -1,7 +1,7 @@
 // ///// CARDDECK FUNCTIONS ////////////////////////////////
 import { aCard } from "./app.js";
 
-// Generate new deck (an array of card objects) to pass to shuffle function
+// Generate a new deck (an array of card objects), which we pass to shuffle()
 const newDeck = () => {
   const suits = ["♧", "♢", "♡", "♤"];
   const ranks = ["7", "8", "9", "10", "J", "Q", "K", "A"];
@@ -24,11 +24,12 @@ const newDeck = () => {
   return deck;
 };
 
-// Generate shuffled deck from newDeck()'s array of card objects to pass to deal function
-// Fisher–Yates Shuffle
+// Generate a shuffled deck from newDeck()'s array of card objects,
+// which we pass to assignCardsToPlayers()
 const shuffle = deck => {
+  // Fisher–Yates Shuffle
   let numUnshuffledCards = deck.length;
-  // 32 card deck 7 through ace
+  // 32 card deck using 7 through ace
   let randomUnshuffledCard;
   let lastUnshuffledCard;
   // Select and move a random unshuffled card to the shuffled portion of the array

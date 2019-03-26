@@ -90,12 +90,8 @@ const addListeners = () => {
   removeHumanBtn.addEventListener("click", removeHuman);
   addAnimalBtn.addEventListener("click", addAnimal);
   removeAnimalBtn.addEventListener("click", removeAnimal);
-
   // Begins a game: generates players
   cutForDealBtn.addEventListener("click", cutForDeal);
-  // Deals: creates new card deck, shuffles, "deals" to hand arrays and DOM
-  // dealBtn.addEventListener("click", deal);
-
   // Exchanges the current player's 1 or 3 cards with the extra hand card/cards
   exchangeBtn.addEventListener("click", exchangeCards);
   // Buy: current player passes on turn

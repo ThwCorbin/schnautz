@@ -1,4 +1,4 @@
-import { messageArea, allHands } from "./app.js";
+import { allHands } from "./app.js";
 import { players } from "./generate.js";
 import changeActivePlayer from "./changeActivePlayer.js";
 import endRound from "./endRound.js";
@@ -60,34 +60,31 @@ const updateScore = playerNum => {
       allHands[idxAllHands][1].points >= allHands[idxAllHands][2].points
     ? (players[idxPlayers].currentScore = allHands[idxAllHands][1].points)
     : (players[idxPlayers].currentScore = allHands[idxPlayers][2].points);
-  messageArea.textContent = `Player ${players[idxPlayers].player} score: ${
-    players[idxPlayers].currentScore
-  }`;
 };
 
 const check31Or33 = (playerNum = null) => {
   let idxPlayers = playerNum - 1; // Convert player number to zero-based index
   let playerHas31 = [];
-  // If a player's score is 31 or 33, the round ends immediately
-  // Check if any players have been dealt 33 or 31
+  // After dealing, check if any players have been dealt 33 or 31
   if (playerNum === null) {
     players.forEach(player => {
       if (player.currentScore === 33) {
+        // End the round because only one player may have 33 (3 aces) at a time
         endRound("Feuer", 33);
+        // Store players with 31 as multiple players may be dealt 31
       } else if (player.currentScore === 31) {
         playerHas31.push(player.player);
-        console.log(`Player ${player.player} has 31!`);
       }
     });
-    // If any player has 31, end the round, if not change the active player
+    // If any player has been dealt 31, end the round; if not, play the round
     playerHas31.length > 0 ? endRound("Schnautz", 31) : changeActivePlayer();
 
-    // else if (playerNum !== null) check if a player has 33 or 31
+    // After a player's turn, check if that player has 33 or 31
   } else if (players[idxPlayers].currentScore === 33) {
     endRound("Feuer", 33);
   } else if (players[idxPlayers].currentScore === 31) {
     endRound("Schnautz", 31);
-    // if (playerNum !== null) and no player has 33 or 31
+    // If no player has 33 or 31, continue playing the round
   } else {
     changeActivePlayer();
   }

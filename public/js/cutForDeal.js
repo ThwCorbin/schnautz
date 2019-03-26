@@ -19,7 +19,7 @@ import deal from "./deal.js";
 const cutForDeal = () => {
   if (!v.activeGame && v.playerNames.length) {
     v.activeGame = true;
-    // Check if we need an animal (two player minimum to play)
+    // Check if we need an animal to play (we need two players minimum)
     getAnimal();
 
     // Temporary solution: "cut for the dealer"

@@ -21,9 +21,10 @@ import updateScore, { check31Or33 } from "./updateScore.js";
 const deal = () => {
   if (v.activeGame && v.activeRound === false) {
     v.activeRound = true;
-    // Generate a deck of cards, shuffle, and assign cards to players' hands
+    // Generate a deck of cards, shuffle it, and assign ("deal") a subset of
+    // the card objects to the extra hand array and the player hand arrays
     assignCardsToPlayers(shuffle(newDeck()));
-    // "Deal" cards to screen
+    // "Deal" card values to the screen based on the number of cards
     if (v.numCards === 15) {
       for (let i = 0; i <= 2; i++) {
         extraCard[i].textContent = extraHand[i].card;
@@ -86,7 +87,7 @@ const deal = () => {
           : (playerTwoCard[i].textContent = leftOfDealerHand[i].card);
       }
     }
-    // Spades and clubs should be black (default is red)
+    // Spades and clubs on screen should be black (default is red)
     styleBlackCards();
     // Update scores to avoid currentScore: null on an early Schnautz/Feuer
     players.forEach(player => updateScore(player.player));

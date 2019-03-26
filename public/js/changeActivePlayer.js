@@ -11,7 +11,8 @@ import {
   playerOneArea,
   playerTwoArea,
   playerThreeArea,
-  playerFourArea
+  playerFourArea,
+  messageArea
 } from "./app.js";
 import { players } from "./generate.js";
 import selectDeselectCard from "./manageCards.js";
@@ -80,6 +81,9 @@ const changeActivePlayer = () => {
       playerOneArea.classList.add("active-area"),
       (v.activeCards = playerOneCard),
       changeEventListener());
+
+  // Clear message area
+  messageArea.textContent = "";
 
   // Clear arrays for next player
   cardsToExtraHand.length = 0;

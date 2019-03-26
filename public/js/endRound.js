@@ -21,13 +21,16 @@ const endRound = (msgSchnautzFeuer, num31Or33) => {
   players.forEach(player => {
     if (player.currentScore === lowScore) {
       player.tokens -= 1;
-      messageTokens += `Player ${player.player} loses a token
+      messageTokens += `
+
+      Player ${player.player} loses a token
       `;
     }
   });
   // If 31 (Schnautz) or 33 (Feuer) points, update message
   if (num31Or33)
     message = `${msgSchnautzFeuer}!!!
+
   `;
   // Build the message
   message += `
@@ -40,13 +43,16 @@ const endRound = (msgSchnautzFeuer, num31Or33) => {
   manageTokens();
 
   // Reset properties in players array of objects
-  players.forEach(player => {
-    player.currentScore = null;
-    player.buyLastTurn = false;
-    player.holdLastTurn = false;
-  });
-  clearTable();
-  changeDealer();
+  setTimeout(() => {
+    messageArea.textContent = `Next dealer`;
+    players.forEach(player => {
+      player.currentScore = null;
+      player.buyLastTurn = false;
+      player.holdLastTurn = false;
+    });
+    clearTable();
+    changeDealer();
+  }, 3000);
 };
 
 export default endRound;
