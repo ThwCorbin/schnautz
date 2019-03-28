@@ -14,37 +14,33 @@ const endRound = (msgSchnautzFeuer, num31Or33) => {
   // Check which player has the lowest score and build scores message
   players.forEach(player => {
     lowScore = player.currentScore <= lowScore ? player.currentScore : lowScore;
-    messageScores += `Player ${player.player} score: ${player.currentScore}
-    `;
+    messageScores += `<li>Player ${player.player} score: ${
+      player.currentScore
+    }</li>`;
   });
 
   players.forEach(player => {
     if (player.currentScore === lowScore) {
       player.tokens -= 1;
-      messageTokens += `
-
-      Player ${player.player} loses a token
-      `;
+      messageTokens += `<li>Player ${player.player} loses a token</li>`;
     }
   });
   // If 31 (Schnautz) or 33 (Feuer) points, update message
-  if (num31Or33)
-    message = `${msgSchnautzFeuer}!!!
-
-  `;
+  if (num31Or33) message = `<h5>${msgSchnautzFeuer}!!!</h5>`;
   // Build the message
-  message += `
-    ${messageScores}
-    ${messageTokens}
-    `;
-  messageArea.textContent = message;
+  message += `<ul>${messageScores}</ul>
+  
+  <h5> Learner: </h5>
+  <ul>${messageTokens}</ul>`;
+  // Updated message text on screen
+  messageArea.innerHTML = message;
 
   // Remove one token from lowest scoring player/players
   manageTokens();
 
   // Reset properties in players array of objects
   setTimeout(() => {
-    messageArea.textContent = `Next dealer`;
+    messageArea.innerHTML = `<h5>Next dealer</h5>`;
     players.forEach(player => {
       player.currentScore = null;
       player.buyLastTurn = false;

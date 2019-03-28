@@ -230,6 +230,13 @@ body {
   text-align: center;
 }
 
+.messageArea > ul > li {
+  color: red;
+  text-align: left;
+  line-height: 1;
+  padding-left: 33%;
+}
+
 .playerNames {
   grid-column-start: 2;
   grid-column-end: 5;

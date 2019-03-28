@@ -1,4 +1,5 @@
 import { v, playerText1 } from "./app.js";
+import { myPetNames } from "./addPlayers.js";
 import manageTokens from "./manageTokens.js";
 import clearTable from "./resets.js";
 
@@ -20,6 +21,7 @@ const generatePlayers = () => {
           ? "acrossFromDealer"
           : "rightOfDealer",
       activePlayer: i === 1, // boolean - default is dealer
+      animal: myPetNames.includes(v.playerNames[i]), // true if animal/computer
       buyLastTurn: false,
       holdLastTurn: false,
       tokens: 3,

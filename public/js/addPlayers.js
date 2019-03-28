@@ -29,12 +29,14 @@ const addHuman = e => {
   let name = textPlayerName.value;
   if (!v.activeGame) {
     if (v.playerNames.length === 4) {
-      messageArea.textContent = "There are already four players";
+      messageArea.innerHTML = `<h5>There are already four players</h5>`;
     } else if (v.playerNames.includes(name)) {
-      messageArea.textContent = "That name is already taken";
+      messageArea.innerHTML = `<h5>That name is already taken</h5>`;
     } else {
       v.playerNames.push(textPlayerName.value);
-      messageArea.textContent = `Welcome to the game, ${textPlayerName.value}!`;
+      messageArea.innerHTML = `<h5>Welcome to the game, ${
+        textPlayerName.value
+      }!</h5>`;
       updateVariables();
     }
   }
@@ -54,14 +56,16 @@ const removeHuman = e => {
     });
     updateVariables();
   } else if (!v.activeGame) {
-    msg += `${name} is not a player. `;
+    msg += `<h5>${name} is not a player. </h5>`;
   }
 
   if (!v.activeGame) {
     v.playerNames.forEach(playerName => {
-      listPlayers += `, ${playerName}`;
+      listPlayers += `<li>- ${playerName}</li>`;
     });
-    messageArea.textContent = `${msg}Current players include${listPlayers}.`;
+    messageArea.innerHTML = `<ul>${msg}Current players:
+    ${listPlayers}
+    </ul>`;
   }
   textPlayerName.value = "";
 };
@@ -72,7 +76,7 @@ const addAnimal = () => {
   let listPlayers = "";
   if (!v.activeGame) {
     if (v.playerNames.length === 4) {
-      messageArea.textContent = "There are already four players";
+      messageArea.innerHTML = `<h5>There are already four players</h5>`;
       // If there is at least one human, add one animal
     } else if (v.playerNames.length > 0) {
       !v.playerNames.includes(myPetNames[0])
@@ -83,11 +87,13 @@ const addAnimal = () => {
       // Update numbers/text and print current players to the message area
       updateVariables();
       v.playerNames.forEach(playerName => {
-        listPlayers += `, ${playerName}`;
+        listPlayers += `<li>- ${playerName}</li>`;
       });
-      messageArea.textContent = `${msg}Current players include${listPlayers}.`;
+      messageArea.innerHTML = `<ul>${msg}Current players:
+      ${listPlayers}
+      </ul>`;
     } else {
-      messageArea.textContent = "Add a human player first";
+      messageArea.innerHTML = `<h5>Add a human player first</h5>`;
     }
   }
 };
@@ -114,11 +120,13 @@ const removeAnimal = () => {
     // Update numbers/text and print current players to the message area
     updateVariables();
     v.playerNames.forEach(playerName => {
-      listPlayers += `, ${playerName}`;
+      listPlayers += `<li>- ${playerName}</li>`;
     });
-    messageArea.textContent = `${msg}Current players include${listPlayers}.`;
-  } else {
-    messageArea.textContent = "There are no animals playing";
+    messageArea.innerHTML = `<ul>${msg}Current players:
+    ${listPlayers}
+    </ul>`;
+  } else if (!v.activeGame) {
+    messageArea.innerHTML = `<h5>There are no animals playing</h5>`;
   }
 };
 
@@ -130,4 +138,11 @@ const getAnimal = () => {
   }
 };
 
-export { addHuman as default, removeHuman, addAnimal, removeAnimal, getAnimal };
+export {
+  addHuman as default,
+  removeHuman,
+  addAnimal,
+  removeAnimal,
+  getAnimal,
+  myPetNames
+};

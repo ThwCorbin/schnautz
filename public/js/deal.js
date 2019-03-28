@@ -94,7 +94,7 @@ const deal = () => {
     // Check if the dealer dealt a Schnautz/Feuer to any player
     check31Or33();
   } else if (v.activeGame && v.activeRound) {
-    messageArea.textContent = `The die is cast.`;
+    messageArea.innerHTML = `<h5>The round is active.</h5>`;
   }
 };
 

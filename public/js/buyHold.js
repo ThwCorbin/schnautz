@@ -7,9 +7,9 @@ const buy = () => {
   let idx = v.activePlayerNum - 1;
   // check if player used a "buy" on last turn
   if (players[idx].buyLastTurn === true) {
-    messageArea.textContent = `Player ${
+    messageArea.innerHTML = `<h5>Player ${
       v.activePlayerNum
-    } cannot buy this turn.`;
+    } cannot buy this turn.</h5>`;
   } else {
     players[idx].buyLastTurn = true;
     aCard.forEach(card => card.classList.remove("is-active"));

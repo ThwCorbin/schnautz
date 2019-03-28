@@ -83,7 +83,7 @@ const changeActivePlayer = () => {
       changeEventListener());
 
   // Clear message area
-  messageArea.textContent = "";
+  messageArea.innerHTML = `<h5></h5>`;
 
   // Clear arrays for next player
   cardsToExtraHand.length = 0;

@@ -24,7 +24,9 @@ const cutForDeal = () => {
 
     // Temporary solution: "cut for the dealer"
     let randomIdx = Math.floor(Math.random() * v.numPlayers);
-    messageArea.textContent = `${v.playerNames[randomIdx]} is the dealer`;
+    messageArea.innerHTML = `<h5>${
+      v.playerNames[randomIdx]
+    } is the dealer</h5>`;
     // Temporary solution: decide seating order starting with dealer
     let dealerToFront = v.playerNames.splice(randomIdx, 1);
     v.playerNames.unshift(dealerToFront);
@@ -47,7 +49,7 @@ const cutForDeal = () => {
     dealBtn.addEventListener("click", deal);
     cutForDealBtn.textContent = "Deal";
   } else if (!v.playerNames.length) {
-    messageArea.textContent = `Add more players before cutting for the deal.`;
+    messageArea.innerHTML = `<h5>Add more players before cutting for the deal.</h5>`;
   }
 };
 
