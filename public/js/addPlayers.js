@@ -130,9 +130,10 @@ const removeAnimal = () => {
   }
 };
 
-// Add an animal player if we don't have enough humans (two player minimum)
+// Add an animal player if we don't have two players
 const getAnimal = () => {
-  if (v.numPlayers === 1 && v.playerNames.length < 2) {
+  if (v.numPlayers === 1) {
+    //  Note: do we need to add this above (...&& v.playerNames.length < 2)
     v.playerNames.push(myPetNames[0]);
     updateVariables();
   }

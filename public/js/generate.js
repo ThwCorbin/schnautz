@@ -9,9 +9,10 @@ const players = [];
 const generatePlayers = () => {
   clearTable();
   for (let i = 1; i <= v.numPlayers; i++) {
+    let idx = i - 1; // zero-based
     players.push({
       player: i,
-      name: v.playerNames[i],
+      name: v.playerNames[idx],
       position:
         i === 1
           ? "dealer"
@@ -21,13 +22,14 @@ const generatePlayers = () => {
           ? "acrossFromDealer"
           : "rightOfDealer",
       activePlayer: i === 1, // boolean - default is dealer
-      animal: myPetNames.includes(v.playerNames[i]), // true if animal/computer
+      animal: myPetNames.includes(v.playerNames[idx]), // true if animal/computer
       buyLastTurn: false,
       holdLastTurn: false,
       tokens: 3,
       currentScore: null
     });
   }
+  console.log(players);
   // Set initial tokens text
   manageTokens();
   // Set initial dealer text

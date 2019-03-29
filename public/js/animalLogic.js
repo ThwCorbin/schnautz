@@ -1,19 +1,18 @@
-import { v } from "./app.js";
-import { myPetNames } from "./addPlayers.js";
-import { players } from "./generate.js";
+import { messageArea } from "./app.js";
+import { hold } from "./buyHold.js";
 
-const patch = name => {
-  return name;
-};
-
-let words = "dogs and cats forever";
-patch(words);
-
-const thinkLikeAnimal = () => {
-  // v.activeGame;
-  // myPetNames
-  if (players.activePlayer) {
+// changeActivePlayer() passes animal player object
+// Animal decides whether to exchange, buy, or hold this turn
+const thinkLikeAnimal = animal => {
+  if (animal.currentScore >= 22) {
+    messageArea.innerHTML = `<h5>${animal.name} holds.`;
+    hold();
   }
 };
 
-export default thinkLikeAnimal;
+const dealIfAnimal = dealer => {
+  // code
+  console.log(dealer);
+};
+
+export { thinkLikeAnimal as default, dealIfAnimal };

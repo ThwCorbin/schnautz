@@ -9,7 +9,7 @@ import {
   dealBtn
 } from "./app.js";
 // import newDeck, { shuffle, styleBlackCards } from "./cardDeck.js";
-import generatePlayers from "./generate.js";
+import generatePlayers, { players } from "./generate.js";
 // import { resetGame } from "./resets.js";
 import { getAnimal } from "./addPlayers.js";
 import deal from "./deal.js";
@@ -22,24 +22,25 @@ const cutForDeal = () => {
     // Check if we need an animal to play (we need two players minimum)
     getAnimal();
 
-    // Temporary solution: "cut for the dealer"
+    // Cut for the dealer
     let randomIdx = Math.floor(Math.random() * v.numPlayers);
     messageArea.innerHTML = `<h5>${
       v.playerNames[randomIdx]
     } is the dealer</h5>`;
-    // Temporary solution: decide seating order starting with dealer
+    // Decide seating order starting with dealer
     let dealerToFront = v.playerNames.splice(randomIdx, 1);
-    v.playerNames.unshift(dealerToFront);
+    // Note: dealerToFront is an ARRAY containing the one deleted element
+    v.playerNames.unshift(dealerToFront[0]);
 
     // Assign player names to card table
     if (v.playerNames.length === 4) {
-      playerName3.innerHTML = `${v.playerNames[2]}`;
-      playerName4.innerHTML = `${v.playerNames[3]}`;
+      playerName3.textContent = `${v.playerNames[2]}`;
+      playerName4.textContent = `${v.playerNames[3]}`;
     } else if (v.playerNames.length === 3) {
-      playerName3.innerHTML = `${v.playerNames[2]}`;
+      playerName3.textContent = `${v.playerNames[2]}`;
     }
-    playerName1.innerHTML = `${v.playerNames[0]}`;
-    playerName2.innerHTML = `${v.playerNames[1]}`;
+    playerName1.textContent = `${v.playerNames[0]}`;
+    playerName2.textContent = `${v.playerNames[1]}`;
 
     // Generate the array of player objects
     generatePlayers();
@@ -47,7 +48,12 @@ const cutForDeal = () => {
     // Removes cutForDealBtn event listener and adds dealBtn event listener
     cutForDealBtn.removeEventListener("click", cutForDeal);
     dealBtn.addEventListener("click", deal);
-    cutForDealBtn.textContent = "Deal";
+    dealBtn.textContent = "Deal";
+
+    // Check if an animal needs to deal
+    if (players[0].animal) {
+      setTimeout(deal, 2000);
+    }
   } else if (!v.playerNames.length) {
     messageArea.innerHTML = `<h5>Add more players before cutting for the deal.</h5>`;
   }

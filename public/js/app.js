@@ -67,6 +67,7 @@ export const addAnimalBtn = document.querySelector(".addAnimalBtn");
 export const removeAnimalBtn = document.querySelector(".removeAnimalBtn");
 export const cutForDealBtn = document.querySelector(".cutForDealBtn");
 export const dealBtn = document.querySelector(".dealBtn");
+export const tipsBtn = document.querySelector(".tipsBtn");
 const exchangeBtn = document.querySelector(".exchangeBtn");
 const buyBtn = document.querySelector(".buyBtn");
 const holdBtn = document.querySelector(".holdBtn");

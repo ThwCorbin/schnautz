@@ -17,6 +17,7 @@ import {
 import { players } from "./generate.js";
 import selectDeselectCard from "./manageCards.js";
 import endRound from "./endRound.js";
+import thinkLikeAnimal from "./animalLogic.js";
 
 const changeActivePlayer = () => {
   let idx = v.activePlayerNum - 1; // Convert player number to zero-based index
@@ -96,6 +97,11 @@ const changeActivePlayer = () => {
     // Set all .holdLastTurn properties to false - prevents repeating endRound
     players.forEach(player => (player.holdLastTurn = false));
     endRound();
+    // Check whether the new active player is an animal/computer
+  } else if (players[idx].animal) {
+    // Pass this animal player object to animal/computer game logic
+    messageArea.innerHTML = `I am an animal`;
+    thinkLikeAnimal(players[idx]);
   }
 };
 

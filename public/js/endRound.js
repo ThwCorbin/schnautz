@@ -1,9 +1,9 @@
 import { players } from "./generate.js";
+import { messageArea } from "./app.js";
 import manageTokens from "./manageTokens.js";
 import clearTable from "./resets.js";
 import changeDealer from "./changeDealer.js";
-import { messageArea } from "./app.js";
-
+import { dealIfAnimal } from "./animalLogic.js";
 // End the round
 const endRound = (msgSchnautzFeuer, num31Or33) => {
   let message = ``;
@@ -47,8 +47,9 @@ const endRound = (msgSchnautzFeuer, num31Or33) => {
       player.holdLastTurn = false;
     });
     clearTable();
-    changeDealer();
-  }, 3000);
+    // Note: If a player's tokens < 0, remove that player before next line
+    dealIfAnimal(changeDealer());
+  }, 4000);
 };
 
 export default endRound;

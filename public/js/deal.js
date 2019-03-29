@@ -1,6 +1,7 @@
 import {
   v,
-  messageArea,
+  dealBtn,
+  tipsBtn,
   extraHand,
   dealerHand,
   leftOfDealerHand,
@@ -16,11 +17,17 @@ import { players } from "./generate.js";
 import newDeck, { shuffle, styleBlackCards } from "./cardDeck.js";
 import assignCardsToPlayers from "./cardHands.js";
 import updateScore, { check31Or33 } from "./updateScore.js";
+import tips from "./tips.js";
 
 // Deal card objects
 const deal = () => {
   if (v.activeGame && v.activeRound === false) {
     v.activeRound = true;
+    // Removes dealBtn event listener and adds tipsBtn event listener
+    dealBtn.removeEventListener("click", deal);
+    tipsBtn.addEventListener("click", tips);
+    tipsBtn.textContent = "Tips";
+
     // Generate a deck of cards, shuffle it, and assign ("deal") a subset of
     // the card objects to the extra hand array and the player hand arrays
     assignCardsToPlayers(shuffle(newDeck()));
@@ -93,8 +100,6 @@ const deal = () => {
     players.forEach(player => updateScore(player.player));
     // Check if the dealer dealt a Schnautz/Feuer to any player
     check31Or33();
-  } else if (v.activeGame && v.activeRound) {
-    messageArea.innerHTML = `<h5>The round is active.</h5>`;
   }
 };
 

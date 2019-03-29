@@ -11,15 +11,16 @@ import {
   allHands,
   cardsFromExtraHand,
   cardsToExtraHand,
-  // num1to4Msg,
   cutForDealBtn,
   dealBtn,
+  tipsBtn,
   aCard
 } from "./app.js";
 import { players } from "./generate.js";
 import { dealtDeck } from "./cardHands.js";
-import deal from "./deal.js";
 import cutForDeal from "./cutForDeal.js";
+import deal from "./deal.js";
+import tips from "./tips.js";
 
 const clearTable = () => {
   v.activeRound = false;
@@ -36,6 +37,9 @@ const clearTable = () => {
     card.classList.remove("is-active");
     card.textContent = "";
   });
+  tipsBtn.removeEventListener("click", tips);
+  dealBtn.addEventListener("click", deal);
+  dealBtn.textContent = "Deal";
 };
 
 const resetGame = () => {
