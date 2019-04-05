@@ -17,6 +17,7 @@ import {
 import updateScore, { check31Or33 } from "./updateScore.js";
 import { styleBlackCards } from "./cardDeck.js";
 import { players } from "./generate.js";
+import { updateCardsSeen } from "./animalLogic.js";
 
 // Exchange 1 or 3 cards from a player's hand with the extra hand
 const exchangeCards = () => {
@@ -69,6 +70,10 @@ const exchangeCards = () => {
         idxToExtraHand = dealerHand.indexOf(cardsToExtraHand[0]);
         dealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
       }
+      // Use v.activePlayerNum to set current player's index in Players array
+      let idxCurrentPlayer = v.activePlayerNum - 1;
+      // Update cards animals have seen
+      updateCardsSeen(cardsToExtraHand, players[idxCurrentPlayer].name);
 
       // Retrieve index from NodeList and modify textContent && classlist
       extraCard.forEach((card, idx) => {
@@ -91,9 +96,8 @@ const exchangeCards = () => {
       updateScore(v.activePlayerNum);
       check31Or33(v.activePlayerNum);
       // Check if current player used "buy" on last turn, if so reset to false
-      // ...subtract 1 from v.activePlayerNum to select the correct index
-      if (players[v.activePlayerNum - 1].buyLastTurn) {
-        players[v.activePlayerNum - 1].buyLastTurn = false;
+      if (players[idxCurrentPlayer].buyLastTurn) {
+        players[idxCurrentPlayer].buyLastTurn = false;
       }
     } else if (
       cardsToExtraHand.length === 3 &&
@@ -144,6 +148,10 @@ const exchangeCards = () => {
       } else {
         messageArea.textContent = `Error: Unable to exchange three cards.`;
       }
+      let idxCurrentPlayer = v.activePlayerNum - 1;
+      // Update cards animals have seen
+      updateCardsSeen(cardsToExtraHand, players[idxCurrentPlayer].name);
+
       styleBlackCards();
       updateScore(v.activePlayerNum);
       check31Or33(v.activePlayerNum);

@@ -9,6 +9,7 @@ import {
   allHands
 } from "./app.js";
 import { players } from "./generate.js";
+import { updateCardsSeen } from "./animalLogic.js";
 
 const dealtDeck = [];
 
@@ -16,6 +17,7 @@ const dealtDeck = [];
 const assignCardsToPlayers = shuffledDeck => {
   // Note: mutates the objects that shuffle(newDeck()) created inside an array
   // Select subset of shuffledDeck based on number of players
+  // Note: cardObj/value is not used, but enables access to the index argument
   dealtDeck.push(...shuffledDeck.filter((cardObj, idx) => idx < v.numCards));
 
   // Set cardObj properties .cardPosition and .cardPlayerNum
@@ -116,6 +118,7 @@ const assignCardsToPlayers = shuffledDeck => {
       allHands.push(extraHand, dealerHand, leftOfDealerHand);
       break;
   }
+  updateCardsSeen(extraHand);
 };
 
 export { assignCardsToPlayers as default, dealtDeck };

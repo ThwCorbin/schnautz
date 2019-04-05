@@ -100,7 +100,6 @@ const changeActivePlayer = () => {
     // Check whether the new active player is an animal/computer
   } else if (players[idx].animal) {
     // Pass this animal player object to animal/computer game logic
-    messageArea.innerHTML = `I am an animal`;
     thinkLikeAnimal(players[idx]);
   }
 };

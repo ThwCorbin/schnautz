@@ -11,13 +11,19 @@ import {
 // import newDeck, { shuffle, styleBlackCards } from "./cardDeck.js";
 import generatePlayers, { players } from "./generate.js";
 // import { resetGame } from "./resets.js";
-import { getAnimal } from "./addPlayers.js";
+import { getAnimal, myPetNames } from "./addPlayers.js";
 import deal from "./deal.js";
 
 // Begin play
 
 const cutForDeal = () => {
-  if (!v.activeGame && v.playerNames.length) {
+  // Check if game !== active
+  // Check if playerNames array has at least one human player
+  if (
+    !v.activeGame &&
+    v.playerNames.length &&
+    v.playerNames.some(player => myPetNames.includes(player) === false)
+  ) {
     v.activeGame = true;
     // Check if we need an animal to play (we need two players minimum)
     getAnimal();
@@ -54,8 +60,9 @@ const cutForDeal = () => {
     if (players[0].animal) {
       setTimeout(deal, 2000);
     }
-  } else if (!v.playerNames.length) {
-    messageArea.innerHTML = `<h5>Add more players before cutting for the deal.</h5>`;
+    // } else if (!v.playerNames.length) {
+  } else {
+    messageArea.innerHTML = `<h5>Add a human player before cutting for the deal.</h5>`;
   }
 };
 

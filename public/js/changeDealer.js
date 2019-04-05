@@ -65,7 +65,7 @@ const changeDealer = () => {
         (dealer = player))
       : (player.activePlayer = false);
   });
-  // Return the dealer's player object
+  // Return the dealer's player object, which we pass to dealIfAnimal()
   return dealer;
 };
 

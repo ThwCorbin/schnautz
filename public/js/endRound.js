@@ -3,13 +3,21 @@ import { messageArea } from "./app.js";
 import manageTokens from "./manageTokens.js";
 import clearTable from "./resets.js";
 import changeDealer from "./changeDealer.js";
-import { dealIfAnimal } from "./animalLogic.js";
+import {
+  dealIfAnimal
+  // catSawCards,
+  // dogSawCards,
+  // gatorSawCards
+} from "./animalLogic.js";
 // End the round
 const endRound = (msgSchnautzFeuer, num31Or33) => {
   let message = ``;
   let messageScores = ``;
   let messageTokens = ``;
   let lowScore = 33;
+  // catSawCards.clear(); // Clear animal Sets of card's seen
+  // dogSawCards.clear();
+  // gatorSawCards.clear();
 
   // Check which player has the lowest score and build scores message
   players.forEach(player => {
@@ -47,7 +55,8 @@ const endRound = (msgSchnautzFeuer, num31Or33) => {
       player.holdLastTurn = false;
     });
     clearTable();
-    // Note: If a player's tokens < 0, remove that player before next line
+    // Note: If a player's tokens < 0, remove that player before changeDealer()
+    // Check if dealer is an animal--changeDealer passes dealer's player object
     dealIfAnimal(changeDealer());
   }, 4000);
 };
