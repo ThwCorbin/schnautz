@@ -70,10 +70,10 @@ const exchangeCards = () => {
         idxToExtraHand = dealerHand.indexOf(cardsToExtraHand[0]);
         dealerHand.splice(idxToExtraHand, 1, cardsFromExtraHand[0]);
       }
-      // Use v.activePlayerNum to set current player's index in Players array
-      let idxCurrentPlayer = v.activePlayerNum - 1;
-      // Update cards animals have seen
-      updateCardsSeen(cardsToExtraHand, players[idxCurrentPlayer].name);
+      // If animals are playing, update which cards the animals have seen
+      if (v.animals) {
+        updateCardsSeen(cardsToExtraHand);
+      }
 
       // Retrieve index from NodeList and modify textContent && classlist
       extraCard.forEach((card, idx) => {
@@ -96,8 +96,9 @@ const exchangeCards = () => {
       updateScore(v.activePlayerNum);
       check31Or33(v.activePlayerNum);
       // Check if current player used "buy" on last turn, if so reset to false
-      if (players[idxCurrentPlayer].buyLastTurn) {
-        players[idxCurrentPlayer].buyLastTurn = false;
+      // ...subtract 1 from v.activePlayerNum to select the correct index
+      if (players[v.activePlayerNum - 1].buyLastTurn) {
+        players[v.activePlayerNum - 1].buyLastTurn = false;
       }
     } else if (
       cardsToExtraHand.length === 3 &&
@@ -148,9 +149,10 @@ const exchangeCards = () => {
       } else {
         messageArea.textContent = `Error: Unable to exchange three cards.`;
       }
-      let idxCurrentPlayer = v.activePlayerNum - 1;
-      // Update cards animals have seen
-      updateCardsSeen(cardsToExtraHand, players[idxCurrentPlayer].name);
+      // If animals are playing, update which cards the animals have seen
+      if (v.animals) {
+        updateCardsSeen(cardsToExtraHand);
+      }
 
       styleBlackCards();
       updateScore(v.activePlayerNum);

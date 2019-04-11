@@ -9,7 +9,7 @@ import {
   allHands
 } from "./app.js";
 import { players } from "./generate.js";
-import { updateCardsSeen } from "./animalLogic.js";
+import { createAnimalSets } from "./animalLogic.js";
 
 const dealtDeck = [];
 
@@ -118,7 +118,8 @@ const assignCardsToPlayers = shuffledDeck => {
       allHands.push(extraHand, dealerHand, leftOfDealerHand);
       break;
   }
-  updateCardsSeen(extraHand);
+  // Checks if animals are playing and passes cards array to animalLogic.js
+  createAnimalSets(extraHand);
 };
 
 export { assignCardsToPlayers as default, dealtDeck };

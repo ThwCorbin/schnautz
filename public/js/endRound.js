@@ -1,32 +1,25 @@
 import { players } from "./generate.js";
-import { messageArea } from "./app.js";
+import { v, messageArea } from "./app.js";
 import manageTokens from "./manageTokens.js";
 import clearTable from "./resets.js";
 import changeDealer from "./changeDealer.js";
-import {
-  dealIfAnimal
-  // catSawCards,
-  // dogSawCards,
-  // gatorSawCards
-} from "./animalLogic.js";
+import { dealIfAnimal } from "./animalLogic.js";
 // End the round
 const endRound = (msgSchnautzFeuer, num31Or33) => {
   let message = ``;
   let messageScores = ``;
   let messageTokens = ``;
   let lowScore = 33;
-  // catSawCards.clear(); // Clear animal Sets of card's seen
-  // dogSawCards.clear();
-  // gatorSawCards.clear();
 
   // Check which player has the lowest score and build scores message
+  // Reset each players's turns property to 0
   players.forEach(player => {
     lowScore = player.currentScore <= lowScore ? player.currentScore : lowScore;
     messageScores += `<li>Player ${player.player} score: ${
       player.currentScore
     }</li>`;
+    player.turns = 0;
   });
-
   players.forEach(player => {
     if (player.currentScore === lowScore) {
       player.tokens -= 1;

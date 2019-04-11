@@ -26,10 +26,10 @@ const generatePlayers = () => {
       buyLastTurn: false,
       holdLastTurn: false,
       tokens: 3,
+      turns: 0,
       currentScore: null
     });
   }
-  console.log(players);
   // Set initial tokens text
   manageTokens();
   // Set initial dealer text

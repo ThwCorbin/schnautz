@@ -21,6 +21,7 @@ import { dealtDeck } from "./cardHands.js";
 import cutForDeal from "./cutForDeal.js";
 import deal from "./deal.js";
 import tips from "./tips.js";
+import { clearAnimalSets } from "./animalLogic.js";
 
 const clearTable = () => {
   v.activeRound = false;
@@ -40,6 +41,10 @@ const clearTable = () => {
   tipsBtn.removeEventListener("click", tips);
   dealBtn.addEventListener("click", deal);
   dealBtn.textContent = "Deal";
+  // Clear animal sets of card's seen
+  if (v.animals) {
+    clearAnimalSets();
+  }
 };
 
 const resetGame = () => {
@@ -48,9 +53,10 @@ const resetGame = () => {
   v.activeGame = false;
   v.numCards = null;
   v.numPlayers = null;
-  v.playerNames = [];
+  v.playerNames.length = 0;
   v.activeCards = playerOneCard;
   v.activePlayerNum = 1;
+  v.animals = false;
   dealBtn.textContent = "Cut";
   dealBtn.removeEventListener("click", deal);
   cutForDealBtn.addEventListener("click", cutForDeal);

@@ -40,13 +40,14 @@ export const playerFourArea = document.querySelector(".playerFourArea");
 
 // Default variables object
 export const v = {
-  numCards: null, // 3 cards per player and 3 extra cards
-  numPlayers: null,
-  playerNames: [],
+  activeGame: false,
+  activeRound: false,
   activeCards: playerOneCard,
   activePlayerNum: 1,
-  activeGame: false,
-  activeRound: false
+  animals: false, // true (if at least one animal/computer player is playing)
+  numCards: null, // 3 cards per player and 3 extra cards
+  numPlayers: null,
+  playerNames: []
 };
 
 // Hand variables - visualize players sitting around a card table
