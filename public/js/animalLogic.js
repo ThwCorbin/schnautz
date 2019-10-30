@@ -10,9 +10,9 @@ import {
 import { players } from "./generate.js";
 import { hold } from "./buyHold.js";
 
-let catSawCards;
-let dogSawCards;
-let gatorSawCards;
+let catSawCards = 0;
+let dogSawCards = 0;
+let gatorSawCards = 0;
 
 // Create animal sets if animals are playing: assignCardsToPlayers() calls
 // creatAnimalSets(), which passes the extraHand array of 3 card objects
