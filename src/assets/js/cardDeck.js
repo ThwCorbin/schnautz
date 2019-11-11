@@ -1,5 +1,5 @@
 // ///// CARDDECK FUNCTIONS ////////////////////////////////
-import { aCard } from "./app.js";
+import { aCard } from "../../main.js";
 
 // Generate a new deck (an array of card objects), which we pass to shuffle()
 const newDeck = () => {

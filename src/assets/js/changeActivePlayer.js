@@ -13,7 +13,7 @@ import {
   playerThreeArea,
   playerFourArea,
   messageArea
-} from "./app.js";
+} from "../../main.js";
 import { players } from "./generate.js";
 import selectDeselectCard from "./manageCards.js";
 import endRound from "./endRound.js";

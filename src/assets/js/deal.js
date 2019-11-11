@@ -12,7 +12,7 @@ import {
   playerTwoCard,
   playerThreeCard,
   playerFourCard
-} from "./app.js";
+} from "../../main.js";
 import { players } from "./generate.js";
 import newDeck, { shuffle, styleBlackCards } from "./cardDeck.js";
 import assignCardsToPlayers from "./cardHands.js";

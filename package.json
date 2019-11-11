@@ -9,6 +9,10 @@
     "url": "https://github.com/ThwCorbin/schnautz.git"
   },
   "main": "dist/bundle.js",
+  "engines": {
+    "node": ">=8.10.0"
+  },
+  "type": "module",
   "scripts": {
     "build": "rollup -c && npx @11ty/eleventy --serve",
     "serve": "npx @11ty/eleventy --serve",
@@ -25,6 +29,8 @@
     "Schwimmen"
   ],
   "devDependencies": {
+    "@11ty/eleventy": "^0.9.0",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^2.0.3",
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.7.2",
     "@babel/node": "^7.7.0",
@@ -41,7 +47,10 @@
     "rollup": "^1.26.5",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "nunjucks": "^3.2.0"
+  }
 }

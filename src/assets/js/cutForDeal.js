@@ -7,7 +7,7 @@ import {
   playerName4,
   cutForDealBtn,
   dealBtn
-} from "./app.js";
+} from "../../main.js";
 // import newDeck, { shuffle, styleBlackCards } from "./cardDeck.js";
 import generatePlayers, { players } from "./generate.js";
 // import { resetGame } from "./resets.js";
@@ -30,9 +30,7 @@ const cutForDeal = () => {
 
     // Cut for the dealer
     let randomIdx = Math.floor(Math.random() * v.numPlayers);
-    messageArea.innerHTML = `<h5>${
-      v.playerNames[randomIdx]
-    } is the dealer</h5>`;
+    messageArea.innerHTML = `<h5>${v.playerNames[randomIdx]} is the dealer</h5>`;
     // Decide seating order starting with dealer
     let dealerToFront = v.playerNames.splice(randomIdx, 1);
     // Note: dealerToFront is an ARRAY containing the one deleted element

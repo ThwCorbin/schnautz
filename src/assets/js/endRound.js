@@ -1,5 +1,5 @@
 import { players } from "./generate.js";
-import { v, messageArea } from "./app.js";
+import { v, messageArea } from "../../main.js";
 import manageTokens from "./manageTokens.js";
 import clearTable from "./resets.js";
 import changeDealer from "./changeDealer.js";
@@ -15,9 +15,7 @@ const endRound = (msgSchnautzFeuer, num31Or33) => {
   // Reset each players's turns property to 0
   players.forEach(player => {
     lowScore = player.currentScore <= lowScore ? player.currentScore : lowScore;
-    messageScores += `<li>Player ${player.player} score: ${
-      player.currentScore
-    }</li>`;
+    messageScores += `<li>Player ${player.player} score: ${player.currentScore}</li>`;
     player.turns = 0;
   });
   players.forEach(player => {

@@ -1,4 +1,4 @@
-import { v, playerText1 } from "./app.js";
+import { v, playerText1 } from "../../main.js";
 import { myPetNames } from "./addPlayers.js";
 import manageTokens from "./manageTokens.js";
 import clearTable from "./resets.js";

@@ -8,7 +8,7 @@ import {
   playerTwoArea,
   playerThreeArea,
   playerFourArea
-} from "./app.js";
+} from "../../main.js";
 import { players } from "./generate.js";
 
 const changeDealer = () => {

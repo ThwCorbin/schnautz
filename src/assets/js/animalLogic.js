@@ -6,7 +6,7 @@ import {
   leftOfDealerHand,
   acrossFromDealerHand,
   rightOfDealerHand
-} from "./app.js";
+} from "../../main.js";
 import { players } from "./generate.js";
 import { hold } from "./buyHold.js";
 

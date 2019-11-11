@@ -15,7 +15,7 @@ import {
   dealBtn,
   tipsBtn,
   aCard
-} from "./app.js";
+} from "../../main.js";
 import { players } from "./generate.js";
 import { dealtDeck } from "./cardHands.js";
 import cutForDeal from "./cutForDeal.js";

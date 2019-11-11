@@ -13,7 +13,7 @@ import {
   playerTwoCard,
   playerThreeCard,
   playerFourCard
-} from "./app.js";
+} from "../../main.js";
 import updateScore, { check31Or33 } from "./updateScore.js";
 import { styleBlackCards } from "./cardDeck.js";
 import { players } from "./generate.js";

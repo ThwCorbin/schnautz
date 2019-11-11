@@ -1,4 +1,4 @@
-import { cardsFromExtraHand, cardsToExtraHand } from "./app.js";
+import { cardsFromExtraHand, cardsToExtraHand } from "../../main.js";
 import { dealtDeck } from "./cardHands.js";
 
 // Manage cards that current player will be exchange with extra hand

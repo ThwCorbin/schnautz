@@ -1,4 +1,4 @@
-import { allHands } from "./app.js";
+import { allHands } from "../../main.js";
 import { players } from "./generate.js";
 import changeActivePlayer from "./changeActivePlayer.js";
 import endRound from "./endRound.js";

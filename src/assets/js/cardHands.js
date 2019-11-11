@@ -7,7 +7,7 @@ import {
   acrossFromDealerHand,
   rightOfDealerHand,
   allHands
-} from "./app.js";
+} from "../../main.js";
 import { players } from "./generate.js";
 import { createAnimalSets } from "./animalLogic.js";
 

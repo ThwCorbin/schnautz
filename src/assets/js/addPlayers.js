@@ -1,4 +1,4 @@
-import { v, messageArea, textPlayerName } from "./app.js";
+import { v, messageArea, textPlayerName } from "../../main.js";
 
 const myPetNames = ["Freddie Cat", "Nellie Dog", "Gator Face"];
 
@@ -34,9 +34,7 @@ const addHuman = e => {
       messageArea.innerHTML = `<h5>That name is already taken</h5>`;
     } else {
       v.playerNames.push(textPlayerName.value);
-      messageArea.innerHTML = `<h5>Welcome to the game, ${
-        textPlayerName.value
-      }!</h5>`;
+      messageArea.innerHTML = `<h5>Welcome to the game, ${textPlayerName.value}!</h5>`;
       updateVariables();
     }
   }

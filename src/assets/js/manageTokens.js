@@ -1,4 +1,4 @@
-import { p1Tokens, p2Tokens, p3Tokens, p4Tokens } from "./app.js";
+import { p1Tokens, p2Tokens, p3Tokens, p4Tokens } from "../../main.js";
 import { players } from "./generate.js";
 
 // Style cards and tokens variables
