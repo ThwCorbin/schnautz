@@ -1,15 +1,19 @@
 {
   "name": "schnautz",
-  "version": "1.0.0",
   "description": "A schnautz card game",
-  "main": "index.js",
-  "scripts": {
-    "build": "babel server --out-dir dist",
-    "serve": "node dist/server.js"
-  },
+  "version": "1.0.0",
+  "author": "Tom Corbin",
+  "license": "ISC",
   "repository": {
     "type": "git",
     "url": "https://github.com/ThwCorbin/schnautz.git"
+  },
+  "main": "dist/bundle.js",
+  "scripts": {
+    "build": "rollup -c && npx @11ty/eleventy --serve",
+    "serve": "npx @11ty/eleventy --serve",
+    "clean": "rimraf dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "Hosen",
@@ -20,12 +24,6 @@
     "game",
     "Schwimmen"
   ],
-  "author": "Tom Corbin",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ThwCorbin/SchnautzCardGame/issues"
-  },
-  "homepage": "https://github.com/ThwCorbin/SchnautzCardGame#readme",
   "devDependencies": {
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.7.2",
