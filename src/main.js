@@ -1,8 +1,7 @@
-console.log("Hiya luna!");
 import addHuman, {
   removeHuman,
   addAnimal,
-  removeAnimal
+  removeAnimal,
 } from "./assets/js/addPlayers.js";
 import cutForDeal from "./assets/js/cutForDeal.js";
 import selectDeselectCard from "./assets/js/manageCards.js";
@@ -48,7 +47,7 @@ export const v = {
   animals: false, //* true (if at least one animal/computer player is playing)
   numCards: null, //* 3 cards per player and 3 extra cards
   numPlayers: null,
-  playerNames: []
+  playerNames: [],
 };
 
 //> Hand variables - visualize players sitting around a card table
@@ -75,10 +74,10 @@ const holdBtn = document.querySelector(".holdBtn");
 
 //* Selects/deselects extra hand's and current player's cards on screen
 //* ...by adding an event listener to the extraCard NodeList...
-extraCard.forEach(card => card.addEventListener("click", selectDeselectCard));
+extraCard.forEach((card) => card.addEventListener("click", selectDeselectCard));
 //* ...and to the active player's cards' Nodelist (e.g. playerOneCard)
 export const changeEventListener = () => {
-  v.activeCards.forEach(card =>
+  v.activeCards.forEach((card) =>
     card.addEventListener("click", selectDeselectCard)
   );
 };
