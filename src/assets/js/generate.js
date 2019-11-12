@@ -1,18 +1,19 @@
-import { v, playerText1 } from "../../main.js";
-import { myPetNames } from "./addPlayers.js";
+import { gameState } from "./gameStatus.js";
 import manageTokens from "./manageTokens.js";
 import clearTable from "./resets.js";
+import { myPetNames } from "./addPlayers.js";
+import { playerText1 } from "./changeDealer.js";
 
 const players = [];
 
-// Generate players
+//> Generate players
 const generatePlayers = () => {
   clearTable();
-  for (let i = 1; i <= v.numPlayers; i++) {
-    let idx = i - 1; // zero-based
+  for (let i = 1; i <= gameState.numPlayers; i++) {
+    let idx = i - 1; //* zero-based
     players.push({
       player: i,
-      name: v.playerNames[idx],
+      name: gameState.playerNames[idx],
       position:
         i === 1
           ? "dealer"
@@ -21,8 +22,8 @@ const generatePlayers = () => {
           : i === 3
           ? "acrossFromDealer"
           : "rightOfDealer",
-      activePlayer: i === 1, // boolean - default is dealer
-      animal: myPetNames.includes(v.playerNames[idx]), // true if animal/computer
+      activePlayer: i === 1, //* boolean - default is dealer
+      animal: myPetNames.includes(gameState.playerNames[idx]), //* true if animal/computer
       buyLastTurn: false,
       holdLastTurn: false,
       tokens: 3,
@@ -30,9 +31,9 @@ const generatePlayers = () => {
       currentScore: null
     });
   }
-  // Set initial tokens text
+  //* Set initial tokens text
   manageTokens();
-  // Set initial dealer text
+  //* Set initial dealer text
   playerText1.textContent = " Dealer ";
 };
 

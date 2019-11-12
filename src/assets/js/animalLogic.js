@@ -1,23 +1,21 @@
-import { myPetNames } from "./addPlayers.js";
-import {
-  v,
-  messageArea,
-  dealerHand,
-  leftOfDealerHand,
-  acrossFromDealerHand,
-  rightOfDealerHand
-} from "../../main.js";
+import { gameState } from "./gameStatus.js";
+import { messageArea, myPetNames } from "./addPlayers.js";
 import { players } from "./generate.js";
 import { hold } from "./buyHold.js";
+
+const dealerHand = []; //* Array of dealer's hand's three card objects
+const leftOfDealerHand = []; //*...of player left of dealer...
+const acrossFromDealerHand = []; //* ...of player across from dealer...
+const rightOfDealerHand = []; //* ...of player right of dealer...
 
 let catSawCards = 0;
 let dogSawCards = 0;
 let gatorSawCards = 0;
 
-// Create animal sets if animals are playing: assignCardsToPlayers() calls
-// creatAnimalSets(), which passes the extraHand array of 3 card objects
-const createAnimalSets = cards => {
-  players.forEach(player => {
+//> Create animal sets if animals are playing: assignCardsToPlayers() calls
+//> creatAnimalSets(), which passes the extraHand array of 3 card objects
+const createAnimalSets = (cards) => {
+  players.forEach((player) => {
     let arr;
     if (player.animal) {
       player.position === "dealer"
@@ -39,17 +37,17 @@ const createAnimalSets = cards => {
         : console.log("Cannot find pet");
     }
   });
-  // If we created an animal set, v.animals is set true (an animal is playing)
+  //* If we created an animal set, gameState.animals is set true (an animal is playing)
   if (catSawCards.size > 0 || dogSawCards.size > 0 || gatorSawCards.size > 0) {
-    v.animals = true;
+    gameState.animals = true;
   }
 };
 
-// Update animal sets with cards seen: exchangeCards() calls updateCardsSeen(),
-// which passes 1 or 3 card objects from the updated extraHand array
-const updateCardsSeen = cards => {
-  // cards parameter is an array of 1 or 3 card objects
-  cards.forEach(card => {
+//> Update animal sets with cards seen: exchangeCards() calls updateCardsSeen(),
+//> which passes 1 or 3 card objects from the updated extraHand array
+const updateCardsSeen = (cards) => {
+  //* cards parameter is an array of 1 or 3 card objects
+  cards.forEach((card) => {
     catSawCards.add(card);
     dogSawCards.add(card);
     gatorSawCards.add(card);
@@ -57,22 +55,22 @@ const updateCardsSeen = cards => {
   console.log(catSawCards, dogSawCards, gatorSawCards);
 };
 
-// Clear sets on after round ends
+//> Clear sets on after round ends
 const clearAnimalSets = () => {
   if (catSawCards.size > 0) catSawCards.clear();
   if (dogSawCards.size > 0) dogSawCards.clear();
   if (gatorSawCards.size > 0) gatorSawCards.clear();
 };
 
-// Check if dealer is an animal--changeDealer passes dealer's player object
-const dealIfAnimal = dealer => {
-  // code
+//> Check if dealer is an animal--changeDealer passes dealer's player object
+const dealIfAnimal = (dealer) => {
+  //todo code
   console.log(dealer);
 };
 
-// changeActivePlayer() passes animal player object
-// Animal decides whether to exchange, buy, or hold this turn
-const thinkLikeAnimal = animal => {
+//> changeActivePlayer() passes animal player object
+//> Animal decides whether to exchange, buy, or hold this turn
+const thinkLikeAnimal = (animal) => {
   if (animal.currentScore >= 22) {
     messageArea.innerHTML = `<h5>${animal.name} holds.`;
     hold();
@@ -81,8 +79,12 @@ const thinkLikeAnimal = animal => {
 
 export {
   thinkLikeAnimal as default,
-  dealIfAnimal,
-  createAnimalSets,
   clearAnimalSets,
-  updateCardsSeen
+  createAnimalSets,
+  dealIfAnimal,
+  updateCardsSeen,
+  dealerHand,
+  leftOfDealerHand,
+  acrossFromDealerHand,
+  rightOfDealerHand
 };

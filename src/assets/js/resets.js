@@ -1,30 +1,26 @@
-// ///// RESET GAME/ROUND FUNCTIONS ////////////////////////////
+import { gameState } from "./gameStatus.js";
+import tips from "./tips.js";
+import deal, { tipsBtn } from "./deal.js";
+import cutForDeal, { cutForDealBtn, dealBtn } from "./cutForDeal.js";
+import { aCard } from "./cardDeck.js";
+import { players } from "./generate.js";
+import { allHands, dealtDeck, extraHand } from "./cardHands.js";
 import {
-  v,
-  changeEventListener,
-  playerOneCard,
-  extraHand,
+  clearAnimalSets,
   dealerHand,
   leftOfDealerHand,
   acrossFromDealerHand,
-  rightOfDealerHand,
-  allHands,
+  rightOfDealerHand
+} from "./animalLogic.js";
+import {
+  changeEventListener,
   cardsFromExtraHand,
   cardsToExtraHand,
-  cutForDealBtn,
-  dealBtn,
-  tipsBtn,
-  aCard
-} from "../../main.js";
-import { players } from "./generate.js";
-import { dealtDeck } from "./cardHands.js";
-import cutForDeal from "./cutForDeal.js";
-import deal from "./deal.js";
-import tips from "./tips.js";
-import { clearAnimalSets } from "./animalLogic.js";
+  playerOneCard
+} from "./changeActivePlayer.js";
 
 const clearTable = () => {
-  v.activeRound = false;
+  gameState.activeRound = false;
   dealtDeck.length = 0;
   extraHand.length = 0;
   dealerHand.length = 0;
@@ -34,15 +30,15 @@ const clearTable = () => {
   allHands.length = 0;
   cardsFromExtraHand.length = 0;
   cardsToExtraHand.length = 0;
-  aCard.forEach(card => {
+  aCard.forEach((card) => {
     card.classList.remove("is-active");
     card.textContent = "";
   });
   tipsBtn.removeEventListener("click", tips);
   dealBtn.addEventListener("click", deal);
   dealBtn.textContent = "Deal";
-  // Clear animal sets of card's seen
-  if (v.animals) {
+  //* Clear animal sets of card's seen
+  if (gameState.animals) {
     clearAnimalSets();
   }
 };
@@ -50,13 +46,13 @@ const clearTable = () => {
 const resetGame = () => {
   clearTable();
   changeEventListener();
-  v.activeGame = false;
-  v.numCards = null;
-  v.numPlayers = null;
-  v.playerNames.length = 0;
-  v.activeCards = playerOneCard;
-  v.activePlayerNum = 1;
-  v.animals = false;
+  gameState.activeGame = false;
+  gameState.numCards = null;
+  gameState.numPlayers = null;
+  gameState.playerNames.length = 0;
+  gameState.activeCards = playerOneCard;
+  gameState.activePlayerNum = 1;
+  gameState.animals = false;
   dealBtn.textContent = "Cut";
   dealBtn.removeEventListener("click", deal);
   cutForDealBtn.addEventListener("click", cutForDeal);

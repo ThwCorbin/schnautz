@@ -1,36 +1,38 @@
-// MANAGE CARDS IN HANDS
+//> Manage cards in hands
+import { gameState } from "./gameStatus.js";
 import {
-  v,
-  extraHand,
+  createAnimalSets,
   dealerHand,
   leftOfDealerHand,
   acrossFromDealerHand,
-  rightOfDealerHand,
-  allHands
-} from "../../main.js";
+  rightOfDealerHand
+} from "./animalLogic.js";
 import { players } from "./generate.js";
-import { createAnimalSets } from "./animalLogic.js";
 
+const extraHand = []; //* Array of extra hand's three card objects
+const allHands = []; //* Array of all hand arrays (of three card objects)
 const dealtDeck = [];
 
-// Assign card objects to the hand arrays from the deck that shuffle() returned
-const assignCardsToPlayers = shuffledDeck => {
-  // Note: mutates the objects that shuffle(newDeck()) created inside an array
-  // Select subset of shuffledDeck based on number of players
-  // Note: cardObj/value is not used, but enables access to the index argument
-  dealtDeck.push(...shuffledDeck.filter((cardObj, idx) => idx < v.numCards));
+//> Assign card objects to the hand arrays from the deck that shuffle() returned
+const assignCardsToPlayers = (shuffledDeck) => {
+  //* Note: mutates the objects that shuffle(newDeck()) created inside an array
+  //* Select subset of shuffledDeck based on number of players
+  //* Note: cardObj/value is not used, but enables access to the index argument
+  dealtDeck.push(
+    ...shuffledDeck.filter((cardObj, idx) => idx < gameState.numCards)
+  );
 
-  // Set cardObj properties .cardPosition and .cardPlayerNum
-  // --.cardPosition value based on order of dealtDeck card objects && numCards
-  //    --With 15 cards, "leftOfDealer" is dealt the 1st, 5th, and 10th cards
-  // --.cardPlayerNum value based on dealerPlayerNum value && numCards
-  //    --"extraHand" is not a player hand, we set cardObj.cardPlayerNum = 0
-  // Assign card objects to players' hand arrays and extra hand array
+  //* Set cardObj properties .cardPosition and .cardPlayerNum
+  //* --.cardPosition value based on order of dealtDeck card objects && numCards
+  //*    --With 15 cards, "leftOfDealer" is dealt the 1st, 5th, and 10th cards
+  //* --.cardPlayerNum value based on dealerPlayerNum value && numCards
+  //*    --"extraHand" is not a player hand, we set cardObj.cardPlayerNum = 0
+  //* Assign card objects to players' hand arrays and extra hand array
   let dealerPlayerNum;
-  players.forEach(player => {
+  players.forEach((player) => {
     if (player.position === "dealer") dealerPlayerNum = player.player;
   });
-  switch (v.numCards) {
+  switch (gameState.numCards) {
     case 15:
       dealtDeck.forEach((cardObj, idx) => {
         if (idx === 0 || idx === 5 || idx === 10) {
@@ -118,8 +120,8 @@ const assignCardsToPlayers = shuffledDeck => {
       allHands.push(extraHand, dealerHand, leftOfDealerHand);
       break;
   }
-  // Checks if animals are playing and passes cards array to animalLogic.js
+  //* Checks if animals are playing and passes cards array to animalLogic.js
   createAnimalSets(extraHand);
 };
 
-export { assignCardsToPlayers as default, dealtDeck };
+export { assignCardsToPlayers as default, allHands, dealtDeck, extraHand };

@@ -1,11 +1,16 @@
-import { p1Tokens, p2Tokens, p3Tokens, p4Tokens } from "../../main.js";
 import { players } from "./generate.js";
 
-// Style cards and tokens variables
+//> DOM text and token variables
+//* Denotes tokens remaining
+const p1Tokens = document.querySelector(".p1Tokens");
+const p2Tokens = document.querySelector(".p2Tokens");
+const p3Tokens = document.querySelector(".p3Tokens");
+const p4Tokens = document.querySelector(".p4Tokens");
 
-// Check players array for each player's token count and update DOM
+//> Style cards and tokens variables
+//> Check players array for each player's token count and update DOM
 const manageTokens = () => {
-  players.forEach(player => {
+  players.forEach((player) => {
     player.player === 1
       ? (p1Tokens.textContent = `${String(player.tokens)} tokens`)
       : player.player === 2
@@ -17,3 +22,4 @@ const manageTokens = () => {
 };
 
 export default manageTokens;
+//? export p1Tokens, p2Tokens, p3Tokens, p4Tokens

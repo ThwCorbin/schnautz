@@ -1,7 +1,7 @@
-import { cardsFromExtraHand, cardsToExtraHand } from "../../main.js";
 import { dealtDeck } from "./cardHands.js";
+import { cardsFromExtraHand, cardsToExtraHand } from "./changeActivePlayer.js";
 
-// Manage cards that current player will be exchange with extra hand
+//> Manage cards that current player will be exchange with extra hand
 const manageCardsToExchange = (fromExtra, isSelected, cardObj) => {
   fromExtra && isSelected
     ? cardsFromExtraHand.push(cardObj)
@@ -12,13 +12,13 @@ const manageCardsToExchange = (fromExtra, isSelected, cardObj) => {
     : cardsToExtraHand.splice(cardsToExtraHand.indexOf(cardObj), 1);
 };
 
-// Select and deselect cards in active player's and extra hands
-const selectDeselectCard = e => {
-  // Note: mutates the objects that newDeck() created inside an array
-  dealtDeck.forEach(cardObj => {
-    // Toggles boolean "selected" property in card objects
-    // Toggles event target's classList "is-active" for styling
-    // Calls manageCardsToExchange with params (fromExtra, isSelected, cardObj)
+//> Select and deselect cards in active player's and extra hands
+const selectDeselectCard = (e) => {
+  //! mutates the objects that newDeck() created inside an array
+  dealtDeck.forEach((cardObj) => {
+    //* Toggles boolean "selected" property in card objects
+    //* Toggles event target's classList "is-active" for styling
+    //* Calls manageCardsToExchange with params (fromExtra, isSelected, cardObj)
     if (
       e.target.className.includes("extraCard") &&
       e.target.textContent === cardObj.card

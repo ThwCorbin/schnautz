@@ -1,38 +1,40 @@
+import { gameState } from "./gameStatus.js";
+import tips from "./tips.js";
+import assignCardsToPlayers, { extraHand } from "./cardHands.js";
+import updateScore, { check31Or33 } from "./updateScore.js";
+import newDeck, { shuffle, styleBlackCards } from "./cardDeck.js";
+import { dealBtn } from "./cutForDeal.js";
+import { players } from "./generate.js";
 import {
-  v,
-  dealBtn,
-  tipsBtn,
-  extraHand,
   dealerHand,
   leftOfDealerHand,
   acrossFromDealerHand,
-  rightOfDealerHand,
-  extraCard,
+  rightOfDealerHand
+} from "./animalLogic.js";
+import {
   playerOneCard,
   playerTwoCard,
   playerThreeCard,
   playerFourCard
-} from "../../main.js";
-import { players } from "./generate.js";
-import newDeck, { shuffle, styleBlackCards } from "./cardDeck.js";
-import assignCardsToPlayers from "./cardHands.js";
-import updateScore, { check31Or33 } from "./updateScore.js";
-import tips from "./tips.js";
+} from "./changeActivePlayer.js";
 
-// Deal card objects
+const extraCard = document.querySelectorAll(".extraCard"); //* extra hand cards
+const tipsBtn = document.querySelector(".tipsBtn");
+
+//> Deal card objects
 const deal = () => {
-  if (v.activeGame && v.activeRound === false) {
-    v.activeRound = true;
-    // Removes dealBtn event listener and adds tipsBtn event listener
+  if (gameState.activeGame && gameState.activeRound === false) {
+    gameState.activeRound = true;
+    //* Removes dealBtn event listener and adds tipsBtn event listener
     dealBtn.removeEventListener("click", deal);
     tipsBtn.addEventListener("click", tips);
     tipsBtn.textContent = "Tips";
 
-    // Generate a deck of cards, shuffle it, and assign ("deal") a subset of
-    // the card objects to the extra hand array and the player hand arrays
+    //* Generate a deck of cards, shuffle it, and assign ("deal") a subset of
+    //* the card objects to the extra hand array and the player hand arrays
     assignCardsToPlayers(shuffle(newDeck()));
-    // "Deal" card values to the screen based on the number of cards
-    if (v.numCards === 15) {
+    //* "Deal" card values to the screen based on the number of cards
+    if (gameState.numCards === 15) {
       for (let i = 0; i <= 2; i++) {
         extraCard[i].textContent = extraHand[i].card;
         players[0].position === "dealer"
@@ -64,7 +66,7 @@ const deal = () => {
           ? (playerFourCard[i].textContent = acrossFromDealerHand[i].card)
           : (playerFourCard[i].textContent = rightOfDealerHand[i].card);
       }
-    } else if (v.numCards === 12) {
+    } else if (gameState.numCards === 12) {
       for (let i = 0; i <= 2; i++) {
         extraCard[i].textContent = extraHand[i].card;
         players[0].position === "dealer"
@@ -94,13 +96,13 @@ const deal = () => {
           : (playerTwoCard[i].textContent = leftOfDealerHand[i].card);
       }
     }
-    // Spades and clubs on screen should be black (default is red)
+    //* Spades and clubs on screen should be black (default is red)
     styleBlackCards();
-    // Update scores to avoid currentScore: null on an early Schnautz/Feuer
-    players.forEach(player => updateScore(player.player));
-    // Check if the dealer dealt a Schnautz/Feuer to any player
+    //* Update scores to avoid currentScore: null on an early Schnautz/Feuer
+    players.forEach((player) => updateScore(player.player));
+    //* Check if the dealer dealt a Schnautz/Feuer to any player
     check31Or33();
   }
 };
 
-export default deal;
+export { deal as default, extraCard, tipsBtn };
